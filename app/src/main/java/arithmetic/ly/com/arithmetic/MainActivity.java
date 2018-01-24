@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Stack;
 
 import arithmetic.ly.com.arithmetic.linkedlist.LinkList;
 import arithmetic.ly.com.arithmetic.linkedlist.Node;
@@ -42,8 +42,16 @@ public class MainActivity extends AppCompatActivity {
 
         linkList.displayAllNodes();
 
-        Stack stack = new Stack();
-        stack.peek();
+        BinaryTree binaryTree = new BinaryTree();
+        ArrayList<String> data = new ArrayList<>();
+        String[] dataArray=new String[]{"A","B","D","#","#","E","#","#","C","#","F","#","#"};
+        for (String s : dataArray) {
+            data.add(s);
+        }
+        binaryTree.createBinaryTreePre(data);
+        binaryTree.preOrder(binaryTree.root);
+//        Stack stack = new Stack();
+//        stack.peek();
 
     }
 }
