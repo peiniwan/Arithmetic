@@ -1,4 +1,4 @@
-package arithmetic.ly.com.arithmetic;
+package arithmetic.ly.com.arithmetic.tree;
 
 import java.util.ArrayList;
 import java.util.Stack;
