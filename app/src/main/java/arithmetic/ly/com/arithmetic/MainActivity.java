@@ -7,7 +7,6 @@ import android.util.Log;
 import java.util.LinkedList;
 
 import arithmetic.ly.com.arithmetic.linkedlist.LinkList;
-import arithmetic.ly.com.arithmetic.linkedlist.Node;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,10 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
         linkList.addFirstNode(3);//321
         linkList.addFirstNode(4);//4321
-
-        Node byPos = linkList.findByPos(1);
+        LinkList.Node byPos = linkList.findByPos(1);
         Log.d("data","byPos:"+byPos.data);
-        Node byData = linkList.findByData(1);
+        LinkList.Node byData = linkList.findByData(1);
         Log.d("data","byData:"+byData.data);
 
 
