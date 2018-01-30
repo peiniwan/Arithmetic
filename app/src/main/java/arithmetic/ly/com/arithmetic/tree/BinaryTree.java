@@ -269,6 +269,7 @@ public class BinaryTree {
             data.add(s);
         }
         binaryTree.createBinaryTreePre(data);
+        binaryTree.postOrder(binaryTree.root);
 
     }
 }

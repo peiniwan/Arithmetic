@@ -43,7 +43,7 @@ public class Combinations {
 
         System.out.println("Testing normal data.");
         comb.combinations(
-                new ArrayList<Integer>(), Arrays.asList(1, 2, 3, 4), 2);
+                new ArrayList<Integer>(), Arrays.asList(1, 2, 3), 2);
         System.out.println("==========");
 
 //        System.out.println("Testing empty source data.");

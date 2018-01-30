@@ -1,5 +1,6 @@
 package arithmetic.ly.com.arithmetic.loop;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import arithmetic.ly.com.arithmetic.Node;
@@ -7,7 +8,7 @@ import arithmetic.ly.com.arithmetic.linkedlist.LinkedListCreator;
 
 /**
  * Created by 拯救者 on 2018/1/28.
- *
+ * 用循环反转链表
  */
 
 public class LinkedListReverser {
@@ -17,9 +18,8 @@ public class LinkedListReverser {
         // Loop invariant:
         // newHead points to the linked list already reversed.
         // curHead points to the linked list not yet reversed.
-
         // Loop invariant holds.
-        while(curHead != null) {
+        while (curHead != null) {
             // Loop invariant holds.
             Node<T> next = curHead.getNext();//2
             curHead.setNext(newHead);//1的next的null
@@ -35,17 +35,17 @@ public class LinkedListReverser {
         LinkedListCreator creator = new LinkedListCreator();
         LinkedListReverser reverser = new LinkedListReverser();
 
-//        Node.printLinkedList(reverser.reverseLinkedList(
-//                creator.createLinkedList(new ArrayList<>())));
-//
-//        Node.printLinkedList(reverser.reverseLinkedList(
-//                creator.createLinkedList(Arrays.asList(1))));
-//
         Node.printLinkedList(reverser.reverseLinkedList(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5))));
-//
-//        reverser.reverseLinkedList(
-//                creator.createLargeLinkedList(1000000));
-//        System.out.println("done");
+                creator.createLinkedList(new ArrayList<>())));
+
+        Node.printLinkedList(reverser.reverseLinkedList(
+                creator.createLinkedList(Arrays.asList(1))));
+
+        Node.printLinkedList(reverser.reverseLinkedList(
+                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+
+        reverser.reverseLinkedList(
+                creator.createLargeLinkedList(1000000));
+        System.out.println("done");
     }
 }

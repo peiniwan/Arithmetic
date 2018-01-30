@@ -56,7 +56,6 @@ public class SearchBinaryTree {
         node = new TreeNode(0, data);
         if (data < parent.data) {
             parent.leftChild = node;
-            node.parent = parent;
         } else {
             parent.rightChild = node;
         }
