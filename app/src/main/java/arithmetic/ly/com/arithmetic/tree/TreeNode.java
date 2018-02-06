@@ -1,19 +1,19 @@
 package arithmetic.ly.com.arithmetic.tree;
 
-public class TreeNode {
-    private final char value;
+public class TreeNode<T> {
+    private final T value;
     private TreeNode left;
     private TreeNode right;
     private TreeNode parent;
 
-    public TreeNode(char value) {
+    public TreeNode(T value) {
         this.value = value;
         this.left = null;
         this.right = null;
         this.parent = null;
     }
 
-    public char getValue() {
+    public T getValue() {
         return value;
     }
 

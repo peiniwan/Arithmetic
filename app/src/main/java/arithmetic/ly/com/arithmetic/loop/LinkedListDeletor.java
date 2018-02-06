@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import arithmetic.ly.com.arithmetic.Node;
-import arithmetic.ly.com.arithmetic.linkedlist.LinkedListCreator;
+import arithmetic.ly.com.arithmetic.linkedlist.LinkedListTest;
 
 /**
  * 删除链表节点
@@ -36,7 +36,7 @@ public class LinkedListDeletor {
     }
 
     public static void main(String[] args) {
-        LinkedListCreator creator = new LinkedListCreator();
+        LinkedListTest creator = new LinkedListTest();
         LinkedListDeletor deletor = new LinkedListDeletor();
         Node.printLinkedList(deletor.deleteIfEquals(
                 creator.createLinkedList(Arrays.asList(1, 2, 3, 2, 5)),

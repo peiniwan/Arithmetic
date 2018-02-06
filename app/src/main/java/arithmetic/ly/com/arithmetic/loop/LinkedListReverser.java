@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import arithmetic.ly.com.arithmetic.Node;
-import arithmetic.ly.com.arithmetic.linkedlist.LinkedListCreator;
+import arithmetic.ly.com.arithmetic.linkedlist.LinkedListTest;
 
 /**
  * Created by 拯救者 on 2018/1/28.
@@ -32,7 +32,7 @@ public class LinkedListReverser {
     }
 
     public static void main(String[] args) {
-        LinkedListCreator creator = new LinkedListCreator();
+        LinkedListTest creator = new LinkedListTest();
         LinkedListReverser reverser = new LinkedListReverser();
 
         Node.printLinkedList(reverser.reverseLinkedList(
