@@ -1,9 +1,6 @@
 package arithmetic.ly.com.arithmetic.file;
 
-import android.content.Context;
-
 import java.io.File;
-import java.io.FileOutputStream;
 
 /**
  * Created by liuyu1 on 2018/2/6.
