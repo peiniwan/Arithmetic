@@ -1,7 +1,5 @@
 package arithmetic.ly.com.arithmetic.linkedlist;
 
-import android.util.Log;
-
 /**
  * Created by liuyu1 on 2018/1/17.
  */
@@ -111,6 +109,7 @@ public class LinkList {
         }
     }
 
+
     public class Node {
         public Node next; //指针域
         public int data;//数据域
@@ -121,8 +120,29 @@ public class LinkList {
 
         //显示此节点
         public void display() {
-//        System.out.print(data + " ");
-            Log.d("data", data + " ");
+            System.out.print(data + " ");
         }
+    }
+
+    public static void main(String[] args) {
+        LinkList linkList = new LinkList();
+        linkList.addFirstNode(1);
+        linkList.addFirstNode(2);
+        linkList.addFirstNode(3);
+        linkList.addFirstNode(4);
+
+        linkList.deleteFirstNode();//321
+        linkList.add(2, 5);//3251
+        linkList.deleteByPos(2);//321   0是删的第一个
+//        linkList.deleteByData(3);//21
+//
+//        linkList.addFirstNode(3);//321
+//        linkList.addFirstNode(4);//4321
+//        LinkList.Node byPos = linkList.findByPos(1);
+//        System.out.println("byPos:" + byPos.data);
+//        LinkList.Node byData = linkList.findByData(1);
+//        System.out.println("byPos:" + byData.data);
+
+        linkList.displayAllNodes();
     }
 }
