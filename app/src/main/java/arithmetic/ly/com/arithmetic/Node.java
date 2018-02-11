@@ -25,11 +25,24 @@ public class Node<T> {
     }
 
     public static <T> void printLinkedList(Node<T> head) {
-        while(head != null) {
+        while (head != null) {
             System.out.print(head.getValue());
             System.out.print(" ");
             head = head.getNext();
         }
         System.out.println();
+    }
+
+    public void removeNode(Node previous, T data) {
+        //第一次previous=node、this=node.next
+        //第二次previous=node.next、this=node.next.next
+        if (data.equals(this.value)) {
+            previous.next = this.next;//空出当前节点
+        } else {//向后继续查询
+            if (this.next == null) {
+                return;
+            }
+            this.next.removeNode(this, data);
+        }
     }
 }

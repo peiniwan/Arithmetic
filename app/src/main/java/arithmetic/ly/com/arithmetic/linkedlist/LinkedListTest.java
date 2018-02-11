@@ -137,7 +137,7 @@ public class LinkedListTest {
      *
      * @param index 索引
      */
-    public Node delete(Node head, int index) {
+    public Node deleteByPos(Node head, int index) {
         Node node = head;
         int j = 0;
         while (node != null && j < index - 2) {
@@ -146,6 +146,15 @@ public class LinkedListTest {
             j++;
         }
         node.setNext(node.getNext().getNext());//删除第index个元素
+        return head;
+    }
+
+    public Node deleteByData(Node head, int data) {
+        if ((int) head.getValue() == data) {
+            head = head.getNext();
+        } else {//此时根元素已经判断过了，从第二个元素开始，head就是上一个node，传进去
+            head.getNext().removeNode(head, data);
+        }
         return head;
     }
 
@@ -244,8 +253,11 @@ public class LinkedListTest {
         System.out.println(creator.findByData(
                 creator.createLinkedList(Arrays.asList(3, 2, 5, 1)), 1));
 
-        Node.printLinkedList(creator.delete(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 3));
+//        Node.printLinkedList(creator.deleteByPos(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 3));
+
+        Node.printLinkedList(creator.deleteByData(
+                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 5));
 
     }
 }
