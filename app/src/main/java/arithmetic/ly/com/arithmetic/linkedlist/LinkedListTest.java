@@ -132,24 +132,20 @@ public class LinkedListTest {
     }
 
 
-    public Node deleteByPos(Node head, int index) {
-        int pos = 0;
-        Node current = head;
-        Node previous = head;
-        while (pos != index) {
-            previous = current;
-            current = current.getNext();
-            pos++;
+    /**
+     * 删除指定位置的结点(错误)
+     *
+     * @param index 索引
+     */
+    public Node delete(Node head, int index) {
+        Node node = head;
+        int j = 0;
+        while (node != null && j < index - 2) {
+            //查找到第i-1个元素
+            node = node.getNext();
+            j++;
         }
-        //此时的position就是要删除的位置
-        //3251
-        if (current == head) {
-            head = head.getNext();
-        } else {
-            pos = 0;
-            previous.setNext(current.getNext());//251   51
-        }
-        head.setNext(previous);
+        node.setNext(node.getNext().getNext());//删除第index个元素
         return head;
     }
 
@@ -242,14 +238,14 @@ public class LinkedListTest {
         Node.printLinkedList(creator.add(
                 creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 4, 8));
 
-        Node.printLinkedList(creator.deleteByPos(
-                creator.createLinkedList(Arrays.asList(3, 2, 4, 5, 6, 3, 1)), 5));
-
         System.out.println(creator.findByPos(
                 creator.createLinkedList(Arrays.asList(3, 2, 5, 1)), 4));
 
         System.out.println(creator.findByData(
                 creator.createLinkedList(Arrays.asList(3, 2, 5, 1)), 1));
+
+        Node.printLinkedList(creator.delete(
+                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 3));
 
     }
 }
