@@ -1,4 +1,4 @@
-package arithmetic.ly.com.arithmetic.file;
+package arithmetic.ly.com.arithmetic.other;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -26,12 +26,11 @@ public class StringUtils {
         String[] arr = {"nba", "abc", "cba", "zz", "qq", "haha"};
         printArray(arr); // 原来的
         sortString(arr);
-
         printArray(arr); // 比较后的
 
         String str = "shag klh";
-//        String out = reverseString(str);
-        String out = reverse(str);
+        String out = reverseString(str);
+//        String out = reverse(str);
         System.out.println(out);
     }
 

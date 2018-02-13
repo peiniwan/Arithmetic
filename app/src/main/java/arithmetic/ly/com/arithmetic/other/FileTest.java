@@ -1,4 +1,4 @@
-package arithmetic.ly.com.arithmetic.file;
+package arithmetic.ly.com.arithmetic.other;
 
 import java.io.File;
 

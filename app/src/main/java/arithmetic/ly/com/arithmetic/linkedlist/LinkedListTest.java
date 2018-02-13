@@ -9,7 +9,6 @@ import arithmetic.ly.com.arithmetic.Node;
 /**
  * Created by 拯救者 on 2018/1/27.
  */
-
 public class LinkedListTest {
 
     /**
@@ -99,6 +98,7 @@ public class LinkedListTest {
         combinations(selected, data.subList(1, data.size()), n);
     }
 
+
     // 插入一个头节点
     public Node addFirstNode(Node head, int data) { // data 1  next null data 2 next 1  data 3 next 2
         Node node = new Node(data);
@@ -149,6 +149,12 @@ public class LinkedListTest {
         return head;
     }
 
+    /**
+     * 删除指定的数据
+     * @param head
+     * @param data
+     * @return
+     */
     public Node deleteByData(Node head, int data) {
         if ((int) head.getValue() == data) {
             head = head.getNext();
@@ -172,6 +178,7 @@ public class LinkedListTest {
         }
         return current.getValue();
     }
+
 
     // 根据数据查找节点信息
     public int findByData(Node head, Object data) {
@@ -258,6 +265,7 @@ public class LinkedListTest {
 
         Node.printLinkedList(creator.deleteByData(
                 creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 5));
+
 
     }
 }

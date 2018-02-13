@@ -24,7 +24,7 @@ public class InsertSort {
                     break;
                 }
             }
-            //插入进来。将小于temp的后一位设为temple，将9的位置改成8，a[-1+1]=8
+            //插入进来。将小于temp的后一位设为temple，将9的位置改成8,a[j+1](9)=8
             a[j + 1] = temp;
         }
         System.out.println();
