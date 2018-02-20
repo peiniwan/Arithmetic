@@ -40,4 +40,25 @@ public class Recursion {
             return n * f(n - 1);
         }
     }
+
+
+    /**
+     * 欧几里德
+     * 定理：两个整数的最大公约数等于其中较小的那个数和两数相除余数的最大公约数
+     * (m>n)m和n的最大公约数 = n 和m%n的最大公约数
+     * 36 24  12 = 24和12 = 12和 0
+     * int x = gcd.gcd(99,55);
+     *
+     * @param m
+     * @param n
+     * @return
+     */
+    public int gcd(int m, int n) {
+        if (n == 0) {
+            return m;
+        } else {
+            return gcd(n, m % n);
+        }
+    }
+
 }

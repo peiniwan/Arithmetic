@@ -108,7 +108,8 @@ public class TreeCreate {
         int rootIndex = inOrder.indexOf(rootValue);
 
         TreeNode root = new TreeNode(rootValue);
-        //BDEG的setLeft迭代执行完，会执行setRight
+        //BDEG的setLeft迭代执行完，剩下的就是
+        // right了，8会执行setRight
         root.setLeft(
                 createTree(
                         preOrder.substring(1, 1 + rootIndex),
@@ -144,7 +145,9 @@ public class TreeCreate {
         for (int i : intarry) {
             treeCreate.put(i);
         }
+        //查找二叉树用中序即可从小到大
         treeTraverse.inOrder(treeCreate.root);
+        treeTraverse.inOrder(treeTraverse.mirrorTreeNode(treeCreate.root));
 
 //        System.out.println("=====");
 //        System.out.println("Creating tree from preOrder and inOrder");

@@ -1,6 +1,5 @@
 package arithmetic.ly.com.arithmetic.linkedlist;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import arithmetic.ly.com.arithmetic.Node;
 /**
  * Created by 拯救者 on 2018/1/27.
  */
+
 public class LinkedListTest {
 
     /**
@@ -70,6 +70,33 @@ public class LinkedListTest {
 
 
     /**
+     * 用循环反转链表
+     *
+     * @param head
+     * @param <T>
+     * @return
+     */
+    public <T> Node<T> reverseLoopLinkedList(Node<T> head) {
+        Node<T> newHead = null;//5
+        Node<T> curHead = head;//null
+        // Loop invariant:
+        // newHead points to the linked list already reversed.
+        // curHead points to the linked list not yet reversed.
+        // Loop invariant holds.
+        while (curHead != null) {
+            // Loop invariant holds.
+            Node<T> next = curHead.getNext();//2
+            curHead.setNext(newHead);//1的next的null
+            newHead = curHead;//=1 next:null
+            curHead = next;//=2 next:3
+            // Loop invariant holds.
+        }
+        // Loop invariant holds.
+        return newHead;
+    }
+
+
+    /**
      * 列出所有的组合
      * Generates all combinations and output them,
      * selecting n elements from data.
@@ -98,7 +125,6 @@ public class LinkedListTest {
         combinations(selected, data.subList(1, data.size()), n);
     }
 
-
     // 插入一个头节点
     public Node addFirstNode(Node head, int data) { // data 1  next null data 2 next 1  data 3 next 2
         Node node = new Node(data);
@@ -109,9 +135,7 @@ public class LinkedListTest {
 
     // 删除一个头结点
     public Node deleteFirstNode(Node head) {
-        Node tempNode = head;
-        head = tempNode.getNext();
-        return head;
+        return head.getNext();
     }
 
     // 在任意位置插入节点 在index的后面插入
@@ -150,10 +174,7 @@ public class LinkedListTest {
     }
 
     /**
-     * 删除指定的数据
-     * @param head
-     * @param data
-     * @return
+     * 删除链表节点
      */
     public Node deleteByData(Node head, int data) {
         if ((int) head.getValue() == data) {
@@ -165,12 +186,37 @@ public class LinkedListTest {
     }
 
 
+    /**
+     * 删除链表节点
+     */
+    public <T> Node<T> deleteByData2(Node<T> head, T value) {
+        while (head != null && head.getValue() == value) {
+            head = head.getNext();
+        }
+        if (head == null) {
+            return null;
+        }
+        Node<T> prev = head;
+        // Loop invariant: list nodes from head up to prev has been
+        // processed. (Nodes with values equal to value are deleted.)
+        while (prev.getNext() != null) {
+            if (prev.getNext().getValue() == value) {
+                // delete it
+                prev.setNext(prev.getNext().getNext());
+            } else {
+                prev = prev.getNext();
+            }
+        }
+        return head;
+    }
+
+
     // 根据位置查找节点信息
     public Object findByPos(Node head, int index) {
         int pos = 0;
         Node current = head;
         while (pos != index) {
-            if (current.getNext() != null) {
+            if (current.getNext() == null) {
                 return -1;
             }
             current = current.getNext();
@@ -178,7 +224,6 @@ public class LinkedListTest {
         }
         return current.getValue();
     }
-
 
     // 根据数据查找节点信息
     public int findByData(Node head, Object data) {
@@ -198,12 +243,12 @@ public class LinkedListTest {
     public static void main(String[] args) {
         LinkedListTest creator = new LinkedListTest();
 
-        Node.printLinkedList(
-                creator.createLinkedList(new ArrayList<>()));
-        Node.printLinkedList(
-                creator.createLinkedList(Arrays.asList(1)));
-        Node.printLinkedList(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)));
+//        Node.printLinkedList(
+//                creator.createLinkedList(new ArrayList<>()));
+//        Node.printLinkedList(
+//                creator.createLinkedList(Arrays.asList(1)));
+//        Node.printLinkedList(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)));
 
 //        Node.printLinkedList(creator.reverseLinkedList(
 //                creator.createLinkedList(new ArrayList<>())));
@@ -253,19 +298,18 @@ public class LinkedListTest {
 
         Node.printLinkedList(creator.add(
                 creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 4, 8));
+//
+//        System.out.println(creator.findByPos(
+//                creator.createLinkedList(Arrays.asList(3, 2, 5, 1)), 4));
+//
+//        System.out.println(creator.findByData(
+//                creator.createLinkedList(Arrays.asList(3, 2, 5, 1)), 1));
+//
+////        Node.printLinkedList(creator.deleteByPos(
+////                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 3));
 
-        System.out.println(creator.findByPos(
-                creator.createLinkedList(Arrays.asList(3, 2, 5, 1)), 4));
-
-        System.out.println(creator.findByData(
-                creator.createLinkedList(Arrays.asList(3, 2, 5, 1)), 1));
-
-//        Node.printLinkedList(creator.deleteByPos(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 3));
-
-        Node.printLinkedList(creator.deleteByData(
+        Node.printLinkedList(creator.deleteByData2(
                 creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 5));
-
 
     }
 }

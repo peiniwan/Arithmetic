@@ -2,8 +2,8 @@ package arithmetic.ly.com.arithmetic.sort;
 
 /**
  * Created by liuyu1 on 2018/2/7.
+ * 二分法插入排序
  */
-
 public class BinaryInsertSort {
     public static void main(String[] args) {
         int[] a = {4, 8, 6, 7, 3, 5, 9, 1};
@@ -20,7 +20,7 @@ public class BinaryInsertSort {
         }
     }
 
-    //二分法插入
+
     private static void sort(int[] a) {
         // {4, 6, 8, 7, 3, 5, 9, 1}
         // {4, 6, 7, 8, 3, 5, 9, 1}
@@ -43,7 +43,7 @@ public class BinaryInsertSort {
             }
             //移动必须从最后一个记录开始，向后移动一位，再移动倒数第2位，直到要插入的位置的记录移后一位。
             for (int j = i - 1; j >= left; j--) {
-                //以左下标为标准，在左位置前插入该数据，左及左后边全部后移
+                //以左下标为标准，左及左后边全部后移，然后左位置前插入该数据
                 a[j + 1] = a[j];
             }
             if (left != i) {//如果相等，不需要移动

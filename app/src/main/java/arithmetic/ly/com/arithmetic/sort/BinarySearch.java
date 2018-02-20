@@ -1,4 +1,4 @@
-package arithmetic.ly.com.arithmetic.loop;
+package arithmetic.ly.com.arithmetic.sort;
 
 /**
  * Created by 拯救者 on 2018/1/28.
@@ -9,7 +9,7 @@ public class BinarySearch {
     /**
      * Searches element k in a sorted array.
      *
-     * @param arr a sorted array
+     * @param arr a sorted array  一个排好序的数组
      * @param k   the element to search
      * @return index in arr where k is. -1 if not found.
      */

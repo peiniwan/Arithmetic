@@ -104,4 +104,22 @@ public class TreeTraverse {
     }
 
 
+    /**
+     * 翻转二叉树or镜像二叉树
+     *
+     * @param
+     * @return
+     */
+    public TreeNode mirrorTreeNode(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        TreeNode left = mirrorTreeNode(root.getLeft());
+        TreeNode right = mirrorTreeNode(root.getRight());
+        root.setLeft(right);
+        root.setRight(left);
+        return root;
+    }
+
+
 }

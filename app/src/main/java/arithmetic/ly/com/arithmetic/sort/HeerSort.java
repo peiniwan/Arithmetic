@@ -13,6 +13,16 @@ public class HeerSort {
         }
         //希尔排序
         System.out.println();
+        HeerSort heerSort = new HeerSort();
+        heerSort.heer(a);
+        System.out.println();
+        System.out.println("排序之后：");
+        for (int i = 0; i < a.length; i++) {
+            System.out.print(a[i] + " ");
+        }
+    }
+
+    public void heer(int[] a) {
         int d = a.length / 2;//默认增量
         while (true) {
             for (int i = 0; i < d; i++) {
@@ -32,11 +42,7 @@ public class HeerSort {
             }
             d--;
         }
-        System.out.println();
-        System.out.println("排序之后：");
-        for (int i = 0; i < a.length; i++) {
-            System.out.print(a[i] + " ");
-        }
     }
+
 
 }
