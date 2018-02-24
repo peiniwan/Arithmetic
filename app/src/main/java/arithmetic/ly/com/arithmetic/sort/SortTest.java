@@ -21,6 +21,66 @@ public class SortTest {
         }
     }
 
+    public void bubbleSort(int[] a) {
+        for (int i = 0; i < a.length - 1; i++) {
+            for (int j = i; i < a.length - i - 1; i++) {
+                if (a[j] > a[j + 1]) {
+                    int temp = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+
+    public void selectSor(int[] a) {
+        int temp;
+        int min;
+        for (int i = 0; i < a.length; i++) {
+            min = a[i];
+            for (int j = i; j < a.length; j++) {
+                if (a[j] < min) {
+                    min = a[j];
+                    temp = a[i];
+                    a[i] = min;
+                    a[j] = temp;
+                }
+            }
+        }
+    }
+
+
+    public void quickSort(int[] a) {
+        if (a.length > 0) {
+            quick(a, 0, a.length - 1);
+        }
+    }
+
+    private void quick(int[] a, int low, int high) {
+        if (low < high) {
+            int middle = getMiddle(a, low, high);
+            quick(a, 0, middle - 1);
+            quick(a, middle + 1, high);
+        }
+    }
+
+    private int getMiddle(int[] a, int low, int high) {
+        int temp = a[low];
+        while (low < high) {
+            while (low < high && a[high] >= temp) {
+                high--;
+            }
+            a[low] = a[high];
+            while (low < high && a[low] <= temp) {
+                low++;
+            }
+            a[high] = a[low];
+        }
+        a[low] = temp;
+        return low;
+    }
+
 
     public void binaryInsertSort(int[] a) {
 
@@ -66,22 +126,6 @@ public class SortTest {
         }
     }
 
-    public void selectSor(int[] a) {
-        int temp;
-        int min;
-        for (int i = 0; i < a.length; i++) {
-            min = a[i];
-            for (int j = i; j < a.length; j++) {
-                if (a[j] < min) {
-                    min = a[j];
-                    temp = a[i];
-                    a[i] = min;
-                    a[j] = temp;
-                }
-            }
-        }
-    }
-
 
     public void heapSort(int[] a) {
         buildMaxHead(a);
@@ -123,48 +167,6 @@ public class SortTest {
         a[index2] = temp;
     }
 
-    public void bubbleSort(int[] a) {
-        for (int i = 0; i < a.length - 1; i++) {
-            for (int j = i; i < a.length - i - 1; i++) {
-                if (a[j] > a[j + 1]) {
-                    int temp = a[j];
-                    a[j] = a[j + 1];
-                    a[j + 1] = temp;
-                }
-            }
-        }
-    }
-
-
-    public void quickSort(int[] a) {
-        if (a.length > 0) {
-            quick(a, 0, a.length - 1);
-        }
-    }
-
-    private void quick(int[] a, int low, int high) {
-        if (low < high) {
-            int middle = getMiddle(a, low, high);
-            quick(a, 0, middle - 1);
-            quick(a, middle + 1, high);
-        }
-    }
-
-    private int getMiddle(int[] a, int low, int high) {
-        int temp = a[low];
-        while (low < high) {
-            while (low < high && a[high] >= temp) {
-                high--;
-            }
-            a[low] = a[high];
-            while (low < high && a[low] <= temp) {
-                low++;
-            }
-            a[high] = a[low];
-        }
-        a[low] = temp;
-        return low;
-    }
 
 
     public void mergeSort(int[] a, int left, int right) {

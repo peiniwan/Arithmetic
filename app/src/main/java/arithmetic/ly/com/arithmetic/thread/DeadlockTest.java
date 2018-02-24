@@ -37,7 +37,7 @@ class Lock implements Runnable {
                 synchronized (str2) {
                     // 执行不到这里
                     System.out.println(Thread.currentThread().getName()
-                            + "锁住" + str2);
+                            + "锁住了" + str2);
                 }
             }
         } catch (Exception e) {
