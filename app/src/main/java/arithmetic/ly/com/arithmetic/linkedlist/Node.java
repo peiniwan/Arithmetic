@@ -1,4 +1,4 @@
-package arithmetic.ly.com.arithmetic;
+package arithmetic.ly.com.arithmetic.linkedlist;
 
 /**
  * Created by 拯救者 on 2018/1/27.

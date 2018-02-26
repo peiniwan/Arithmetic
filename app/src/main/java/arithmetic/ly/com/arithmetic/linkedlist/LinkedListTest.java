@@ -3,8 +3,6 @@ package arithmetic.ly.com.arithmetic.linkedlist;
 import java.util.Arrays;
 import java.util.List;
 
-import arithmetic.ly.com.arithmetic.Node;
-
 /**
  * Created by 拯救者 on 2018/1/27.
  */

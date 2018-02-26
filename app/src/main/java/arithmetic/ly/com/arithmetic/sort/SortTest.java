@@ -6,6 +6,22 @@ package arithmetic.ly.com.arithmetic.sort;
 
 public class SortTest {
 
+    public int binarySearch(int[] arr, int k) {
+        int a = 0;
+        int b = arr.length - 1;
+        while (a < b) {
+            int m = a + (b - a) / 2;
+            if (k < arr[m]) {
+                b = m;
+            } else if (k > arr[m]) {
+                a = m + 1;
+            } else {
+                return m;
+            }
+        }
+        return -1;
+    }
+
     public void insertSort(int[] array) {
         for (int i = 1; i < array.length; i++) {
             int temp = array[i];
@@ -20,6 +36,7 @@ public class SortTest {
             array[j + 1] = temp;
         }
     }
+
 
     public void bubbleSort(int[] a) {
         for (int i = 0; i < a.length - 1; i++) {
@@ -81,6 +98,26 @@ public class SortTest {
         return low;
     }
 
+    public void heer(int[] a) {
+        int d = a.length / 2;
+        while (true) {
+            for (int i = 0; i < d; i++) {
+                for (int j = i; j + d < a.length; j += d) {
+                    int temp;
+                    if (a[j] > a[j + d]) {
+                        temp = a[j];
+                        a[j] = a[j + d];
+                        a[j + d] = temp;
+                    }
+                }
+            }
+            if (d == 1) {
+                break;
+            }
+            d--;
+        }
+    }
+
 
     public void binaryInsertSort(int[] a) {
 
@@ -103,26 +140,6 @@ public class SortTest {
             if (left != i) {
                 a[left] = temp;
             }
-        }
-    }
-
-    public void heer(int[] a) {
-        int d = a.length / 2;
-        while (true) {
-            for (int i = 0; i < d; i++) {
-                for (int j = i; j + d < a.length; j += d) {
-                    int temp;
-                    if (a[j] > a[j + d]) {
-                        temp = a[j];
-                        a[j] = a[j + d];
-                        a[j + d] = temp;
-                    }
-                }
-            }
-            if (d == 1) {
-                break;
-            }
-            d--;
         }
     }
 
@@ -166,7 +183,6 @@ public class SortTest {
         a[index] = a[index2];
         a[index2] = temp;
     }
-
 
 
     public void mergeSort(int[] a, int left, int right) {
