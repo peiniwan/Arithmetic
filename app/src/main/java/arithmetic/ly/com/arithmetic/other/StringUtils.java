@@ -32,6 +32,8 @@ public class StringUtils {
         String out = reverseString(str);
 //        String out = reverse(str);
         System.out.println(out);
+
+        countWordInString("ddfdffwgfddd berterg   sdfwersdf");
     }
 
 
@@ -63,6 +65,7 @@ public class StringUtils {
 
     /**
      * 用递归实现字符串反转
+     *
      * @param originStr
      * @return
      */
@@ -75,6 +78,7 @@ public class StringUtils {
 
     /**
      * 将字符串反转
+     *
      * @param str
      * @return
      */
@@ -123,5 +127,33 @@ public class StringUtils {
             ex.printStackTrace();
         }
         return counter;
+    }
+
+    /**
+     * 统计给定字符串中字符出现的次数
+     */
+    public static int countWordInString(String s) {
+        int len1 = s.length();//获取原来的字符串长度
+        String[] strings = s.split("");
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < strings.length; i++) {
+            if (stringBuilder.toString().contains(strings[i])) {
+                continue;
+            }
+            stringBuilder.append(strings[i]);
+            String s1 = s.replaceAll(strings[i], "");
+            int len2 = s1.length();
+            int lenTimes = len1 - len2;//出现的次数
+            System.out.println(strings[i] + "的个数：" + lenTimes);
+        }
+
+
+        int count = 0;
+//        for (int i = 0; i < s.length(); i++) {
+//            if (s.charAt(i) == c) {
+//                count++;
+//            }
+//        }
+        return count;
     }
 }

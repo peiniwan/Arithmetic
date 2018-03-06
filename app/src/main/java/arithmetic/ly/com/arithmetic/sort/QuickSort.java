@@ -31,7 +31,7 @@ public class QuickSort {
         if (low < high) {
             int middle = getMiddle(a, low, high);
             //递归排比第一个基数小的数和大的数
-            quickSort(a, 0, middle - 1);
+            quickSort(a, low, middle - 1);
             quickSort(a, middle + 1, high);
         }
     }

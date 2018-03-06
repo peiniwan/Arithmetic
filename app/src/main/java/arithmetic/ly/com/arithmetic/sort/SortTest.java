@@ -22,6 +22,8 @@ public class SortTest {
         return -1;
     }
 
+
+
     public void insertSort(int[] array) {
         for (int i = 1; i < array.length; i++) {
             int temp = array[i];
@@ -40,7 +42,7 @@ public class SortTest {
 
     public void bubbleSort(int[] a) {
         for (int i = 0; i < a.length - 1; i++) {
-            for (int j = i; i < a.length - i - 1; i++) {
+            for (int j = i; i < a.length - i - 1; j++) {
                 if (a[j] > a[j + 1]) {
                     int temp = a[j];
                     a[j] = a[j + 1];
@@ -66,6 +68,7 @@ public class SortTest {
             }
         }
     }
+
 
 
     public void quickSort(int[] a) {
@@ -185,6 +188,7 @@ public class SortTest {
     }
 
 
+
     public void mergeSort(int[] a, int left, int right) {
         if (left < right) {
             int middle = (left + right) / 2;
@@ -228,8 +232,9 @@ public class SortTest {
     public static void main(String[] args) {
         SortTest sortTest = new SortTest();
         int[] arr = {9, 4, 2, 6, 7, 3, 10, 33, 88, 1, 17};
+        sortTest.bubbleSort(arr);
 //        sortTest.selertSort(arr);
-        sortTest.insertSort(arr);
+//        sortTest.insertSort(arr);
         sortTest.printArr(arr);
     }
 }
