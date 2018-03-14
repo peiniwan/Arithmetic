@@ -26,6 +26,8 @@ public class SelertSort {
         }
     }
 
+
+
     public static void main(String[] args) {
         SelertSort selertSort = new SelertSort();
         selertSort.selectSort(new int[]{9, 4, 2, 6, 7, 3, 10, 33, 88, 1, 17});

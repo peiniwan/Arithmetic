@@ -3,6 +3,7 @@ package arithmetic.ly.com.arithmetic.sort;
 /**
  * Created by liuyu1 on 2018/2/7.
  * 二分法插入排序
+ * 先找到正确的位置，然后用插入排序排序
  */
 public class BinaryInsertSort {
     public static void main(String[] args) {

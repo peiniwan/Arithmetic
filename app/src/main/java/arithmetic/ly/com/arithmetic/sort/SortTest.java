@@ -23,7 +23,6 @@ public class SortTest {
     }
 
 
-
     public void insertSort(int[] array) {
         for (int i = 1; i < array.length; i++) {
             int temp = array[i];
@@ -39,10 +38,38 @@ public class SortTest {
         }
     }
 
+    public void binaryInsertSort(int[] a) {
+        for (int i = 1; i < a.length; i++) {
+            int temp = a[i];
+            int left = 0;
+            int right = i - 1;
+            int middle = 0;
+            while (left < right) {
+                middle = (left + right) / 2;
+                if (temp < a[middle]) {
+                    right = middle - 1;
+                } else {
+                    left = middle + 1;
+                }
+            }
+            for (int j = i - 1; j >= left; j--) {
+                a[j + 1] = a[j];
+            }
+            if (left != i) {
+                a[left] = temp;
+            }
+        }
+    }
 
+
+    /**
+     * 冒泡排序
+     * 每次i排序后最大的数到了最后边
+     * -i每进行一趟比较，每一趟少比较一次，一定程度上减少了算法的量
+     */
     public void bubbleSort(int[] a) {
-        for (int i = 0; i < a.length - 1; i++) {
-            for (int j = i; i < a.length - i - 1; j++) {
+        for (int i = 0; i < a.length - 1; i++) {//外层循环控制排序趟数
+            for (int j = 0; j < a.length - 1 - i; j++) {//内层循环控制每一趟排序多少次
                 if (a[j] > a[j + 1]) {
                     int temp = a[j];
                     a[j] = a[j + 1];
@@ -53,22 +80,26 @@ public class SortTest {
     }
 
 
-    public void selectSor(int[] a) {
-        int temp;
+    /**
+     * 选择排序
+     * 每次i排序后最小的数到了最前面
+     */
+    public void selectSort(int[] a) {
         int min;
+        int tmp;
         for (int i = 0; i < a.length; i++) {
             min = a[i];
+            //里面for第一次出来0，并且排在最前面，然后从i=1开始遍历
             for (int j = i; j < a.length; j++) {
                 if (a[j] < min) {
-                    min = a[j];
-                    temp = a[i];
-                    a[i] = min;
-                    a[j] = temp;
+                    min = a[j];//记录最小值  3
+                    tmp = a[i];//9
+                    a[i] = min;//3
+                    a[j] = tmp;//9
                 }
             }
         }
     }
-
 
 
     public void quickSort(int[] a) {
@@ -122,31 +153,6 @@ public class SortTest {
     }
 
 
-    public void binaryInsertSort(int[] a) {
-
-        for (int i = 0; i < a.length; i++) {
-            int temp = a[i];
-            int left = 0;
-            int right = i - 1;
-            int middle = 0;
-            while (left <= right) {
-                middle = (left + right) / 2;
-                if (temp < a[middle]) {
-                    right = middle - 1;
-                } else {
-                    left = middle + 1;
-                }
-            }
-            for (int j = i - 1; j >= left; j--) {
-                a[j + 1] = a[j];
-            }
-            if (left != i) {
-                a[left] = temp;
-            }
-        }
-    }
-
-
     public void heapSort(int[] a) {
         buildMaxHead(a);
         for (int i = a.length - 1; i >= 1; i--) {
@@ -186,7 +192,6 @@ public class SortTest {
         a[index] = a[index2];
         a[index2] = temp;
     }
-
 
 
     public void mergeSort(int[] a, int left, int right) {
@@ -232,8 +237,8 @@ public class SortTest {
     public static void main(String[] args) {
         SortTest sortTest = new SortTest();
         int[] arr = {9, 4, 2, 6, 7, 3, 10, 33, 88, 1, 17};
-        sortTest.bubbleSort(arr);
-//        sortTest.selertSort(arr);
+//        sortTest.bubbleSort(arr);
+        sortTest.selectSort(arr);
 //        sortTest.insertSort(arr);
         sortTest.printArr(arr);
     }
