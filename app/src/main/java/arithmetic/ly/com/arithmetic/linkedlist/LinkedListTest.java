@@ -123,20 +123,35 @@ public class LinkedListTest {
         combinations(selected, data.subList(1, data.size()), n);
     }
 
-    // 插入一个头节点
+    /**
+     * 插入头节点
+     */
     public Node addFirstNode(Node head, int data) { // data 1  next null data 2 next 1  data 3 next 2
         Node node = new Node(data);
         node.setNext(head);
-        head = node;
+        return node;
+    }
+
+
+    /**
+     * 插入尾节点
+     *
+     */
+    public Node addLastNode(Node head, int data) {
+        Node node = new Node(data);
+        Node current = head;
+        //找到未节点 注意这里是当元素的下一个元素为空的时候这个节点即为未节点
+        while (current.getNext() != null) {
+            current = current.getNext();
+        }
+        current.setNext(node);
         return head;
     }
 
-    // 删除一个头结点
-    public Node deleteFirstNode(Node head) {
-        return head.getNext();
-    }
 
-    // 在任意位置插入节点 在index的后面插入
+    /**
+     * 在任意位置插入节点 在index的后面插入
+     */
     public Node add(Node head, int index, int data) {
         int pos = 0;
         Node node = new Node(data);
@@ -154,22 +169,11 @@ public class LinkedListTest {
     }
 
 
-    /**
-     * 删除指定位置的结点(错误)
-     *
-     * @param index 索引
-     */
-    public Node deleteByPos(Node head, int index) {
-        Node node = head;
-        int j = 0;
-        while (node != null && j < index - 2) {
-            //查找到第i-1个元素
-            node = node.getNext();
-            j++;
-        }
-        node.setNext(node.getNext().getNext());//删除第index个元素
-        return head;
+    // 删除一个头结点
+    public Node deleteFirstNode(Node head) {
+        return head.getNext();
     }
+
 
     /**
      * 删除链表节点
@@ -289,6 +293,9 @@ public class LinkedListTest {
 //                Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 4);
 
         Node.printLinkedList(creator.addFirstNode(
+                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
+
+        Node.printLinkedList(creator.addLastNode(
                 creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
 
         Node.printLinkedList(creator.deleteFirstNode(

@@ -23,6 +23,6 @@ public class HanNota {
 
     public static void main(String [] args){
         HanNota hanNota = new HanNota();
-        hanNota.hanNota(72, 'A', 'B', 'C');
+        hanNota.hanNota(3, 'A', 'B', 'C');
     }
 }
