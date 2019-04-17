@@ -1,26 +1,21 @@
 package arithmetic.ly.com.arithmetic.linkedlist;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by 拯救者 on 2018/1/27.
+ * 链表的创建增删改查
  */
 
 public class LinkedListTest {
 
-    /**
-     * Creates a linked list.
-     *
-     * @param data the data to create the list
-     * @return head of the linked list. The returned linked list
-     * ends with last node with getNext() == null.
-     */
+
     public <T> Node<T> createLinkedList(List<T> data) {
         if (data.isEmpty()) {
             return null;
         }
-
         Node<T> firstNode = new Node<>(data.get(0));
         firstNode.setNext(
                 createLinkedList(data.subList(1, data.size())));
@@ -43,12 +38,6 @@ public class LinkedListTest {
         return head;
     }
 
-    /**
-     * Reverses a linked list.
-     *
-     * @param head the linked list to reverse
-     * @return head of the reversed linked list
-     */
     public <T> Node<T> reverseLinkedList(Node<T> head) {
         // size == 0 or size == 1
         if (head == null || head.getNext() == null) {
@@ -77,51 +66,16 @@ public class LinkedListTest {
     public <T> Node<T> reverseLoopLinkedList(Node<T> head) {
         Node<T> newHead = null;//5
         Node<T> curHead = head;//null
-        // Loop invariant:
-        // newHead points to the linked list already reversed.
-        // curHead points to the linked list not yet reversed.
-        // Loop invariant holds.
         while (curHead != null) {
             // Loop invariant holds.
             Node<T> next = curHead.getNext();//2
             curHead.setNext(newHead);//1的next的null
             newHead = curHead;//=1 next:null
             curHead = next;//=2 next:3
-            // Loop invariant holds.
         }
-        // Loop invariant holds.
         return newHead;
     }
 
-
-    /**
-     * 列出所有的组合
-     * Generates all combinations and output them,
-     * selecting n elements from data.
-     */
-    public void combinations(List<Integer> selected, List<Integer> data, int n) {
-        if (n == 0) {
-            // output all selected elements
-            for (Integer i : selected) {
-                System.out.print(i);
-                System.out.print(" ");
-            }
-            System.out.println();
-            return;
-        }
-
-        if (data.isEmpty()) {
-            return;
-        }
-
-        // select element 0
-        selected.add(data.get(0));
-        combinations(selected, data.subList(1, data.size()), n - 1);
-
-        // un-select element 0
-        selected.remove(selected.size() - 1);
-        combinations(selected, data.subList(1, data.size()), n);
-    }
 
     /**
      * 插入头节点
@@ -135,7 +89,6 @@ public class LinkedListTest {
 
     /**
      * 插入尾节点
-     *
      */
     public Node addLastNode(Node head, int data) {
         Node node = new Node(data);
@@ -241,25 +194,42 @@ public class LinkedListTest {
         return pos;
     }
 
+    /**
+     * 列出所有的组合
+     */
+    public void combinations(List<Integer> selected, List<Integer> data, int n) {
+        if (n == 0) {
+            // output all selected elements
+            for (Integer i : selected) {
+                System.out.print(i);
+                System.out.print(" ");
+            }
+            System.out.println();
+            return;
+        }
+
+        if (data.isEmpty()) {
+            return;
+        }
+
+        // select element 0
+        selected.add(data.get(0));
+        combinations(selected, data.subList(1, data.size()), n - 1);
+
+        // un-select element 0
+        selected.remove(selected.size() - 1);
+        combinations(selected, data.subList(1, data.size()), n);
+    }
+
 
     public static void main(String[] args) {
         LinkedListTest creator = new LinkedListTest();
 
 //        Node.printLinkedList(
-//                creator.createLinkedList(new ArrayList<>()));
-//        Node.printLinkedList(
-//                creator.createLinkedList(Arrays.asList(1)));
-//        Node.printLinkedList(
 //                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)));
 
-//        Node.printLinkedList(creator.reverseLinkedList(
-//                creator.createLinkedList(new ArrayList<>())));
-//
-//        Node.printLinkedList(creator.reverseLinkedList(
-//                creator.createLinkedList(Arrays.asList(1))));
-
-//        Node.printLinkedList(creator.reverseLinkedList(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5))));
+        Node.printLinkedList(creator.reverseLinkedList(
+                creator.createLinkedList(Arrays.asList(1, 2, 3))));
 
 //        System.out.println("Testing large data. Expect exceptions.");
 //        creator.reverseLinkedList(
@@ -268,18 +238,6 @@ public class LinkedListTest {
 
 
 //        System.out.println("Testing normal data.");
-//        creator.combinations(
-//                new ArrayList<Integer>(), Arrays.asList(1, 2, 3), 2);
-//        System.out.println("==========");
-//
-//        System.out.println("Testing empty source data.");
-//        creator.combinations(new ArrayList<Integer>(), new ArrayList<Integer>(), 2);
-//        System.out.println("==========");
-//        creator.combinations(
-//                new ArrayList<Integer>(), new ArrayList<Integer>(), 0);
-//        System.out.println("==========");
-//
-//        System.out.println("Selecting 1 and 0 elements.");
 //        comb.combinations(
 //                new ArrayList<Integer>(), Arrays.asList(1, 2, 3, 4), 1);
 //        System.out.println("==========");
@@ -292,29 +250,24 @@ public class LinkedListTest {
 //                new ArrayList<Integer>(),
 //                Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 4);
 
-        Node.printLinkedList(creator.addFirstNode(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
-
-        Node.printLinkedList(creator.addLastNode(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
-
-        Node.printLinkedList(creator.deleteFirstNode(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5))));
-
-        Node.printLinkedList(creator.add(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 4, 8));
+//        Node.printLinkedList(creator.addFirstNode(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
 //
-//        System.out.println(creator.findByPos(
-//                creator.createLinkedList(Arrays.asList(3, 2, 5, 1)), 4));
+//        Node.printLinkedList(creator.addLastNode(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
+//
+//        Node.printLinkedList(creator.deleteFirstNode(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5))));
+//
+//        Node.printLinkedList(creator.add(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 4, 8));
+
 //
 //        System.out.println(creator.findByData(
 //                creator.createLinkedList(Arrays.asList(3, 2, 5, 1)), 1));
 //
-////        Node.printLinkedList(creator.deleteByPos(
-////                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 3));
-
-        Node.printLinkedList(creator.deleteByData2(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 5));
+//        Node.printLinkedList(creator.deleteByPos(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6)), 3));
 
     }
 }
