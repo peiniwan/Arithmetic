@@ -1,6 +1,5 @@
 package arithmetic.ly.com.arithmetic.linkedlist;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,7 +74,6 @@ public class LinkedListTest {
         }
         return newHead;
     }
-
 
     /**
      * 插入头节点

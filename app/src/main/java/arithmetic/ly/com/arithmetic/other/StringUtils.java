@@ -1,7 +1,7 @@
 package arithmetic.ly.com.arithmetic.other;
 
+import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -38,10 +38,10 @@ public class StringUtils {
 
 
     public static void sortString(String[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            for (int j = i + 1; j < arr.length; j++) {
-                if (arr[i].compareTo(arr[j]) > 0)// 字符串比较用compareTo方法
-                    swap(arr, i, j);
+        for (int i = 0; i < arr.length ; i++) {
+            for (int j = 0; j < arr.length-i-1; j++) {
+                if (arr[j].compareTo(arr[j+1]) > 0)// 字符串比较用compareTo方法
+                    swap(arr, j, j+1);
             }
         }
     }
@@ -109,7 +109,7 @@ public class StringUtils {
      * @param word     字符串
      * @return 字符串在文件中出现的次数
      */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static int countWordInFile(String filename, String word) {
         int counter = 0;
         try (FileReader fr = new FileReader(filename)) {

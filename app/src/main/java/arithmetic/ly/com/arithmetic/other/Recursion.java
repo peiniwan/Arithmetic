@@ -22,11 +22,11 @@ public class Recursion {
     public static int binary(int num) {
         StringBuilder sb = new StringBuilder();
         if (num > 0) {
-            summation(num / 2);
+            binary(num / 2);
             int i = num % 2;
             sb.append(i);
         }
-        System.out.println(sb.toString());
+        System.out.print(sb.toString());
         return -1;
     }
 
@@ -59,6 +59,11 @@ public class Recursion {
         } else {
             return gcd(n, m % n);
         }
+    }
+
+    public static void main(String[] args) {
+        Recursion recursion = new Recursion();
+        int i = recursion.binary(11);
     }
 
 }

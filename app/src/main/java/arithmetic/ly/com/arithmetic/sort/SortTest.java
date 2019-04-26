@@ -38,29 +38,6 @@ public class SortTest {
         }
     }
 
-    public void binaryInsertSort(int[] a) {
-        for (int i = 1; i < a.length; i++) {
-            int temp = a[i];
-            int left = 0;
-            int right = i - 1;
-            int middle = 0;
-            while (left < right) {
-                middle = (left + right) / 2;
-                if (temp < a[middle]) {
-                    right = middle - 1;
-                } else {
-                    left = middle + 1;
-                }
-            }
-            for (int j = i - 1; j >= left; j--) {
-                a[j + 1] = a[j];
-            }
-            if (left != i) {
-                a[left] = temp;
-            }
-        }
-    }
-
 
     /**
      * 冒泡排序
@@ -100,7 +77,6 @@ public class SortTest {
             }
         }
     }
-
 
     public void quickSort(int[] a) {
         if (a.length > 0) {
@@ -153,6 +129,30 @@ public class SortTest {
     }
 
 
+    public void binaryInsertSort(int[] a) {
+        for (int i = 1; i < a.length; i++) {
+            int temp = a[i];
+            int left = 0;
+            int right = i - 1;
+            int middle = 0;
+            while (left < right) {
+                middle = (left + right) / 2;
+                if (temp < a[middle]) {
+                    right = middle - 1;
+                } else {
+                    left = middle + 1;
+                }
+            }
+            for (int j = i - 1; j >= left; j--) {
+                a[j + 1] = a[j];
+            }
+            if (left != i) {
+                a[left] = temp;
+            }
+        }
+    }
+
+
     public void heapSort(int[] a) {
         buildMaxHead(a);
         for (int i = a.length - 1; i >= 1; i--) {
@@ -160,6 +160,7 @@ public class SortTest {
             maxHeap(a, i, 0);
         }
     }
+
 
     private void buildMaxHead(int[] a) {
         if (a == null || a.length <= 1) {
