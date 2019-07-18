@@ -1,0 +1,333 @@
+package arithmetic.ly.com.arithmetic.linkedlist;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
+
+public class LinkedUtils {
+
+    public static class ListNode {
+        public int val;
+        public ListNode next;
+
+        ListNode(int x) {
+            val = x;
+        }
+
+        static void printLinkedList(ListNode head) {
+            while (head != null) {
+                System.out.print(head.val);
+                System.out.print(" ");
+                head = head.next;
+            }
+            System.out.println();
+        }
+
+        public void removeNode(ListNode previous, int data) {
+            //第一次previous=node、this=node.next
+            //第二次previous=node.next、this=node.next.next
+            if (data == (this.val)) {
+                previous.next = this.next;//空出当前节点
+            } else {//向后继续查询
+                if (this.next == null) {
+                    return;
+                }
+                this.next.removeNode(this, data);
+            }
+        }
+    }
+
+
+    public ListNode createLinkedList(List<Integer> data) {
+        if (data.isEmpty()) {
+            return null;
+        }
+        ListNode firstNode = new ListNode(data.get(0));
+
+        firstNode.next = createLinkedList(data.subList(1, data.size()));
+        return firstNode;
+
+    }
+
+    /**
+     * 反转链表，可以用栈,递归本质就是一个栈，理解递归
+     */
+    public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        Stack<Integer> stack = new Stack<Integer>();
+        while (listNode != null) {
+            stack.push(listNode.val);
+            listNode = listNode.next;
+        }
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        while (!stack.isEmpty()) {
+            list.add(stack.pop());
+        }
+        return list;
+    }
+
+
+    /**
+     * 递归反转链表(打印)
+     */
+    public ListNode reverseLinkedList(ListNode head) {
+        // size == 0 or size == 1
+        if (head == null || head.next == null) {
+            //第一次出来的是3,他的nextnull
+            return head;
+        }
+        //先一般再特殊，先假设可以反转，缩小问题规模程度1
+        //写完一般后再一行一行看可能会出现什么问题
+        //递归执行完后，递归上面的方法就不回执行了
+        //2-1-null
+        ListNode newHead = reverseLinkedList(head.next);
+        head.next.next = head;//2->1
+        head.next = null;//1->null
+//      head是2，将2.next（3）的next设为null，第一次出来3的next是2，2的next是null
+        return newHead;
+    }
+
+    /**
+     * 循环反转链表
+     * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
+     */
+    public ListNode reverseLoopLinkedList(ListNode head) {
+        ListNode prev = null; //前指针节点
+        ListNode curr = head; //当前指针节点
+        //每次循环，都将当前节点指向它前面的节点，然后当前节点和前节点后移
+        while (curr != null) {
+            ListNode nextTemp = curr.next; //临时节点，暂存当前节点的下一节点，用于后移
+            curr.next = prev; //将当前节点指向它前面的节点
+            prev = curr; //前指针后移
+            curr = nextTemp; //当前指针后移
+        }
+        return prev;
+        // nexttemp=2(3)        curr.next =null       prev=1(null)    curr= 2(3)
+        // nexttemp=3(null)     curr.next =1(null)    prev=2(1)       curr= 3(null)
+        // nexttemp=null(null)  curr.next =2(1)       prev=3(2)       curr= null(null)
+    }
+
+
+
+    /**
+     * 插入头节点
+     */
+    public ListNode addFirstNode(ListNode head, int data) {
+        ListNode node = new ListNode(data);
+        node.next = head;
+        return node;
+    }
+
+    /**
+     * 插入尾节点
+     */
+    public ListNode addLastNode(ListNode head, int data) {
+        ListNode node = new ListNode(data);
+        ListNode current = head;
+        //找到未节点 注意这里是当元素的下一个元素为空的时候这个节点即为未节点
+        while (current.next != null) {
+            current = current.next;
+        }
+        current.next = node;
+        return head;
+    }
+
+    /**
+     * 在任意位置插入节点 在index的后面插入
+     */
+    public ListNode add(ListNode head, int index, int data) {
+        int pos = 0;
+        ListNode node = new ListNode(data);
+        ListNode current = head;
+        ListNode previous = head;
+        while (pos != index) {
+            previous = current;
+            current = current.next;
+            pos++;
+        }
+        node.next = current;//最后current 1 null  previous 2  1
+        previous.next = node;// node.next设为index后面的节点，index.next设为node
+        pos = 0;
+        return head;
+    }
+
+
+    // 删除一个头结点
+    public ListNode deleteFirstNode(ListNode head) {
+        return head.next;
+    }
+
+    /**
+     * 递归删除链表节点
+     */
+    public ListNode deleteByData(ListNode head, int data) {
+        if ((int) head.val == data) {
+            head = head.next;
+        } else {//此时根元素已经判断过了，从第二个元素开始，head就是上一个node，传进去
+            head.next.removeNode(head, data);
+        }
+        return head;
+    }
+
+    /**
+     * 循环删除链表节点
+     */
+    public ListNode deleteByData2(ListNode head, int value) {
+        while (head != null && head.val == value) {
+            head = head.next;
+        }
+        if (head == null) {
+            return null;
+        }
+        ListNode prev = head;
+        while (prev.next != null) {
+            if (prev.next.val == value) {
+                prev.next = prev.next.next;
+            } else {
+                prev = prev.next;
+            }
+        }
+        return head;
+    }
+
+    /**
+     * 根据位置查找节点信息
+     */
+    public int findByPos(ListNode head, int index) {
+        int pos = 0;
+        ListNode current = head;
+        while (pos != index) {
+            if (current.next == null) {
+                return -1;
+            }
+            current = current.next;
+            pos++;
+        }
+        return current.val;
+    }
+
+    /**
+     * 根据数据查找节点信息
+     */
+    public int findByData(ListNode head, int data) {
+        int pos = 0;
+        ListNode current = head;
+        while (current.val != data) {
+            if (current.val == 0) {//todo
+                return -1;
+            }
+            current = current.next;
+            pos++;
+        }
+        return pos;
+    }
+
+    //============================leetcode============================
+
+    /**
+     * 删除链表中的节点
+     */
+    public void deleteNode(ListNode node) {
+        node.val = node.next.val;
+        node.next = node.next.next;
+    }
+
+    /**
+     * 删除链表的倒数第N个节点
+     * 给定一个链表: 1->2->3->4->5, 和 n = 2.
+     * 当删除了倒数第二个节点后，链表变为 1->2->3->5.
+     * 快指针先移n个节点，接下来,快慢指针一起移动,两指针之间一直保持n个节点,当快指针到链表底了,操作慢指针,删除要删除的元素!
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode preNode = head;
+        ListNode curNode = head;
+
+        for (int i = 0; i < n; i++) {
+            curNode = curNode.next;
+        }
+        if (curNode == null) {
+            return preNode.next;
+        }
+        while (curNode.next != null) {
+            preNode = preNode.next;
+            curNode = curNode.next;
+        }
+        preNode.next = preNode.next.next;//preNode.next就是要删的
+
+        return head;
+    }
+
+
+    /**
+     * 环形链表
+     * 我们遍历所有结点并在哈希表中存储每个结点的引用（或内存地址）。如果当前结点为空结点 null（即已检测到链表尾部的下一个结点），
+     * 那么我们已经遍历完整个链表，并且该链表不是环形链表。如果当前结点的引用已经存在于哈希表中，那么返回 true（即该链表为环形链表）。
+     */
+    public boolean hasCycle(ListNode head) {
+        Set<ListNode> nodesSeen = new HashSet<>();
+        while (head != null) {
+            if (nodesSeen.contains(head)) {
+                return true;
+            } else {
+                nodesSeen.add(head);
+            }
+            head = head.next;
+        }
+        return false;
+    }
+
+    /**
+     * 慢指针每次移动一步，而快指针每次移动两步。
+     * 如果列表中不存在环，最终快指针将会最先到达尾部，此时我们可以返回 false。
+     * 现在考虑一个环形链表，把慢指针和快指针想象成两个在环形赛道上跑步的运动员（分别称之为慢跑者与快跑者）。而快跑者最终一定会追上慢跑者。
+     * 这是为什么呢？考虑下面这种情况（记作情况 A）- 假如快跑者只落后慢跑者一步，在下一次迭代中，它们就会分别跑了一步或两步并相遇。
+     * 其他情况又会怎样呢？例如，我们没有考虑快跑者在慢跑者之后两步或三步的情况。但其实不难想到，因为在下一次或者下下次迭代后，
+     * 又会变成上面提到的情况 A。
+     */
+    public boolean hasCycle2(ListNode head) {
+        if (head == null || head.next == null) {
+            return false;
+        }
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while (slow != fast) {
+            if (fast == null || fast.next == null) {
+                return false;
+            }
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return true;
+    }
+
+
+    /**
+     * 将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+     * 输入：1->2->4, 1->3->4
+     * 输出：1->1->2->3->4->4
+     */
+//    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+//
+//    }
+    public static void main(String[] args) {
+        LinkedUtils creator = new LinkedUtils();
+
+//        ListNode.printLinkedList(creator.reverseLinkedList(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+
+        ListNode.printLinkedList(creator.reverseLinkedList(
+                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+
+
+//        ListNode.printLinkedList(creator.reverseLoopLinkedList(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+
+//        ListNode.printLinkedList(creator.removeNthFromEnd(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
+
+    }
+
+
+}

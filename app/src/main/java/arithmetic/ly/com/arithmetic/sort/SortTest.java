@@ -7,6 +7,12 @@ package arithmetic.ly.com.arithmetic.sort;
 public class SortTest {
 
     public int binarySearch(int[] arr, int k) {
+        if(arr.length==0){
+            return -1;
+        }
+        if(arr[0]==k){
+            return 0;
+        }
         int a = 0;
         int b = arr.length - 1;
         while (a < b) {

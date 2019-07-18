@@ -1,6 +1,6 @@
 package arithmetic.ly.com.arithmetic.other;
 
-import java.util.ArrayList;
+import java.util.Stack;
 
 public class ToOffer {
 
@@ -26,30 +26,30 @@ public class ToOffer {
         return res.reverse().toString();
     }
 
+    /*
+     * 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
+     * */
+     class TwoStacksAsQueue {
+        Stack<Integer> stack1 = new Stack<Integer>();
+        Stack<Integer> stack2 = new Stack<Integer>();
 
-    /**
-     * 从尾到头打印链表
-     * 一种方法是利用栈来实现；
-     * 另外一种方法是利用三个指针把链表反转，关键是 r 指针保存断开的节点。
-     */
-    public ArrayList<Integer> printListFromTailToHead(LeetCode.ListNode listNode) {
-        if (listNode == null)
-            return new ArrayList<Integer>();
-        LeetCode.ListNode head = listNode;//倒序后存在这了
-        LeetCode.ListNode cur = listNode.next;
-        while (cur != null) {
-            LeetCode.ListNode temp = cur.next;
-            cur.next = head;
-            head = cur;
-            cur = temp;
+        public void push(int node) {
+            stack1.push(node);
         }
-        //此时listNode的next还指向第二个node，所以要让listNode.next=null,防止循环
-        listNode.next = null;
-        ArrayList<Integer> res = new ArrayList<Integer>();
-        while (head != null) {
-            res.add(head.val);
-            head = head.next;
+
+        public int pop() {
+            if (stack1.isEmpty() && stack2.isEmpty()) {
+                throw new RuntimeException("The queue is empty.");
+            }
+            if (stack2.isEmpty()) {
+                while (!stack1.isEmpty()) {
+                    stack2.push(stack1.pop());
+                }
+            }
+            return stack2.pop();
         }
-        return res;
     }
+
+
+
 }

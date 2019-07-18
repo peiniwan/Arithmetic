@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class LeetCode {
@@ -24,7 +25,12 @@ public class LeetCode {
 //        leetCode.firstUniqChar2("loveleetcode");
 //        leetCode.isPalindrome("A man, a plan, a canal: Panama");
 //        leetCode.strStr("hello", "ll");
-        leetCode.longestCommonPrefix(new String[]{"leets", "leetcode", "leet", "leets"});
+//        leetCode.longestCommonPrefix(new String[]{"leets", "leetcode", "leet", "leets"});
+//        leetCode.climbStairs(5);
+//        leetCode.climbStairs2(5);
+//        leetCode.getRandomArray(new String[]{"a","b","c","d","e","f","g","h","t"},5);
+        leetCode.getRandomArray2(new int[]{1,2,3,4,5,6,7,8,9,0},5);
+
 
     }
 
@@ -328,8 +334,7 @@ public class LeetCode {
             }
             map.put(c, value);
         }
-        int n = s.length();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < s.length(); i++) {
             if (map.get(s.charAt(i)) == 1) {
                 System.out.println(i);
                 return i;
@@ -409,43 +414,102 @@ public class LeetCode {
         return prefix;
     }
 
-
-   //============================链表============================
-    class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
+    /**
+     * 从数组和List中随机抽取若干不重复的元素.
+     * 这里的重复是指索引位置重复
+     * 从长度为m的int数组中随机取出n个元素，每次取的元素都是之前未取过的，
+     *  改成int【】就行
+     */
+    public  String[] getRandomArray(String[] paramArray, int count) {
+        if (paramArray.length < count) {
+            return paramArray;
         }
+        String[] newArray = new String[count];
+        Random random = new Random();
+        int temp = 0;//接收产生的随机数
+        List<Integer> list = new ArrayList<Integer>();
+        for (int i = 1; i <= count; i++) {
+            temp = random.nextInt(paramArray.length);//将产生的随机数作为被抽数组的索引
+            if (!(list.contains(temp))) {
+                newArray[i - 1] = paramArray[temp];
+                list.add(temp);
+            } else {
+                i--;//重新设置
+            }
+        }
+        for (String s : newArray) {
+            System.out.println("String:" + s);
+        }
+        return newArray;
     }
 
+    public  int [] getRandomArray2(int[] paramArray, int count) {
+        if (paramArray.length < count) {
+            return paramArray;
+        }
+        int[] newArray = new int[count];
+        Random random = new Random();
+        int temp = 0;//接收产生的随机数
+        List<Integer> list = new ArrayList<Integer>();
+        for (int i = 1; i <= count; i++) {
+            temp = random.nextInt(paramArray.length);//将产生的随机数作为被抽数组的索引
+            if (!(list.contains(temp))) {
+                newArray[i - 1] = paramArray[temp];
+                list.add(temp);
+            } else {
+                i--;//重新设置
+            }
+        }
+        for (int s : newArray) {
+            System.out.println("String:" + s);
+        }
+        return newArray;
+    }
 
-    public void deleteNode(ListNode node) {
-        node.val = node.next.val;
-        node.next = node.next.next;
+    //============================动态规划============================
+
+    /**
+     * 爬楼梯
+     * 暴力解法
+     * 2^n
+     */
+    public int climbStairs(int n) {
+        int i = climb_Stairs(0, n);
+        System.out.println("I:" + i);
+        return i;
+    }
+
+    public int climb_Stairs(int i, int n) {
+        if (i > n) {
+            return 0;
+        }
+        if (i == n) {
+            return 1;
+        }
+        return climb_Stairs(i + 1, n) + climb_Stairs(i + 2, n);
     }
 
     /**
-     * 删除链表的倒数第N个节点
+     * 动态规划算法通常基于一个递推公式及一个或多个初始状态。
+     * 当前子问题的解将由上一次子问题的解推出。
+     * https://segmentfault.com/a/1190000015944750
+     * 0（0）  1（1）  2（2）  3（3） 4（5） 5（8）
+     * 时间复杂度：O(n)，单循环到 n
+     * 空间复杂度：O(n)，dp 数组用了 n的空间。
      */
-    public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode preNode = head;
-        ListNode curNode = head;
+    public int climbStairs2(int n) {
+        if (n == 1) {
+            return 1;
+        }
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        dp[2] = 2;
+        for (int i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        System.out.println("dp[n]:" + dp[n]);
 
-        for (int i = 0; i < n; i++) {
-            curNode = curNode.next;
-        }
-        if (curNode == null) {
-            return preNode.next;
-        }
-        while (curNode.next != null) {
-            preNode = preNode.next;
-            curNode = curNode.next;
-        }
-        preNode.next = preNode.next.next;
-
-        return head;
+        return dp[n];
     }
 
 
