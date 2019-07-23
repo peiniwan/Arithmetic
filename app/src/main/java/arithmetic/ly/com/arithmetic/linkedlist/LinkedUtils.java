@@ -72,7 +72,7 @@ public class LinkedUtils {
         ListNode newHead = reverseLinkedList(head.next);
         head.next.next = head;//2->1
         head.next = null;//1->null
-//      head是2，将2.next（3）的next设为null，第一次出来3的next是2，2的next是null
+//      head是2，第一次出来3的next是2，2的next是null
         return newHead;
     }
 
@@ -273,6 +273,56 @@ public class LinkedUtils {
             fast = fast.next.next;
         }
         return true;
+    }
+
+    /**
+     * O(1)时间删除链表节点
+     */
+    public ListNode findKthToTail(ListNode head, int k) {
+        if (head == null) return head;
+        ListNode current = head;  //作为遍历链表的游标
+        int num = 0;  //用于计数链表最后一位的索引，即链表项数量减1
+        while (current != null) {
+            current = current.next;
+            num++;
+        }
+        if (num < k) return null;  //如果倒数第k个节点的索引在整个链表之外，返回空
+        ListNode current2 = head;  //前面的current已经指向链表尾部，再用一个新的游标遍历链表
+        for (int i = 0; i < num - k; i++) {  //遍历num-k-1次后，到达倒数第k个节点
+            current2 = current2.next;
+        }
+        return current2;  //现在第二个游标指向倒数第k个节点，直接返回
+    }
+
+
+    /*
+     * 输入一个链表，输出该链表中倒数第k个结点。
+     * 2个指针，保持k-1,Node1到了尾，Node2就是倒数K
+     * */
+    public ListNode findKthToTail2(ListNode head, int k) {
+        if (head == null)
+            return null;
+        if (k == 0) {
+            System.out.println("k应该从1开始");
+            return null;
+        }
+        ListNode Node1 = head;
+        ListNode Node2 = null;
+        for (int i = 0; i < k - 1; i++) {
+            if (Node1.next == null) {
+                System.out.println("k不应该大于链表长度");
+                return null;
+            }
+            Node1 = Node1.next;
+        }
+        Node2 = head;
+
+        while (Node1.next != null) {
+            Node1 = Node1.next;
+            Node2 = Node2.next;
+        }
+        return Node2.next;
+
     }
 
 
