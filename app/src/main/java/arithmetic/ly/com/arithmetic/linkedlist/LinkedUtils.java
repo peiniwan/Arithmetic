@@ -25,19 +25,6 @@ public class LinkedUtils {
             }
             System.out.println();
         }
-
-        public void removeNode(ListNode previous, int data) {
-            //第一次previous=node、this=node.next
-            //第二次previous=node.next、this=node.next.next
-            if (data == (this.val)) {
-                previous.next = this.next;//空出当前节点
-            } else {//向后继续查询
-                if (this.next == null) {
-                    return;
-                }
-                this.next.removeNode(this, data);
-            }
-        }
     }
 
 
@@ -110,7 +97,6 @@ public class LinkedUtils {
     }
 
 
-
     /**
      * 插入头节点
      */
@@ -160,26 +146,48 @@ public class LinkedUtils {
     }
 
     /**
-     * 递归删除链表节点
+     * 删除链表中的节点
      */
-    public ListNode deleteByData(ListNode head, int data) {
-        if ((int) head.val == data) {
-            head = head.next;
-        } else {//此时根元素已经判断过了，从第二个元素开始，head就是上一个node，传进去
-            head.next.removeNode(head, data);
+    public void deleteNode(ListNode node) {
+        node.val = node.next.val;
+        node.next = node.next.next;
+    }
+
+    /**
+     * 删除链表的倒数第N个节点
+     * 给定一个链表: 1->2->3->4->5, 和 n = 2.
+     * 当删除了倒数第二个节点后，链表变为 1->2->3->5.
+     * 快指针先移n个节点，接下来,快慢指针一起移动,两指针之间一直保持n个节点,当快指针到链表底了,操作慢指针,删除要删除的元素!
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode preNode = head;
+        ListNode curNode = head;
+
+        for (int i = 0; i < n; i++) {
+            curNode = curNode.next;
         }
+        if (curNode == null) {
+            return preNode.next;
+        }
+        while (curNode.next != null) {
+            preNode = preNode.next;
+            curNode = curNode.next;
+        }
+        preNode.next = preNode.next.next;//preNode.next就是要删的
+
         return head;
     }
+
 
     /**
      * 循环删除链表节点
      */
     public ListNode deleteByData2(ListNode head, int value) {
-        while (head != null && head.val == value) {
-            head = head.next;
-        }
         if (head == null) {
             return null;
+        }
+        while (head != null && head.val == value) {
+            head = head.next;
         }
         ListNode prev = head;
         while (prev.next != null) {
@@ -222,41 +230,6 @@ public class LinkedUtils {
             pos++;
         }
         return pos;
-    }
-
-    //============================leetcode============================
-
-    /**
-     * 删除链表中的节点
-     */
-    public void deleteNode(ListNode node) {
-        node.val = node.next.val;
-        node.next = node.next.next;
-    }
-
-    /**
-     * 删除链表的倒数第N个节点
-     * 给定一个链表: 1->2->3->4->5, 和 n = 2.
-     * 当删除了倒数第二个节点后，链表变为 1->2->3->5.
-     * 快指针先移n个节点，接下来,快慢指针一起移动,两指针之间一直保持n个节点,当快指针到链表底了,操作慢指针,删除要删除的元素!
-     */
-    public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode preNode = head;
-        ListNode curNode = head;
-
-        for (int i = 0; i < n; i++) {
-            curNode = curNode.next;
-        }
-        if (curNode == null) {
-            return preNode.next;
-        }
-        while (curNode.next != null) {
-            preNode = preNode.next;
-            curNode = curNode.next;
-        }
-        preNode.next = preNode.next.next;//preNode.next就是要删的
-
-        return head;
     }
 
 

@@ -129,7 +129,6 @@ public class TreeCreate {
     public static void main(String[] args) {
 
         TreeCreate treeCreate = new TreeCreate();
-        TreeTraverse treeTraverse = new TreeTraverse();
 
 //        ArrayList<String> data = new ArrayList<>();
 //        String[] dataArray = new String[]{"A", "B", "D", "#", "#", "E", "#", "#", "C", "#", "F", "#", "#"};
@@ -145,9 +144,6 @@ public class TreeCreate {
         for (int i : intarry) {
             treeCreate.put(i);
         }
-        //查找二叉树用中序即可从小到大
-        treeTraverse.inOrder(treeCreate.root);
-        treeTraverse.inOrder(treeTraverse.mirrorTreeNode(treeCreate.root));
 
 //        System.out.println("=====");
 //        System.out.println("Creating tree from preOrder and inOrder");
