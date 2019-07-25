@@ -81,16 +81,15 @@ public class LinkedUtils {
      * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
      */
     public ListNode reverseLoopLinkedList(ListNode head) {
-        ListNode prev = null; //前指针节点
-        ListNode curr = head; //当前指针节点
-        //每次循环，都将当前节点指向它前面的节点，然后当前节点和前节点后移
-        while (curr != null) {
-            ListNode nextTemp = curr.next; //临时节点，暂存当前节点的下一节点，用于后移
-            curr.next = prev; //将当前节点指向它前面的节点
-            prev = curr; //前指针后移
-            curr = nextTemp; //当前指针后移
+        ListNode first = head;  //初始化首节点，从原链表的首节点开始反转操作
+        ListNode reverse = null;  //用一个新的空链表存放反转后的链表
+        while (first != null) {  //当原链表的节点没有被剥离完时不断循环
+            ListNode second = first.next;  //初始化原链表首节点的下一个节点
+            first.next = reverse;  //原链表首节点的下一个节点链接到新链表的首节点处
+            reverse = first;  //下一跳节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
+            first = second;  //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
         }
-        return prev;
+        return reverse;  //返回插入到新链表的首节点，即原链表的最后一个节点
         // nexttemp=2(3)        curr.next =null       prev=1(null)    curr= 2(3)
         // nexttemp=3(null)     curr.next =1(null)    prev=2(1)       curr= 3(null)
         // nexttemp=null(null)  curr.next =2(1)       prev=3(2)       curr= null(null)
@@ -296,7 +295,7 @@ public class LinkedUtils {
 
 
     /*
-     * 输入一个链表，输出该链表中倒数第k个结点。
+     * 14.输入一个链表，输出该链表中倒数第k个结点。
      * 2个指针，保持k-1,Node1到了尾，Node2就是倒数K
      * */
     public ListNode findKthToTail2(ListNode head, int k) {
@@ -331,9 +330,19 @@ public class LinkedUtils {
      * 输入：1->2->4, 1->3->4
      * 输出：1->1->2->3->4->4
      */
-//    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-//
-//    }
+    public ListNode Merge(ListNode list1, ListNode list2) {
+        if (list1 == null) return list2;//注意鲁棒性
+        if (list2 == null) return list1;
+        if (list1.val <= list2.val) {  //利用归并排序的递归思想，将两个链表的较小节点链接起来
+            list1.next = Merge(list1.next, list2);  //如果list1当前节点小于list2当前节点，链表放入较小节点并将索引往后一个节点，与list2的原较大节点继续比较
+            return list1;
+        } else {
+            list2.next = Merge(list2.next, list1);  //如果list2当前节点小于list1当前节点，链表放入较小节点并将索引往后一个节点，与list1的原较大节点继续比较
+            return list2;
+        }
+    }
+
+
     public static void main(String[] args) {
         LinkedUtils creator = new LinkedUtils();
 
