@@ -39,6 +39,7 @@ public class LinkedUtils {
 
     }
 
+
     /**
      * 反转链表，可以用栈,递归本质就是一个栈，理解递归
      */
@@ -49,6 +50,7 @@ public class LinkedUtils {
             listNode = listNode.next;
         }
         ArrayList<Integer> list = new ArrayList<Integer>();
+
         while (!stack.isEmpty()) {
             list.add(stack.pop());
         }
@@ -79,6 +81,7 @@ public class LinkedUtils {
     /**
      * 循环反转链表
      * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
+     * 不定义first也能反转
      */
     public ListNode reverseLoopLinkedList(ListNode head) {
         ListNode first = head;  //初始化首节点，从原链表的首节点开始反转操作
@@ -90,9 +93,9 @@ public class LinkedUtils {
             first = second;  //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
         }
         return reverse;  //返回插入到新链表的首节点，即原链表的最后一个节点
-        // nexttemp=2(3)        curr.next =null       prev=1(null)    curr= 2(3)
-        // nexttemp=3(null)     curr.next =1(null)    prev=2(1)       curr= 3(null)
-        // nexttemp=null(null)  curr.next =2(1)       prev=3(2)       curr= null(null)
+        //出来后 first=second=2(3)           reverse=1(null)
+        //      first=second=3(null)     reverse =2(1)
+        //      first=null(null)        reverse =3(2)1
     }
 
 
@@ -159,21 +162,20 @@ public class LinkedUtils {
      * 快指针先移n个节点，接下来,快慢指针一起移动,两指针之间一直保持n个节点,当快指针到链表底了,操作慢指针,删除要删除的元素!
      */
     public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode preNode = head;
-        ListNode curNode = head;
+        ListNode slowNode = head;
+        ListNode fastNode = head;
 
         for (int i = 0; i < n; i++) {
-            curNode = curNode.next;
+            fastNode = fastNode.next;
         }
-        if (curNode == null) {
-            return preNode.next;
+        if (fastNode == null) {
+            return slowNode.next;
         }
-        while (curNode.next != null) {
-            preNode = preNode.next;
-            curNode = curNode.next;
+        while (fastNode.next != null) {
+            slowNode = slowNode.next;
+            fastNode = fastNode.next;
         }
-        preNode.next = preNode.next.next;//preNode.next就是要删的
-
+        slowNode.next = slowNode.next.next;//slowNode.next就是要删的
         return head;
     }
 
@@ -181,7 +183,7 @@ public class LinkedUtils {
     /**
      * 循环删除链表节点
      */
-    public ListNode deleteByData2(ListNode head, int value) {
+    public ListNode removeNode(ListNode head, int value) {
         if (head == null) {
             return null;
         }
@@ -349,15 +351,14 @@ public class LinkedUtils {
 //        ListNode.printLinkedList(creator.reverseLinkedList(
 //                creator.createLinkedList(Arrays.asList(1, 2, 3))));
 
-        ListNode.printLinkedList(creator.reverseLinkedList(
-                creator.createLinkedList(Arrays.asList(1, 2, 3))));
-
-
 //        ListNode.printLinkedList(creator.reverseLoopLinkedList(
 //                creator.createLinkedList(Arrays.asList(1, 2, 3))));
 
 //        ListNode.printLinkedList(creator.removeNthFromEnd(
 //                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
+
+        ListNode.printLinkedList(creator.removeNode(
+                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
 
     }
 

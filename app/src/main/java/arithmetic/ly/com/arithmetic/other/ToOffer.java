@@ -29,9 +29,9 @@ public class ToOffer {
         return res.reverse().toString();
     }
 
-    /*
+    /**
      * 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
-     * */
+     */
     class TwoStacksAsQueue {
         Stack<Integer> stack1 = new Stack<Integer>();
         Stack<Integer> stack2 = new Stack<Integer>();
@@ -100,11 +100,10 @@ public class ToOffer {
     }
 
 
-    /*
+    /**
      * 13.输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，
      * 所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
-     *
-     * */
+     */
     private static void mysort(int[] array) {
         if (array == null) {
             return;
@@ -171,11 +170,11 @@ public class ToOffer {
     }
 
 
-    /*
+    /**
      * 28.输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
      * 输入描述：输入一个字符串,长度不超过9(可能有字符重复),字符只包括大小写字母。
      * 原理图：https://uploadfiles.nowcoder.net/images/20170705/7578108_1499250116235_8F032F665EBB2978C26C4051D5B89E90
-     * */
+     */
     public ArrayList<String> permutation(String str) {
         ArrayList<String> result = new ArrayList<String>();  //存放字母按各种排列情况的字符串
         if (str != null && str.length() > 0) {
@@ -245,9 +244,6 @@ public class ToOffer {
         }
         return list;
     }
-
-
-
 
 
     //======================================= 树 =======================================
