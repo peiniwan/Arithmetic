@@ -3,6 +3,7 @@ package arithmetic.ly.com.arithmetic.other;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Stack;
 
 public class ToOffer {
@@ -360,6 +361,54 @@ public class ToOffer {
         //递归检查根节点的左子树根节点和右子树根节点下面是否也符合左子树都小于根节点，右子树都大于根节点的特性，如果全都满足则整个数组都是后序遍历二叉树
         return isPostorderTraversal(a, 0, i - 1) && isPostorderTraversal(a, i, end - 1);
     }
+
+    /*
+     * 34.丑数
+     * 包含的质数因子只有2、3和5的数被称作丑数（Ugly Number）。
+     * 例如6、8都是丑数，但14不是，因为它包含质因子7。习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。
+     * */
+    public int getUglyNumber(int index) {
+        if (index <= 0) return 0;
+        ArrayList<Integer> list = new ArrayList<Integer>();  //用一个列表存放丑数
+        int i2 = 0, i3 = 0, i5 = 0;  //一开始丑数为1，因此后面产生的丑数为1*2，1*3，1*5，这里分别存放乘以2的最小的数、乘以3的最小的数、乘以5的最小的数的索引
+        list.add(1);
+        while (list.size() < index) {
+            int m2 = list.get(i2) * 2;
+            int m3 = list.get(i3) * 3;
+            int m5 = list.get(i5) * 5;
+            //比较三个丑数中的最小值，例如第一轮中1*2，1*3和1*5中2最小，则接下来比较2*2，1*3和1*5最小为3，第三轮比较2*2，3*2和1*5，所以先比较后面再比较前面
+            int min = Math.min(m2, Math.min(m3, m5));
+            list.add(min);  //将比较出的最小丑数放入列表
+            if (min == m2)
+                i2++;  //如果上一轮比较中的最小丑数来源于三个比较索引中的某一个，则对应索引加一，对应下一个索引的丑数乘2，乘3或乘5后加入下一轮比较
+            if (min == m3) i3++;
+            if (min == m5) i5++;
+        }
+        return list.get(list.size() - 1);  //返回列表中最后一个丑数即为从小到大的第N个丑数
+    }
+
+
+    /*
+     * 35.第一次只出现一次的字符
+     * 在一个字符串(0<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,并返回它的位置, 如果没有则返回 -1（需要区分大小写）。
+     * */
+    public int firstNotRepeatingChar(String str) {
+        if (str == null || str.length() == 0) return -1;
+        HashMap<Character, Integer> map = new HashMap<Character, Integer>();  //利用一个HashMap散列表存储每个字符出现的次数，字符为键次数为值
+        for (int i = 0; i < str.length(); i++) {  //遍历字符串，如果散列表中没有该字符的键就新建一个该字符的键，将值即出现次数设为1，若有说明该字符出现过，将值加一更新出现次数
+            if (map.containsKey(str.charAt(i))) {
+                int count = map.get(str.charAt(i));
+                map.put(str.charAt(i), ++count);  //++在前是因为先将出现次数加1，再更新该字符的出现次数
+            } else {
+                map.put(str.charAt(i), 1);
+            }
+        }
+        for (int i = 0; i < str.length(); i++) {  //遍历字符串，对每一个当前字符都去查找散列表对应键的值是不是1，找到就返回该字符在字符串中的位置
+            if (map.get(str.charAt(i)) == 1) return i;
+        }
+        return -1;  //若没有找到只出现一次的字符，则返回-1
+    }
+
 
 
 }
