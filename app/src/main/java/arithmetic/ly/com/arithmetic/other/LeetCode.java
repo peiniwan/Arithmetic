@@ -19,6 +19,8 @@ public class LeetCode {
 //        leetCode.twoSum(new int[]{2, 11, 7, 15}, 9);
 //        leetCode.removeDuplicates(new int[]{0, 0, 1, 1, 1, 2, 2, 3, 3, 4});
 //        leetCode.rotate(new int[]{1, 2, 3, 4, 5, 6, 7}, 3);//5 6 7 1 2 3 4
+//        leetCode.rotate2(new int[]{1, 2, 3, 4, 5, 6, 7}, 3);//5 6 7 1 2 3 4
+
 //        leetCode.singleNumber(new int[]{2, 2, 1});
 //        leetCode.moveZeroes(new int[]{0, 1, 0, 3, 12});
 //        leetCode.reverseInt(123);
@@ -29,7 +31,7 @@ public class LeetCode {
 //        leetCode.climbStairs(5);
 //        leetCode.climbStairs2(5);
 //        leetCode.getRandomArray(new String[]{"a","b","c","d","e","f","g","h","t"},5);
-        leetCode.getRandomArray2(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0}, 5);
+//        leetCode.getRandomArray2(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0}, 5);
 
 
     }
@@ -87,6 +89,7 @@ public class LeetCode {
      * 翻转 O(1)
      */
     public void rotate(int[] nums, int k) {
+        //-100 -1  99 3
         // 旋转即是元素顺序轮转的意思
         if (nums.length < 2 || k < 1 || k % nums.length == 0) {
             return;
@@ -95,7 +98,7 @@ public class LeetCode {
         if (k > nums.length) {
             k = k % nums.length;
         }
-        // 对前 n - k 个元素 [1,2,3,4] 进行逆转后得到 [4,3,2,1]
+        // 对前 n - k(7-3) 个元素 [1,2,3,4] 进行逆转后得到 [4,3,2,1]
         reverse(nums, 0, nums.length - 1 - k);
         // 对后k个元素 [5,6,7] 进行逆转后得到 [7,6,5]
         reverse(nums, nums.length - k, nums.length - 1);

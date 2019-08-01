@@ -98,6 +98,7 @@ public class LinkedUtils {
         //      first=null(null)        reverse =3(2)1
     }
 
+    //==================== 增删改查 ==================
 
     /**
      * 插入头节点
@@ -142,7 +143,9 @@ public class LinkedUtils {
     }
 
 
-    // 删除一个头结点
+    /**
+     * 删除一个头结点
+     */
     public ListNode deleteFirstNode(ListNode head) {
         return head.next;
     }
@@ -155,33 +158,9 @@ public class LinkedUtils {
         node.next = node.next.next;
     }
 
-    /**
-     * 删除链表的倒数第N个节点
-     * 给定一个链表: 1->2->3->4->5, 和 n = 2.
-     * 当删除了倒数第二个节点后，链表变为 1->2->3->5.
-     * 快指针先移n个节点，接下来,快慢指针一起移动,两指针之间一直保持n个节点,当快指针到链表底了,操作慢指针,删除要删除的元素!
-     */
-    public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode slowNode = head;
-        ListNode fastNode = head;
-
-        for (int i = 0; i < n; i++) {
-            fastNode = fastNode.next;
-        }
-        if (fastNode == null) {
-            return slowNode.next;
-        }
-        while (fastNode.next != null) {
-            slowNode = slowNode.next;
-            fastNode = fastNode.next;
-        }
-        slowNode.next = slowNode.next.next;//slowNode.next就是要删的
-        return head;
-    }
-
 
     /**
-     * 循环删除链表节点
+     * 循环删除链表节点值
      */
     public ListNode removeNode(ListNode head, int value) {
         if (head == null) {
@@ -198,6 +177,57 @@ public class LinkedUtils {
                 prev = prev.next;
             }
         }
+        return head;
+    }
+
+    /**
+     * O(1)时间删除链表第k个节点
+     */
+    public ListNode findKthToTail(ListNode head, int k) {
+        if (head == null) return head;
+        ListNode current = head;  //作为遍历链表的游标
+        int num = 0;  //用于计数链表最后一位的索引，即链表项数量减1
+        while (current != null) {
+            current = current.next;
+            num++;
+        }
+        if (num < k) return null;  //如果倒数第k个节点的索引在整个链表之外，返回空
+        ListNode current2 = head;  //前面的current已经指向链表尾部，再用一个新的游标遍历链表
+        for (int i = 0; i < num - k; i++) {  //遍历num-k-1次后，到达倒数第k个节点
+            current2 = current2.next;
+        }
+        return current2;  //现在第二个游标指向倒数第k个节点，直接返回
+    }
+
+    /**
+     * 删除(输出)链表的倒数第k个节点
+     * 给定一个链表: 1->2->3->4->5, 和 n = 2.
+     * 当删除了倒数第二个节点后，链表变为 1->2->3->5.
+     * 快指针先移n个节点，接下来,快慢指针一起移动,两指针之间一直保持n个节点,当快指针到链表底了,操作慢指针,删除要删除的元素!
+     */
+    public ListNode removeNthFromEnd(ListNode head, int k) {
+        if (head == null)
+            return null;
+        if (k == 0) {
+            System.out.println("k应该从1开始");
+            return null;
+        }
+        ListNode slowNode = head;
+        ListNode fastNode = head;
+
+        for (int i = 0; i < k; i++) {
+            if (fastNode.next == null) {
+                System.out.println("k不应该大于链表长度");
+                return null;
+            }
+            fastNode = fastNode.next;
+        }
+        while (fastNode.next != null) {
+            slowNode = slowNode.next;
+            fastNode = fastNode.next;
+        }
+        slowNode.next = slowNode.next.next;//slowNode.next就是要删的
+//        return  slowNode.next;
         return head;
     }
 
@@ -276,56 +306,6 @@ public class LinkedUtils {
         return true;
     }
 
-    /**
-     * O(1)时间删除链表节点
-     */
-    public ListNode findKthToTail(ListNode head, int k) {
-        if (head == null) return head;
-        ListNode current = head;  //作为遍历链表的游标
-        int num = 0;  //用于计数链表最后一位的索引，即链表项数量减1
-        while (current != null) {
-            current = current.next;
-            num++;
-        }
-        if (num < k) return null;  //如果倒数第k个节点的索引在整个链表之外，返回空
-        ListNode current2 = head;  //前面的current已经指向链表尾部，再用一个新的游标遍历链表
-        for (int i = 0; i < num - k; i++) {  //遍历num-k-1次后，到达倒数第k个节点
-            current2 = current2.next;
-        }
-        return current2;  //现在第二个游标指向倒数第k个节点，直接返回
-    }
-
-
-    /*
-     * 14.输入一个链表，输出该链表中倒数第k个结点。
-     * 2个指针，保持k-1,Node1到了尾，Node2就是倒数K
-     * */
-    public ListNode findKthToTail2(ListNode head, int k) {
-        if (head == null)
-            return null;
-        if (k == 0) {
-            System.out.println("k应该从1开始");
-            return null;
-        }
-        ListNode Node1 = head;
-        ListNode Node2 = null;
-        for (int i = 0; i < k - 1; i++) {
-            if (Node1.next == null) {
-                System.out.println("k不应该大于链表长度");
-                return null;
-            }
-            Node1 = Node1.next;
-        }
-        Node2 = head;
-
-        while (Node1.next != null) {
-            Node1 = Node1.next;
-            Node2 = Node2.next;
-        }
-        return Node2.next;
-
-    }
-
 
     /**
      * 将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
@@ -365,6 +345,7 @@ public class LinkedUtils {
     }
 
     /**
+     * 37.两个链表的第一个公共节点(2)
      * 长链表先走n步，第一个相同的就是公共节点
      * 时间复杂度（m+n）空间复杂度（不需要栈了，小）
      */
