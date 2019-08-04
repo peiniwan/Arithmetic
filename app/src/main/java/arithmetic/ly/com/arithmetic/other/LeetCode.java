@@ -191,6 +191,31 @@ public class LeetCode {
 
 
     /**
+     * 40.一个整型数组里除了两个数字之外，其他的数字都出现了偶数次。请写程序找出这两个只出现一次的数字。
+     * num1,num2分别为长度为1的数组。传出参数
+     * 将num1[0],num2[0]设置为返回结果
+     * 和下面数组类似
+     */
+    public void findNumsAppearOnce(int[] array, int num1[], int num2[]) {
+        HashMap<Integer, Integer> hashMap = new HashMap<Integer, Integer>();
+        for (int i = 0; i < array.length; i++) {
+            if (hashMap.containsKey(array[i])) {
+                int count = hashMap.get(array[i]);
+                hashMap.put(array[i], ++count);
+            } else {
+                hashMap.put(array[i], 1);
+            }
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (hashMap.get(array[i]) == 1) {
+                if (num1[0] == 0) num1[0] = array[i];
+                else num2[0] = array[i];
+            }
+        }
+    }
+
+
+    /**
      * 俩个数组交集
      */
     public int[] intersect1(int[] nums1, int[] nums2) {
@@ -257,6 +282,25 @@ public class LeetCode {
             nums[i] = 0;
     }
 
+    /**
+     * 整数反转
+     */
+    public int reverseInt(int x) {
+        if (x >= Integer.MAX_VALUE || x <= Integer.MIN_VALUE) {
+            return 0;
+        }
+        int r = 0;//存反转的数字
+        while (x != 0) {
+            int n = x % 10;//取出最低位上的数字
+            r = r * 10 + n;//依次的反转存储得到反转的数字
+            x = x / 10;//降位 123/10=12
+            if (r > Integer.MAX_VALUE / 10 && x > 0 || r == Integer.MAX_VALUE / 10 && x > 7 || r < Integer.MIN_VALUE / 10 && x < 0 || r == Integer.MIN_VALUE / 10 && x < -8) {
+                return 0;
+            }
+        }
+        return r;
+    }
+
 
     //============================字符串============================
 
@@ -276,6 +320,7 @@ public class LeetCode {
         return new String(chs);
     }
 
+
     private static void reverseArray(char[] chs) {
         char temp;
         for (int start = 0, end = chs.length - 1; start < end; start++, end--) {
@@ -285,25 +330,44 @@ public class LeetCode {
         }
     }
 
-
     /**
-     * 整数反转
+     * 42.输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。
+     * 例如输入字符串"I am student."，则输出"student. a am I"
      */
-    public int reverseInt(int x) {
-        if (x >= Integer.MAX_VALUE || x <= Integer.MIN_VALUE) {
-            return 0;
-        }
-        int r = 0;//存反转的数字
-        while (x != 0) {
-            int n = x % 10;//取出最低位上的数字
-            r = r * 10 + n;//依次的反转存储得到反转的数字
-            x = x / 10;//降位 123/10=12
-            if (r > Integer.MAX_VALUE / 10 && x > 0 || r == Integer.MAX_VALUE / 10 && x > 7 || r < Integer.MIN_VALUE / 10 && x < 0 || r == Integer.MIN_VALUE / 10 && x < -8) {
-                return 0;
+    private static void reverseSentence(String str) {
+        if (str == null)
+            return;
+        char[] arr = str.toCharArray();
+
+        reverse(arr, 0, arr.length - 1);
+        int start = 0;
+        int end = 0;
+        for (char i = 0; i < arr.length; i++) {
+            if (arr[i] == ' ') {
+                reverse(arr, start, end);
+                end++;
+                start = end;
+            } else if (i == arr.length) {
+                end++;
+                reverse(arr, start, end);
+            } else {
+                end++;
             }
         }
-        return r;
+
+        for (char c : arr) {
+            System.out.print(c);
+        }
     }
+
+    private static void reverse(char[] arr, int start, int end) {
+        for (int i = start, j = end; i <= j; i++, j--) {
+            char temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+
 
     /**
      * 给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
