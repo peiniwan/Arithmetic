@@ -15,6 +15,15 @@ public class TreeOther {
     }
 
 
+    /**
+     * 动态规划：都是从底部往上算
+     * 讲一下这里的递归原理(深度)：当遍历到C和E时，左子树node.getLeftChild()和
+     * 右子树node.getRightChild()返回0+1，此时深度为1，
+     * 当到B和D时，B和D的深度都为1，此时返回1+1=2，
+     * 同理，一步一步往回退，直到左右子树遍历一遍得到左右子树的深度然后进行比较
+     * 返回最大的值+1就是整棵树的深度。
+     * 那么求二叉树的所有节点的个数，递归原理与此相同。
+     */
     private int getSize(TreeNode node) {
         if (node == null) {
             return 0;

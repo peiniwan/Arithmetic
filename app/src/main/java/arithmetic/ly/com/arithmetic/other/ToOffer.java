@@ -54,36 +54,6 @@ public class ToOffer {
         }
     }
 
-    //输入n,求斐波那契数列的第n项
-
-    /**
-     * 递归
-     */
-    public int fibonacci(int n) {
-        if (n < 0) {
-            return 0;
-        }
-        if (n == 1) {
-            return 1;
-        }
-        return fibonacci(n - 1) + fibonacci(n - 2);
-
-    }
-
-    /**
-     * 递归效率低，重复数据，栈溢出
-     * 爬楼梯、青蛙跳就是斐波那契
-     */
-    public int fibonacci_2(int n) {
-        if (n == 0) return 0;
-        if (n == 1) return 1;
-        int f = 0, g = 1;
-        for (int i = 0; i < n; i++) {
-            f = f + g;  //前一项加后一项
-            g = f - g;  //已经求和过的f减去g，会得到求和前的f，赋值给g
-        }
-        return f;
-    }
 
     /**
      * 12.数值的整数次方

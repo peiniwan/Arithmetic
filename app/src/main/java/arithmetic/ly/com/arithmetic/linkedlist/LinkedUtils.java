@@ -60,6 +60,7 @@ public class LinkedUtils {
 
     /**
      * 递归反转链表(打印)
+     * 看下面
      */
     public ListNode reverseLinkedList(ListNode head) {
         // size == 0 or size == 1
@@ -78,22 +79,21 @@ public class LinkedUtils {
         return newHead;
     }
 
+
     /**
      * 循环反转链表
      * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
-     * 不定义first也能反转
      */
-    public ListNode reverseLoopLinkedList(ListNode head) {
-        ListNode first = head;  //初始化首节点，从原链表的首节点开始反转操作
+    public ListNode reverseLink(ListNode head) {
         ListNode reverse = null;  //用一个新的空链表存放反转后的链表
-        while (first != null) {  //当原链表的节点没有被剥离完时不断循环
-            ListNode second = first.next;  //初始化原链表首节点的下一个节点
-            first.next = reverse;  //原链表首节点的下一个节点链接到新链表的首节点处
-            reverse = first;  //下一跳节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
-            first = second;  //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
+        while (head != null) {  //当原链表的节点没有被剥离完时不断循环
+            ListNode second = head.next;    //初始化原链表首节点的下一个节点
+            head.next = reverse;  //原链表首节点的下一个节点链接到新链表的首节点处
+            reverse = head;     //下一跳节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
+            head = second;   //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
         }
-        return reverse;  //返回插入到新链表的首节点，即原链表的最后一个节点
-        //出来后 first=second=2(3)           reverse=1(null)
+        return reverse;
+        //        //出来后 first=second=2(3)           reverse=1(null)
         //      first=second=3(null)     reverse =2(1)
         //      first=null(null)        reverse =3(2)1
     }
@@ -160,7 +160,7 @@ public class LinkedUtils {
 
 
     /**
-     * 循环删除链表节点值
+     * 循环删除链表某个节点值
      */
     public ListNode removeNode(ListNode head, int value) {
         if (head == null) {
@@ -181,7 +181,7 @@ public class LinkedUtils {
     }
 
     /**
-     * O(1)时间删除链表第k个节点
+     * O(1)时间删除链表倒数第k个节点
      */
     public ListNode findKthToTail(ListNode head, int k) {
         if (head == null) return head;
@@ -400,8 +400,11 @@ public class LinkedUtils {
 //        ListNode.printLinkedList(creator.removeNthFromEnd(
 //                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
 
-        ListNode.printLinkedList(creator.removeNode(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
+//        ListNode.printLinkedList(creator.removeNode(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
+
+        ListNode.printLinkedList(creator.reverseLink(
+                creator.createLinkedList(Arrays.asList(1, 2, 3))));
 
     }
 

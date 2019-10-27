@@ -534,51 +534,117 @@ public class LeetCode {
         return newArray;
     }
 
+
+    public void onther() {
+        int a = 10;
+        int b = 5;
+        //怎么在不引入其他变量的情况下,让a和b互换？
+        a = a + b;
+        b = a - b;
+        a = a - b;
+        System.out.println("b=" + b);
+        System.out.println("a=" + a);
+
+    }
+
     //============================动态规划============================
 
     /**
      * 爬楼梯
-     * 暴力解法
-     * 2^n
-     */
-    public int climbStairs(int n) {
-        int i = climb_Stairs(0, n);
-        System.out.println("I:" + i);
-        return i;
-    }
-
-    public int climb_Stairs(int i, int n) {
-        if (i > n) {
-            return 0;
-        }
-        if (i == n) {
-            return 1;
-        }
-        return climb_Stairs(i + 1, n) + climb_Stairs(i + 2, n);
-    }
-
-    /**
      * 动态规划算法通常基于一个递推公式及一个或多个初始状态。
      * 当前子问题的解将由上一次子问题的解推出。
-     * https://segmentfault.com/a/1190000015944750
-     * 0（0）  1（1）  2（2）  3（3） 4（5） 5（8）
-     * 时间复杂度：O(n)，单循环到 n
-     * 空间复杂度：O(n)，dp 数组用了 n的空间。
+     * https://segmentfault.com/a/1190000015944750   这个文章好
+     * f(n) = f(n-1) + f(n-2);
+     * 还有两个初始状态：
+     * f(1) = 1;
+     * f(2) = 2;
+     * 其实就是二叉树
+     * <p>
+     * 时间复杂度为O(2^n)
      */
-    public int climbStairs2(int n) {
+    public int getWays(int n) {
+
+        if (n < 1) return 0;
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+
+        return getWays(n - 1) + getWays(n - 2);
+    }
+
+
+    /**
+     * 上面重复计算了
+     * 空间复杂度为O(n),时间复杂度也为O(n)
+     */
+    HashMap map = new HashMap();
+
+    public int getWays2(int n) {
+
+        if (n < 1) return 0;
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+
+        if (map.containsKey(n)) {
+            return (int) map.get(n);
+        }
+        int value = getWays2(n - 1) + getWays2(n - 2);
+        map.put(n, value);
+        return value;
+    }
+
+
+    /**
+     * 时间复杂度仍为O(n)，但空间复杂度降为O(1)
+     */
+    public int getWays3(int n) {
+
+        if (n < 1) return 0;
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+
+        // a保存倒数第二个子状态数据，b保存倒数第一个子状态数据， temp 保存当前状态的数据
+        int a = 1, b = 2;
+        int temp = a + b;
+        for (int i = 3; i <= n; i++) {
+            temp = a + b;
+            a = b;
+            b = temp;
+        }
+        return temp;
+    }
+
+
+    /**
+     * 输入n,求斐波那契数列的第n项
+     * 递归
+     * 1、1、2、3、5、8、13、21
+     */
+    public int fibonacci(int n) {
+        if (n < 0) {
+            return 0;
+        }
         if (n == 1) {
             return 1;
         }
-        int[] dp = new int[n + 1];
-        dp[1] = 1;
-        dp[2] = 2;
-        for (int i = 3; i <= n; i++) {
-            dp[i] = dp[i - 1] + dp[i - 2];
-        }
-        System.out.println("dp[n]:" + dp[n]);
+        return fibonacci(n - 1) + fibonacci(n - 2);
 
-        return dp[n];
     }
+
+    /**
+     * 递归效率低，重复数据，栈溢出
+     * 爬楼梯、青蛙跳就是斐波那契
+     */
+    public int fibonacci_2(int n) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        int f = 0, g = 1;
+        for (int i = 0; i < n; i++) {
+            f = f + g;  //前一项加后一项
+            g = f - g;  //已经求和过的f减去g，会得到求和前的f，赋值给g
+        }
+        return f;
+    }
+
 
 
 }

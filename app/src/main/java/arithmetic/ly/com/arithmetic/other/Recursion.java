@@ -7,6 +7,7 @@ package arithmetic.ly.com.arithmetic.other;
 public class Recursion {
     /**
      * 求和
+     * fn=fn+fn-1
      */
     public static int summation(int num) {
         if (num == 1) {
