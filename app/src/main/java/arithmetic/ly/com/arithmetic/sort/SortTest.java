@@ -6,44 +6,31 @@ package arithmetic.ly.com.arithmetic.sort;
 
 public class SortTest {
 
-    public int binarySearch(int[] arr, int k) {
-        if(arr.length==0){
-            return -1;
-        }
-        if(arr[0]==k){
-            return 0;
-        }
-        int a = 0;
-        int b = arr.length - 1;
-        while (a < b) {
-            int m = a + (b - a) / 2;
-            if (k < arr[m]) {
-                b = m;
-            } else if (k > arr[m]) {
-                a = m + 1;
-            } else {
-                return m;
-            }
-        }
-        return -1;
-    }
 
+    /**
+     * 插入排序，a表示数组，n表示数组大小
+     * 每一步将一个待排序的记录，插入到前面已经排好序的有序序列中去，直到插完所有元素为止。
+     * int[] a = {5,4,6,1,3,2};
+     */
+    public void insertionSort(int[] a, int n) {
+        if (n <= 1) return;
 
-    public void insertSort(int[] array) {
-        for (int i = 1; i < array.length; i++) {
-            int temp = array[i];
-            int j;
-            for (j = i - 1; j >= 0; j--) {
-                if (array[j] > temp) {
-                    array[j + 1] = array[j];
+        for (int i = 1; i < n; ++i) {
+            //待插入元素
+            int value = a[i];
+            int j = i - 1;
+            // 查找插入的位置
+            for (; j >= 0; --j) {
+                if (a[j] > value) {//5>4
+                    // 4的位置改成5,数据移动，将大于temp的往后移动一位
+                    a[j + 1] = a[j];
                 } else {
                     break;
                 }
             }
-            array[j + 1] = temp;
+            a[j + 1] = value; // 插入数据
         }
     }
-
 
     /**
      * 冒泡排序
@@ -84,6 +71,9 @@ public class SortTest {
         }
     }
 
+    /**
+     * 快速排序
+     */
     public void quickSort(int[] a) {
         if (a.length > 0) {
             quick(a, 0, a.length - 1);
@@ -99,18 +89,18 @@ public class SortTest {
     }
 
     private int getMiddle(int[] a, int low, int high) {
-        int temp = a[low];
-        while (low < high) {
+        int temp = a[low];//基准元素
+        while (low < high) {//第二次3，9
             while (low < high && a[high] >= temp) {
                 high--;
             }
-            a[low] = a[high];
+            a[low] = a[high];//将比基数小的数放到基数前面
             while (low < high && a[low] <= temp) {
                 low++;
             }
-            a[high] = a[low];
+            a[high] = a[low];//将比基数大的数放到基数后面
         }
-        a[low] = temp;
+        a[low] = temp;//插入到排序后正确的位置，low就是基数应该在的位置
         return low;
     }
 
@@ -135,30 +125,52 @@ public class SortTest {
     }
 
 
-    public void binaryInsertSort(int[] a) {
-        for (int i = 1; i < a.length; i++) {
-            int temp = a[i];
-            int left = 0;
-            int right = i - 1;
-            int middle = 0;
-            while (left < right) {
-                middle = (left + right) / 2;
-                if (temp < a[middle]) {
-                    right = middle - 1;
-                } else {
-                    left = middle + 1;
-                }
-            }
-            for (int j = i - 1; j >= left; j--) {
-                a[j + 1] = a[j];
-            }
-            if (left != i) {
-                a[left] = temp;
-            }
+    /**
+     * 归并排序
+     */
+    public void mergeSort(int[] a, int left, int right) {
+        if (left < right) {
+            int middle = (left + right) / 2;
+            mergeSort(a, left, middle);//左边归并排序，使得左子序列有序
+            mergeSort(a, middle + 1, right);//右边归并排序，使得右子序列有序
+            merge(a, left, middle, right);//将两个有序子数组合并操作
         }
     }
 
 
+    private void merge(int[] a, int left, int middle, int right) {//left0,mid0,right1
+        //在排序前，先建好一个长度等于原数组长度的临时数组，避免递归中频繁开辟空间
+        int[] tmpArray = new int[a.length];
+        int rightStart = middle + 1;//右序列指针
+        int leftStart = left;//左序列指针
+        int temp = left;//临时数组指针
+        //比较两个小数组相应下标位置的数组大小，小的先放进新数组
+        while (left <= middle && rightStart <= right) {
+            if (a[left] <= a[rightStart]) {
+                //相当于tmpArray[third]=a[left];third++;left++三步合一步
+                tmpArray[temp++] = a[left++];
+            } else {
+                tmpArray[temp++] = a[rightStart++];
+            }
+        }
+        //如果左边还有数据需要拷贝，把左边数组剩下的拷贝到新数组
+        while (left <= middle) {
+            tmpArray[temp++] = a[left++];
+        }
+        //如果右边还有数据......
+        while (rightStart <= right) {
+            tmpArray[temp++] = a[rightStart++];
+        }
+        //将temp中的元素全部拷贝到原数组中
+        while (leftStart <= right) {
+            a[leftStart] = tmpArray[leftStart++];
+        }
+    }
+
+
+    /**
+     * 堆排序
+     */
     public void heapSort(int[] a) {
         buildMaxHead(a);
         for (int i = a.length - 1; i >= 1; i--) {
@@ -201,35 +213,26 @@ public class SortTest {
     }
 
 
-    public void mergeSort(int[] a, int left, int right) {
-        if (left < right) {
-            int middle = (left + right) / 2;
-            mergeSort(a, left, middle);
-            mergeSort(a, middle + 1, right);
-            merge(a, left, middle, right);
-        }
-    }
-
-    private void merge(int[] a, int left, int middle, int right) {
-        int[] temArray = new int[a.length];
-        int rightStart = middle + 1;
-        int leftStart = left;
-        int temp = left;
-        while (left <= middle && rightStart <= right) {
-            if (a[left] <= a[rightStart]) {
-                temArray[temp++] = a[left++];
-            } else {
-                temArray[temp++] = a[rightStart++];
+    public void binaryInsertSort(int[] a) {
+        for (int i = 1; i < a.length; i++) {
+            int temp = a[i];
+            int left = 0;
+            int right = i - 1;
+            int middle = 0;
+            while (left < right) {
+                middle = (left + right) / 2;
+                if (temp < a[middle]) {
+                    right = middle - 1;
+                } else {
+                    left = middle + 1;
+                }
             }
-        }
-        while (left <= middle) {
-            temArray[temp++] = a[left++];
-        }
-        while (rightStart <= right) {
-            temArray[temp++] = a[rightStart++];
-        }
-        while (leftStart <= right) {
-            a[leftStart] = temArray[temp++];
+            for (int j = i - 1; j >= left; j--) {
+                a[j + 1] = a[j];
+            }
+            if (left != i) {
+                a[left] = temp;
+            }
         }
     }
 

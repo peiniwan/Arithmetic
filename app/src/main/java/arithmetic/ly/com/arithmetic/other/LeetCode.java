@@ -34,6 +34,8 @@ public class LeetCode {
 //        leetCode.getRandomArray2(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0}, 5);
 
 
+        int kthLargest = leetCode.findKthLargest(new int[]{4, 2, 5, 12, 3}, 3);
+
     }
 
     //============================数组============================
@@ -299,6 +301,44 @@ public class LeetCode {
             }
         }
         return r;
+    }
+
+
+    /**
+     * 数组中的第K个最大元素
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    public int findKthLargest(int[] nums, int k) {
+        int len = nums.length;
+        int left = 0, right = len - 1;
+        int pivot = 0;
+        while (len - k != (pivot = partition(nums, left, right))) {
+            //4所在的问题就是2，那就找到了
+            //第k大应该在第K位，找每个数字应该在的位置，正好第0个4就是第K位，就找到了
+            if (pivot < len - k) {
+                left = pivot + 1;
+                right = len - 1;
+            } else {
+                left = 0;
+                right = pivot - 1;
+            }
+        }
+        return nums[pivot];
+    }
+
+    private int partition(int[] nums, int left, int right) {
+        int pivot = nums[left];
+        while (left < right) {
+            while (left < right && nums[right] >= pivot) right--;
+            nums[left] = nums[right];
+            while (left < right && nums[left] <= pivot) left++;
+            nums[right] = nums[left];
+        }
+        nums[left] = pivot;
+        return left;
     }
 
 
@@ -644,7 +684,6 @@ public class LeetCode {
         }
         return f;
     }
-
 
 
 }

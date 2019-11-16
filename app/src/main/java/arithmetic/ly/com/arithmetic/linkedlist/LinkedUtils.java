@@ -181,7 +181,7 @@ public class LinkedUtils {
     }
 
     /**
-     * O(1)时间删除链表倒数第k个节点
+     * O(1)时间删除链表倒数第k个节点,看下面
      */
     public ListNode findKthToTail(ListNode head, int k) {
         if (head == null) return head;

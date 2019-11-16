@@ -1,12 +1,11 @@
-package arithmetic.ly.com.arithmetic.stack;
+package arithmetic.ly.com.arithmetic.stackqueue;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Created by liuyu1 on 2018/1/23.
+ * 俩个队列实现栈
  */
-
 public class StackWithQueue {
 
     private static Queue<Object> queue1=new LinkedList<Object>();
