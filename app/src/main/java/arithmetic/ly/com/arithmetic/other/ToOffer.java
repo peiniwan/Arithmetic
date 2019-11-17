@@ -11,6 +11,15 @@ public class ToOffer {
     public static void main(String[] args) {
         ToOffer toOffer = new ToOffer();
         toOffer.replaceSpace("We Are Happy");
+
+        TwoStacksAsQueue queue = new TwoStacksAsQueue();
+        queue.push(10);
+        queue.push(11);
+        queue.push(12);
+        int pop = queue.pop();
+        queue.push(12);
+        int pop2 = queue.pop();
+        System.out.println("pop2----"+pop2);
     }
 
     /**
@@ -33,7 +42,7 @@ public class ToOffer {
     /**
      * 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
      */
-    class TwoStacksAsQueue {
+    static class TwoStacksAsQueue {
         Stack<Integer> stack1 = new Stack<Integer>();
         Stack<Integer> stack2 = new Stack<Integer>();
 

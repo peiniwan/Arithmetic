@@ -39,7 +39,7 @@ public class SortTest {
      */
     public void bubbleSort(int[] a) {
         for (int i = 0; i < a.length - 1; i++) {//外层循环控制排序趟数
-            for (int j = 0; j < a.length - 1 - i; j++) {//内层循环控制每一趟排序多少次
+            for (int j = i; j < a.length - 1 - i; j++) {//内层循环控制每一趟排序多少次
                 if (a[j] > a[j + 1]) {
                     int temp = a[j];
                     a[j] = a[j + 1];

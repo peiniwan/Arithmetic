@@ -2,8 +2,80 @@ package arithmetic.ly.com.arithmetic.stackqueue;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 public class QueueTest {
+
+
+    /**
+     * 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
+     */
+    class TwoStacksAsQueue {
+        Stack<Integer> stack1 = new Stack<Integer>();
+        Stack<Integer> stack2 = new Stack<Integer>();
+
+        public void push(int node) {
+            stack1.push(node);
+        }
+
+        public int pop() {
+            if (stack1.isEmpty() && stack2.isEmpty()) {
+                throw new RuntimeException("The queue is empty.");
+            }
+            if (stack2.isEmpty()) {
+                while (!stack1.isEmpty()) {
+                    stack2.push(stack1.pop());
+                }
+            }
+            return stack2.pop();
+        }
+    }
+
+
+    /**
+     * 两个队列实现一个栈
+     */
+    public static class StackWithQueue {
+
+        private static Queue<Object> queue1 = new LinkedList<>();
+        private static Queue<Object> queue2 = new LinkedList<Object>();
+
+        /*
+         * 向队列中执行入栈操作时，把元素添加到非空的队列中
+         */
+        public static void push(Object item) {
+            if (!queue1.isEmpty())
+                queue1.offer(item);
+            else
+                queue2.offer(item);
+            System.out.println("入栈元素为：" + item);
+        }
+
+        public static void pop() {
+            if (!isEmpty()) {
+                if (queue1.isEmpty()) {
+                    while (queue2.size() > 1) {
+                        queue1.offer(queue2.poll());
+                    }
+                    System.out.println("出栈元素为：" + queue2.poll());
+                } else {
+                    while (queue1.size() > 1) {
+                        queue2.offer(queue1.poll());
+                    }
+                    System.out.println("出栈元素为：" + queue1.poll());
+                }
+            } else
+                throw new RuntimeException("栈为空，无法执行出栈操作");
+        }
+
+        /*
+         * 检查栈是否为空
+         */
+        private static boolean isEmpty() {
+            return queue1.isEmpty() && queue2.isEmpty();
+        }
+    }
+
     /**
      * 基于数组实现的顺序栈
      * 时间复杂度和空间复杂度都是O(1)
@@ -38,7 +110,7 @@ public class QueueTest {
             // 栈为空，则直接返回null
             if (count == 0) return null;
             // 返回下标为count-1的数组元素，并且栈中元素个数count减一
-            String tmp = items[count - 1];
+            String tmp = items[count - 1];//因为前面已经+1了
             --count;
             return tmp;
         }
@@ -100,51 +172,6 @@ public class QueueTest {
             return true;
         }
 
-    }
-
-
-    /**
-     * 俩个队列实现栈
-     */
-    public static class StackWithQueue {
-
-        private static Queue<Object> queue1 = new LinkedList<Object>();
-        private static Queue<Object> queue2 = new LinkedList<Object>();
-
-        /*
-         * 向队列中执行入栈操作时，把元素添加到非空的队列中
-         */
-        public static void push(Object item) {
-            if (!queue1.isEmpty())
-                queue1.offer(item);
-            else
-                queue2.offer(item);
-            System.out.println("入栈元素为：" + item);
-        }
-
-        public static void pop() {
-            if (!isEmpty()) {
-                if (queue1.isEmpty()) {
-                    while (queue2.size() > 1) {
-                        queue1.offer(queue2.poll());
-                    }
-                    System.out.println("出栈元素为：" + queue2.poll());
-                } else {
-                    while (queue1.size() > 1) {
-                        queue2.offer(queue1.poll());
-                    }
-                    System.out.println("出栈元素为：" + queue1.poll());
-                }
-            } else
-                throw new RuntimeException("栈为空，无法执行出栈操作");
-        }
-
-        /*
-         * 检查栈是否为空
-         */
-        private static boolean isEmpty() {
-            return queue1.isEmpty() && queue2.isEmpty();
-        }
     }
 
 

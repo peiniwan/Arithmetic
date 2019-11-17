@@ -1,8 +1,10 @@
 package arithmetic.ly.com.arithmetic.tree;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class TreeOther {
+
     public TreeNode root = null;
 
 
@@ -131,58 +133,62 @@ public class TreeOther {
     }
 
     /**
-     * 前序遍历——非迭代
+     * 12.二叉树的前序遍历
+     * 迭代解法
+     * abcdef
+     * 前：ABDECF
+     * 中：DBEAFC
+     * 后：DEBFCA
      */
-    public void nonRecOrder(TreeNode node) {
-        if (node == null) {
-            return;
+    ArrayList<Integer> preOrder(BinaryTreeUtil.TreeNode root) {
+        Stack<BinaryTreeUtil.TreeNode> stack = new Stack<BinaryTreeUtil.TreeNode>();
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        if (root == null) {
+            return list;
         }
-        Stack<TreeNode> stack = new Stack<TreeNode>();
-        stack.push(node);
-        while (!stack.isEmpty()) {
-            //出栈和进栈
-            TreeNode n = stack.pop();//弹出根结点
-            //压入子结点
-            System.out.println("nonRecOrder data" + n.getValue());
-            if (n.getRight() != null) {
-                stack.push(n.getRight());
-
+        stack.push(root);
+        while (!stack.empty()) {
+            BinaryTreeUtil.TreeNode node = stack.pop();
+            list.add(node.val);
+            if (node.right != null) {
+                stack.push(node.right);
             }
-            if (n.getLeft() != null) {
-                stack.push(n.getLeft());
+            if (node.left != null) {
+                stack.push(node.left);
             }
         }
+        return list;
     }
 
+
     /**
-     * 根据前序和中序不建立二叉树，输出后序遍历
-     *
-     * @param preOrder "ABDEGCF"
-     * @param inOrder  "DBGEACF"
-     * @return DGEBFCA
+     * 13.二叉树的中序遍历
+     * abcdef
+     * 中：DBEAFC
      */
-    public String postOrder(String preOrder, String inOrder) {
-        if (preOrder.isEmpty()) {
-            return "";
+    ArrayList<Integer> inOrder(BinaryTreeUtil.TreeNode root) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        Stack<BinaryTreeUtil.TreeNode> stack = new Stack<BinaryTreeUtil.TreeNode>();
+        BinaryTreeUtil.TreeNode current = root;
+        while (current != null || !stack.empty()) {
+            while (current != null) {
+                stack.add(current);
+                current = current.left;
+            }
+            //不同点：peek 不改变栈的值(不删除栈顶的值)，pop会把栈顶的值删除。
+            current = stack.peek();
+            stack.pop();
+            list.add(current.val);
+            current = current.right;
         }
-
-        char rootValue = preOrder.charAt(0);
-        int rootIndex = inOrder.indexOf(rootValue);
-
-        return
-                postOrder(
-                        preOrder.substring(1, 1 + rootIndex),
-                        inOrder.substring(0, rootIndex)) +
-                        postOrder(
-                                preOrder.substring(1 + rootIndex),
-                                inOrder.substring(1 + rootIndex)) +
-                        rootValue;
+        return list;
     }
 
 
     public static void main(String[] args) {
-        TreeCreate creator = new TreeCreate();
-        TreeOther treeOther = new TreeOther();
-
+//        TreeCreate creator = new TreeCreate();
+//        creator.createBinaryTreePre()
+//        TreeOther treeOther = new TreeOther();
+//        treeOther.preOrder(creator);
     }
 }

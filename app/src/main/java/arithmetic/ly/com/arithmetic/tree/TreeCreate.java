@@ -130,20 +130,20 @@ public class TreeCreate {
 
         TreeCreate treeCreate = new TreeCreate();
 
-//        ArrayList<String> data = new ArrayList<>();
-//        String[] dataArray = new String[]{"A", "B", "D", "#", "#", "E", "#", "#", "C", "#", "F", "#", "#"};
-//        for (String s : dataArray) {
-//            data.add(s);
-//        }
+        ArrayList<String> data = new ArrayList<>();
+        String[] dataArray = new String[]{"A", "B", "D", "#", "#", "E", "#", "#", "C", "#", "F", "#", "#"};
+        for (String s : dataArray) {
+            data.add(s);
+        }
 //        TreeNode binaryTreePre = treeCreate.createBinaryTreePre(data);
 //        treeTraverse.preOrder(binaryTreePre);
 //        System.out.println();
 //        treeTraverse.inOrder(binaryTreePre);
 
-        int[] intarry = new int[]{30, 50, 60, 40, 45, 25, 75, 15};
-        for (int i : intarry) {
-            treeCreate.put(i);
-        }
+//        int[] intarry = new int[]{30, 50, 60, 40, 45, 25, 75, 15};
+//        for (int i : intarry) {
+//            treeCreate.put(i);
+//        }
 
 //        System.out.println("=====");
 //        System.out.println("Creating tree from preOrder and inOrder");

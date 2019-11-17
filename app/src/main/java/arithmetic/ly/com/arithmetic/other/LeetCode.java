@@ -34,7 +34,11 @@ public class LeetCode {
 //        leetCode.getRandomArray2(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0}, 5);
 
 
-        int kthLargest = leetCode.findKthLargest(new int[]{4, 2, 5, 12, 3}, 3);
+//        int kthLargest = leetCode.findKthLargest(new int[]{4, 2, 5, 12, 3}, 3);
+        leetCode.findNumsAppearOnce(new int[]{4, 4, 5, 5, 2, 3}, new int[1], new int[1]);
+
+        int fibonacci = leetCode.fibonacci_2(8);
+        System.out.println("fibonacci"+fibonacci);
 
     }
 
@@ -197,21 +201,22 @@ public class LeetCode {
      * num1,num2分别为长度为1的数组。传出参数
      * 将num1[0],num2[0]设置为返回结果
      * 和下面数组类似
+     * 使用foreach比较简单
      */
     public void findNumsAppearOnce(int[] array, int num1[], int num2[]) {
         HashMap<Integer, Integer> hashMap = new HashMap<Integer, Integer>();
-        for (int i = 0; i < array.length; i++) {
-            if (hashMap.containsKey(array[i])) {
-                int count = hashMap.get(array[i]);
-                hashMap.put(array[i], ++count);
+        for (int i : array) {
+            int val = 1;
+            if (hashMap.get(i) != null) {
+                hashMap.put(i, val + 1);
             } else {
-                hashMap.put(array[i], 1);
+                hashMap.put(i, val);
             }
         }
-        for (int i = 0; i < array.length; i++) {
-            if (hashMap.get(array[i]) == 1) {
-                if (num1[0] == 0) num1[0] = array[i];
-                else num2[0] = array[i];
+        for (int i : array) {
+            if (hashMap.get(i) == 1) {
+                if (num1[0] == 0) num1[0] = i;
+                else num2[0] = i;
             }
         }
     }
@@ -234,6 +239,9 @@ public class LeetCode {
             }
         }
         int[] res = new int[list2.size()];
+//        for (int i = 0; i < list2.size(); i++) {
+//            res[i] = list2.get(i);
+//        }
         int i = 0;
         for (int num : list2) {
             res[i++] = num;
@@ -660,7 +668,7 @@ public class LeetCode {
      * 1、1、2、3、5、8、13、21
      */
     public int fibonacci(int n) {
-        if (n < 0) {
+        if (n == 0) {
             return 0;
         }
         if (n == 1) {
@@ -677,12 +685,19 @@ public class LeetCode {
     public int fibonacci_2(int n) {
         if (n == 0) return 0;
         if (n == 1) return 1;
-        int f = 0, g = 1;
-        for (int i = 0; i < n; i++) {
-            f = f + g;  //前一项加后一项
-            g = f - g;  //已经求和过的f减去g，会得到求和前的f，赋值给g
+//        int f = 0, g = 1;
+//        for (int i = 0; i < n; i++) {
+//            f = f + g;  //前一项加后一项
+//            g = f - g;  //已经求和过的f减去g，会得到求和前的f，赋值给g
+//        }
+        int a = 0, b = 1;
+        int temp=a + b;
+        for (int i = 2; i <= n; i++) {
+            temp = a + b;
+            a = b;
+            b = temp;
         }
-        return f;
+        return temp;
     }
 
 

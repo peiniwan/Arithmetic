@@ -43,20 +43,52 @@ public class LinkedUtils {
     /**
      * 反转链表，可以用栈,递归本质就是一个栈，理解递归
      */
-    public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
-        Stack<Integer> stack = new Stack<Integer>();
-        while (listNode != null) {
-            stack.push(listNode.val);
-            listNode = listNode.next;
+    public ListNode printListFromTailToHead(ListNode head) {
+//        Stack<Integer> stack = new Stack<Integer>();
+//        while (listNode != null) {
+//            stack.push(listNode.val);
+//            listNode = listNode.next;
+//        }
+//        ArrayList<Integer> list = new ArrayList<Integer>();
+//        while (!stack.isEmpty()) {
+////            list.add(stack.pop());
+//        }
+        if(head == null || head.next == null){
+            return head;
         }
-        ArrayList<Integer> list = new ArrayList<Integer>();
-
-        while (!stack.isEmpty()) {
-            list.add(stack.pop());
+        Stack<ListNode> stack = new Stack<ListNode>();
+        ListNode pre = null;
+        while(head.next != null){
+            stack.push(head);
+            head = head.next;
         }
-        return list;
+        pre = head;
+        while(!stack.isEmpty()){
+            head.next = stack.pop();
+            head = head.next;
+        }
+        head.next = null;
+        return pre;
     }
 
+
+    /**
+     * 循环反转链表
+     * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
+     */
+    public ListNode reverseLink(ListNode head) {
+        ListNode reverse = null;  //用一个新的空链表存放反转后的链表
+        while (head != null) {  //当原链表的节点没有被剥离完时不断循环
+            ListNode second = head.next;    //初始化原链表首节点的下一个节点
+            head.next = reverse;  //head.next当作是个变量，原链表首节点的下一个节点链接到新链表的首节点处
+            reverse = head;     //下一跳节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
+            head = second;   //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
+        }
+        return reverse;
+        // 出来后 head=second=2(3)           reverse=1(null)
+        //       head=second=3(null)     reverse =2(1)
+        //       head=null(null)        reverse =3(2)1
+    }
 
     /**
      * 递归反转链表(打印)
@@ -77,25 +109,6 @@ public class LinkedUtils {
         head.next = null;//1->null
 //      head是2，第一次出来3的next是2，2的next是null
         return newHead;
-    }
-
-
-    /**
-     * 循环反转链表
-     * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
-     */
-    public ListNode reverseLink(ListNode head) {
-        ListNode reverse = null;  //用一个新的空链表存放反转后的链表
-        while (head != null) {  //当原链表的节点没有被剥离完时不断循环
-            ListNode second = head.next;    //初始化原链表首节点的下一个节点
-            head.next = reverse;  //原链表首节点的下一个节点链接到新链表的首节点处
-            reverse = head;     //下一跳节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
-            head = second;   //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
-        }
-        return reverse;
-        //        //出来后 first=second=2(3)           reverse=1(null)
-        //      first=second=3(null)     reverse =2(1)
-        //      first=null(null)        reverse =3(2)1
     }
 
     //==================== 增删改查 ==================
@@ -151,7 +164,7 @@ public class LinkedUtils {
     }
 
     /**
-     * 删除链表中的节点
+     * 删除链表的下一个节点
      */
     public void deleteNode(ListNode node) {
         node.val = node.next.val;
@@ -182,6 +195,7 @@ public class LinkedUtils {
 
     /**
      * O(1)时间删除链表倒数第k个节点,看下面
+     * 长度-k=要删的位置
      */
     public ListNode findKthToTail(ListNode head, int k) {
         if (head == null) return head;
@@ -192,11 +206,20 @@ public class LinkedUtils {
             num++;
         }
         if (num < k) return null;  //如果倒数第k个节点的索引在整个链表之外，返回空
-        ListNode current2 = head;  //前面的current已经指向链表尾部，再用一个新的游标遍历链表
-        for (int i = 0; i < num - k; i++) {  //遍历num-k-1次后，到达倒数第k个节点
-            current2 = current2.next;
+//        ListNode current2 = head;  //前面的current已经指向链表尾部，再用一个新的游标遍历链表
+//        for (int i = 0; i < num - k; i++) {  //遍历num-k-1次后，到达倒数第k个节点
+//            current2 = current2.next;
+//        }
+        ListNode pre=head;
+        ListNode cur=head;
+        int pos=0;
+        while (pos!= num - k){
+            pre=cur;
+            cur=cur.next;
+            pos++;
         }
-        return current2;  //现在第二个游标指向倒数第k个节点，直接返回
+        pre.next=cur.next;//pre.next和cur.val就是要删除的值
+        return head;  //现在第二个游标指向倒数第k个节点，直接返回
     }
 
     /**
@@ -254,7 +277,7 @@ public class LinkedUtils {
         int pos = 0;
         ListNode current = head;
         while (current.val != data) {
-            if (current.val == 0) {//todo
+            if (current.next == null) {
                 return -1;
             }
             current = current.next;
@@ -403,8 +426,11 @@ public class LinkedUtils {
 //        ListNode.printLinkedList(creator.removeNode(
 //                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
 
-        ListNode.printLinkedList(creator.reverseLink(
-                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+        ListNode.printLinkedList(creator.findKthToTail(
+                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
+
+//        ListNode.printLinkedList(creator.reverseLink(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
 
     }
 
