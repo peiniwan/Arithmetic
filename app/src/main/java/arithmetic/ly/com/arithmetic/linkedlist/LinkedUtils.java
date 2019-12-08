@@ -1,6 +1,5 @@
 package arithmetic.ly.com.arithmetic.linkedlist;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +32,6 @@ public class LinkedUtils {
             return null;
         }
         ListNode firstNode = new ListNode(data.get(0));
-
         firstNode.next = createLinkedList(data.subList(1, data.size()));
         return firstNode;
 
@@ -44,26 +42,17 @@ public class LinkedUtils {
      * 反转链表，可以用栈,递归本质就是一个栈，理解递归
      */
     public ListNode printListFromTailToHead(ListNode head) {
-//        Stack<Integer> stack = new Stack<Integer>();
-//        while (listNode != null) {
-//            stack.push(listNode.val);
-//            listNode = listNode.next;
-//        }
-//        ArrayList<Integer> list = new ArrayList<Integer>();
-//        while (!stack.isEmpty()) {
-////            list.add(stack.pop());
-//        }
-        if(head == null || head.next == null){
+        if (head == null || head.next == null) {
             return head;
         }
-        Stack<ListNode> stack = new Stack<ListNode>();
+        Stack<ListNode> stack = new Stack<>();
         ListNode pre = null;
-        while(head.next != null){
+        while (head.next != null) {
             stack.push(head);
             head = head.next;
         }
         pre = head;
-        while(!stack.isEmpty()){
+        while (!stack.isEmpty()) {
             head.next = stack.pop();
             head = head.next;
         }
@@ -92,7 +81,6 @@ public class LinkedUtils {
 
     /**
      * 递归反转链表(打印)
-     * 看下面
      */
     public ListNode reverseLinkedList(ListNode head) {
         // size == 0 or size == 1
@@ -124,11 +112,11 @@ public class LinkedUtils {
 
     /**
      * 插入尾节点
+     * （重要）找到未节点，注意这里是当元素的下一个元素为空的时候这个节点即为未节点
      */
     public ListNode addLastNode(ListNode head, int data) {
         ListNode node = new ListNode(data);
         ListNode current = head;
-        //找到未节点 注意这里是当元素的下一个元素为空的时候这个节点即为未节点
         while (current.next != null) {
             current = current.next;
         }
@@ -210,15 +198,15 @@ public class LinkedUtils {
 //        for (int i = 0; i < num - k; i++) {  //遍历num-k-1次后，到达倒数第k个节点
 //            current2 = current2.next;
 //        }
-        ListNode pre=head;
-        ListNode cur=head;
-        int pos=0;
-        while (pos!= num - k){
-            pre=cur;
-            cur=cur.next;
+        ListNode pre = head;
+        ListNode cur = head;
+        int pos = 0;
+        while (pos != num - k) {
+            pre = cur;
+            cur = cur.next;
             pos++;
         }
-        pre.next=cur.next;//pre.next和cur.val就是要删除的值
+        pre.next = cur.next;//pre.next和cur.val就是要删除的值
         return head;  //现在第二个游标指向倒数第k个节点，直接返回
     }
 
@@ -250,7 +238,6 @@ public class LinkedUtils {
             fastNode = fastNode.next;
         }
         slowNode.next = slowNode.next.next;//slowNode.next就是要删的
-//        return  slowNode.next;
         return head;
     }
 
@@ -348,7 +335,7 @@ public class LinkedUtils {
     }
 
     /**
-     * 37.两个链表的第一个公共节点
+     * 37.两个链表的第一个公共节点(公共节点就考虑set)
      * 空间复杂度（m+n）时间复杂度（m+n）
      */
     public ListNode findFirstCommonNode(ListNode pHead1, ListNode pHead2) {

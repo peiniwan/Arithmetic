@@ -12,14 +12,23 @@ public class ToOffer {
         ToOffer toOffer = new ToOffer();
         toOffer.replaceSpace("We Are Happy");
 
-        TwoStacksAsQueue queue = new TwoStacksAsQueue();
-        queue.push(10);
-        queue.push(11);
-        queue.push(12);
-        int pop = queue.pop();
-        queue.push(12);
-        int pop2 = queue.pop();
-        System.out.println("pop2----"+pop2);
+//        TwoStacksAsQueue queue = new TwoStacksAsQueue();
+//        queue.push(10);
+//        queue.push(11);
+//        queue.push(12);
+//        int pop = queue.pop();
+//        queue.push(12);
+//        int pop2 = queue.pop();
+//        System.out.println("pop2----" + pop2);
+    }
+
+
+    public void reverseString(char[] s) {
+        for (int start = 0, end = s.length; start < end; start++, end--) {
+            char c = s[start];
+            s[start] = s[end];
+            s[end] = c;
+        }
     }
 
     /**
@@ -37,30 +46,6 @@ public class ToOffer {
         }
         System.out.println(res.reverse().toString());
         return res.reverse().toString();
-    }
-
-    /**
-     * 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
-     */
-    static class TwoStacksAsQueue {
-        Stack<Integer> stack1 = new Stack<Integer>();
-        Stack<Integer> stack2 = new Stack<Integer>();
-
-        public void push(int node) {
-            stack1.push(node);
-        }
-
-        public int pop() {
-            if (stack1.isEmpty() && stack2.isEmpty()) {
-                throw new RuntimeException("The queue is empty.");
-            }
-            if (stack2.isEmpty()) {
-                while (!stack1.isEmpty()) {
-                    stack2.push(stack1.pop());
-                }
-            }
-            return stack2.pop();
-        }
     }
 
 
@@ -295,29 +280,6 @@ public class ToOffer {
         }
     }
 
-
-    /*
-     * 22.从上往下打印出二叉树的每个节点，同层节点从左至右打印。
-     *
-     * */
-    public ArrayList<Integer> PrintFromTopToBottom(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        ArrayList<TreeNode> queue = new ArrayList<TreeNode>();  //模拟一个队列来存放相应的二叉树节点
-        if (root == null) return list;
-        queue.add(root);
-        while (queue.size() != 0) {  //当“队列中”有二叉树节点时不断循环
-            //从“队列”中移除二叉树当前根节点，并赋给一个临时二叉树变量，按照下面queue添加元素的顺序一定是先添加左节点再添加右节点，所以移除顺序也一定能是前序遍历
-            TreeNode temp = queue.remove(0);
-            if (temp.left != null) {  //如果有左子树就将左节点添加到“队列”中
-                queue.add(temp.left);
-            }
-            if (temp.right != null) {  //如果有右子树就将右节点添加到“队列”中
-                queue.add(temp.right);
-            }
-            list.add(temp.val);  //将二叉树当前根节点的值添加到列表中
-        }
-        return list;
-    }
 
     /*
      * 24.输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。

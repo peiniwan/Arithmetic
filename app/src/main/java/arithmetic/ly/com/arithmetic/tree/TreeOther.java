@@ -1,11 +1,39 @@
 package arithmetic.ly.com.arithmetic.tree;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class TreeOther {
 
     public TreeNode root = null;
+
+    /**
+     * 通过前序遍历的数据反向生成二叉树
+     *          A
+     *       B       C
+     *   D     E   #     F
+     * #   #  # #     #    #
+     * ABD##E##C#F##
+     */
+    public TreeNode createBinaryTreePre(ArrayList<String> data) {
+        if (data.size() == 0) {
+            return null;
+        }
+        String d = data.get(0);
+        TreeNode node;
+        if (d.equals("#")) {
+            node = null;
+            data.remove(0);
+            return node;
+        }
+        node = new TreeNode(d);
+        data.remove(0);
+        //第一次返回是D，b.setleft(d)
+        node.setLeft(createBinaryTreePre(data));
+        node.setRight(createBinaryTreePre(data));
+        return node;
+    }
 
 
     /**
@@ -140,24 +168,30 @@ public class TreeOther {
      * 中：DBEAFC
      * 后：DEBFCA
      */
-    ArrayList<Integer> preOrder(BinaryTreeUtil.TreeNode root) {
-        Stack<BinaryTreeUtil.TreeNode> stack = new Stack<BinaryTreeUtil.TreeNode>();
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        if (root == null) {
-            return list;
-        }
-        stack.push(root);
-        while (!stack.empty()) {
-            BinaryTreeUtil.TreeNode node = stack.pop();
-            list.add(node.val);
-            if (node.right != null) {
-                stack.push(node.right);
+    public static void preorderTraversal(TreeNode root) {
+        // 用来暂存节点的栈
+        Stack<TreeNode> treeNodeStack = new Stack<TreeNode>();
+        // 新建一个游标节点为根节点
+        TreeNode node = root;
+// 当遍历到最后一个节点的时候，无论它的左右子树都为空，并且栈也为空
+// 所以，只要不同时满足这两点，都需要进入循环
+        while (node != null || !treeNodeStack.isEmpty()) {
+// 若当前考查节点非空，则输出该节点的值
+// 由考查顺序得知，需要一直往左走
+            while (node != null) {
+                System.out.print(node.getValue() + " ");
+// 为了之后能找到该节点的右子树，暂存该节点
+                treeNodeStack.push(node);
+                node = node.getLeft();
             }
-            if (node.left != null) {
-                stack.push(node.left);
+// 一直到左子树为空，则开始考虑右子树
+// 如果栈已空，就不需要再考虑
+// 弹出栈顶元素，将游标等于该节点的右子树
+            if (!treeNodeStack.isEmpty()) {
+                node = treeNodeStack.pop();
+                node = node.getRight();
             }
         }
-        return list;
     }
 
 
@@ -166,29 +200,120 @@ public class TreeOther {
      * abcdef
      * 中：DBEAFC
      */
-    ArrayList<Integer> inOrder(BinaryTreeUtil.TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        Stack<BinaryTreeUtil.TreeNode> stack = new Stack<BinaryTreeUtil.TreeNode>();
-        BinaryTreeUtil.TreeNode current = root;
-        while (current != null || !stack.empty()) {
-            while (current != null) {
-                stack.add(current);
-                current = current.left;
+    public static void middleorderTraversal(TreeNode root) {
+        Stack<TreeNode> treeNodeStack = new Stack<TreeNode>();
+        TreeNode node = root;
+        while (node != null || !treeNodeStack.isEmpty()) {
+            while (node != null) {
+                treeNodeStack.push(node);
+                node = node.getLeft();
             }
-            //不同点：peek 不改变栈的值(不删除栈顶的值)，pop会把栈顶的值删除。
-            current = stack.peek();
-            stack.pop();
-            list.add(current.val);
-            current = current.right;
+            if (!treeNodeStack.isEmpty()) {
+                node = treeNodeStack.pop();
+                System.out.print(node.getValue() + " ");
+                node = node.getRight();
+            }
         }
-        return list;
+    }
+
+    public static void postorderTraversal(TreeNode root) {
+        Stack<TreeNode> treeNodeStack = new Stack<TreeNode>();
+        TreeNode node = root;
+        TreeNode lastVisit = root;
+        while (node != null || !treeNodeStack.isEmpty()) {
+            while (node != null) {
+                treeNodeStack.push(node);
+                node = node.getLeft();
+            }
+//查看当前栈顶元素
+            node = treeNodeStack.peek();
+//如果其右子树也为空，或者右子树已经访问
+//则可以直接输出当前节点的值
+            if (node.getRight() == null || node.getRight() == lastVisit) {
+                System.out.print(node.getValue() + " ");
+                treeNodeStack.pop();
+                lastVisit = node;
+                node = null;
+            } else {
+//否则，继续遍历右子树
+                node = node.getRight();
+            }
+        }
+    }
+
+
+    /**
+     * 按层遍历
+     * 从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+     */
+    public static void levelOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root);
+        while (!queue.isEmpty()) { //当“队列中”有二叉树节点时不断循环
+            TreeNode currentNode = queue.poll();//poll获取并删除列表的第一个元素
+            System.out.print(currentNode.getValue() + " "); //将二叉树当前根节点的值添加到列表中
+            if (currentNode.getLeft() != null) {//如果有左子树就将左节点添加到“队列”中
+                queue.add(currentNode.getLeft());
+            }
+            if (currentNode.getRight() != null) {//如果有右子树就将右节点添加到“队列”中
+                queue.add(currentNode.getRight());
+            }
+        }
+    }
+
+    /**
+     * 二叉查找树的查找操作
+     */
+    public TreeNode find(TreeNode<Integer> root, int data) {
+        while (root != null) {
+            if (data < root.getValue()) root = root.getLeft();
+            else if (data > root.getValue()) root = root.getRight();
+            else return root;
+        }
+        return null;
+    }
+
+    public void insert(TreeNode root, int data) {
+        TreeNode<Integer> node = new TreeNode(data);
+        while (root != null) {
+            if (data < (Integer) root.getValue()) {
+                if (root.getLeft() == null) {
+                    root.setLeft(node);
+                    return;
+                }
+                root = root.getLeft();
+            } else {
+                if (root.getRight() == null) {
+                    root.setRight(node);
+                    return;
+                }
+                root = root.getRight();
+            }
+        }
+    }
+
+
+    /**
+     * 删除比较复杂，看文章
+     * https://time.geekbang.org/column/article/68334
+     */
+    public void delete(int data) {
+
     }
 
 
     public static void main(String[] args) {
-//        TreeCreate creator = new TreeCreate();
-//        creator.createBinaryTreePre()
-//        TreeOther treeOther = new TreeOther();
+        TreeCreate creator = new TreeCreate();
+        ArrayList<String> data = new ArrayList<>();
+        String[] dataArray = new String[]{"A", "B", "D", "#", "#", "E", "#", "#", "C", "#", "F", "#", "#"};
+        for (String s : dataArray) {
+            data.add(s);
+        }
+        TreeNode binaryTreePre = creator.createBinaryTreePre(data);
+        preorderTraversal(binaryTreePre);
 //        treeOther.preOrder(creator);
     }
 }

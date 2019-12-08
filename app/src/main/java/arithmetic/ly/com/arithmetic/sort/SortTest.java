@@ -33,26 +33,9 @@ public class SortTest {
     }
 
     /**
-     * 冒泡排序
-     * 每次i排序后最大的数到了最后边
-     * -i每进行一趟比较，每一趟少比较一次，一定程度上减少了算法的量
-     */
-    public void bubbleSort(int[] a) {
-        for (int i = 0; i < a.length - 1; i++) {//外层循环控制排序趟数
-            for (int j = i; j < a.length - 1 - i; j++) {//内层循环控制每一趟排序多少次
-                if (a[j] > a[j + 1]) {
-                    int temp = a[j];
-                    a[j] = a[j + 1];
-                    a[j + 1] = temp;
-                }
-            }
-        }
-    }
-
-
-    /**
      * 选择排序
      * 每次i排序后最小的数到了最前面
+     * 和插入类似，都要先定义 a[i];
      */
     public void selectSort(int[] a) {
         int min;
@@ -70,6 +53,24 @@ public class SortTest {
             }
         }
     }
+
+    /**
+     * 冒泡排序
+     * 每次i排序后最大的数到了最后边
+     * -i每进行一趟比较，每一趟少比较一次，一定程度上减少了算法的量
+     */
+    public void bubbleSort(int[] a) {
+        for (int i = 0; i < a.length - 1; i++) {//外层循环控制排序趟数
+            for (int j = i; j < a.length - 1 - i; j++) {//内层循环控制每一趟排序多少次
+                if (a[j] > a[j + 1]) {
+                    int temp = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = temp;
+                }
+            }
+        }
+    }
+
 
     /**
      * 快速排序
@@ -171,45 +172,53 @@ public class SortTest {
     /**
      * 堆排序
      */
-    public void heapSort(int[] a) {
-        buildMaxHead(a);
-        for (int i = a.length - 1; i >= 1; i--) {
-            exchange(a, 0, i);
-            maxHeap(a, i, 0);
+    //(1)
+    public void heapSort(int[] array) {
+        buildMaxHeap(array);//建立最大堆
+        for (int i = array.length - 1; i >= 1; i--) {
+            //最大的在0位置，那么开始沉降，这样每交换一次最大的值就丢到最后了
+            exchangeElements(array, 0, i);
+            //继续获取0位置最大值，将第一次排序后到了最后面的最大值排除
+            //重新调整结构，使其满足堆，然后继续交换堆顶元素与当前末尾元素，
+            //反复执行调整+交换步骤，直到整个序列有序。
+            maxHeap(array, i, 0);
         }
     }
 
-
-    private void buildMaxHead(int[] a) {
-        if (a == null || a.length <= 1) {
+    //(2)建立最大堆
+    private void buildMaxHeap(int[] array) {
+        if (array == null || array.length <= 1) {
             return;
         }
-        int half = (a.length - 1) / 2;
+        int half = (array.length - 1) / 2;//从一半开始，6
         for (int i = half; i >= 0; i--) {
-            maxHeap(a, a.length, i);
+            maxHeap(array, array.length, i);
         }
     }
 
-    private void maxHeap(int[] a, int headSize, int index) {
-        int left = 2 * index + 1;
-        int right = 2 * index + 2;
+    private void maxHeap(int[] array, int heapSize, int index) {//index堆头
+        int left = index * 2 + 1;
+        int right = index * 2 + 2;
         int largest = index;
-        if (left < headSize && a[left] > a[index]) {
+        //三者找最大值
+        if (left < heapSize && array[left] > array[index]) {
             largest = left;
         }
-        if (right > headSize && a[right] > a[index]) {
+        if (right < heapSize && array[right] > array[largest]) {
             largest = right;
         }
         if (index != largest) {
-            exchange(a, index, largest);
-            maxHeap(a, headSize, largest);
+            exchangeElements(array, index, largest);
+            //继续构造下面的大堆
+            maxHeap(array, heapSize, largest);
         }
     }
 
-    private void exchange(int[] a, int index, int index2) {
-        int temp = a[index];
-        a[index] = a[index2];
-        a[index2] = temp;
+    //（3）换位置
+    public void exchangeElements(int[] array, int index1, int index2) {
+        int temp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = temp;
     }
 
 

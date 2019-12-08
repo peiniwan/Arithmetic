@@ -1,13 +1,11 @@
 package arithmetic.ly.com.arithmetic.other;
 
 
-import android.annotation.TargetApi;
-import android.os.Build;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -17,6 +15,7 @@ public class LeetCode {
     public static void main(String[] args) {
         LeetCode leetCode = new LeetCode();
 //        leetCode.twoSum(new int[]{2, 11, 7, 15}, 9);
+//        leetCode.printPermutations(new int[]{1, 2, 3, 4}, 4, 4);
 //        leetCode.removeDuplicates(new int[]{0, 0, 1, 1, 1, 2, 2, 3, 3, 4});
 //        leetCode.rotate(new int[]{1, 2, 3, 4, 5, 6, 7}, 3);//5 6 7 1 2 3 4
 //        leetCode.rotate2(new int[]{1, 2, 3, 4, 5, 6, 7}, 3);//5 6 7 1 2 3 4
@@ -35,14 +34,144 @@ public class LeetCode {
 
 
 //        int kthLargest = leetCode.findKthLargest(new int[]{4, 2, 5, 12, 3}, 3);
-        leetCode.findNumsAppearOnce(new int[]{4, 4, 5, 5, 2, 3}, new int[1], new int[1]);
+//        leetCode.findNumsAppearOnce(new int[]{4, 4, 5, 5, 2, 3}, new int[1], new int[1]);
+//
+//        int fibonacci = leetCode.fibonacci_2(8);
+//        System.out.println("fibonacci"+fibonacci);
 
-        int fibonacci = leetCode.fibonacci_2(8);
-        System.out.println("fibonacci"+fibonacci);
+        String a = "abbbbaaaccssdd";
+        String b = "acc";
+        System.out.println(bfFind(a, b, 3));
 
+////        leetCode.cal8queens(0);
+//        int[] a = new int[]{4, 1, 2};
+//        leetCode.f(0, 0, a, 3, 9);
+//        System.out.println("args = [" + leetCode.maxW + "]");
     }
 
-    //============================数组============================
+    //============================数组============================\
+
+    /**
+     * 回溯算法：8皇后
+     */
+    public int[] result = new int[8];//全局或成员变量,下标表示行,值表示queen存储在哪一列
+
+    public void cal8queens(int row) { // 调用方式：cal8queens(0);
+        if (row == 8) { // 8个棋子都放置好了，打印结果
+            printQueens(result);
+            return; // 8行棋子都放好了，已经没法再往下递归了，所以就return
+        }
+        for (int column = 0; column < 8; ++column) { // 每一行都有8中放法
+            if (isOk(row, column)) { // 有些放法不满足要求
+                result[row] = column; // 第row行的棋子放到了column列
+                cal8queens(row + 1); // 考察下一行
+            }
+        }
+    }
+
+    private boolean isOk(int row, int column) {//判断row行column列放置是否合适
+        int leftup = column - 1, rightup = column + 1;
+        for (int i = row - 1; i >= 0; --i) { // 逐行往上考察每一行
+            if (result[i] == column) return false; // 第i行的column列有棋子吗？
+            if (leftup >= 0) { // 考察左上对角线：第i行leftup列有棋子吗？
+                if (result[i] == leftup) return false;
+            }
+            if (rightup < 8) { // 考察右上对角线：第i行rightup列有棋子吗？
+                if (result[i] == rightup) return false;
+            }
+            --leftup;
+            ++rightup;
+        }
+        return true;
+    }
+
+    private void printQueens(int[] result) { // 打印出一个二维矩阵
+        for (int row = 0; row < 8; ++row) {
+            for (int column = 0; column < 8; ++column) {
+                if (result[row] == column) System.out.print("Q ");
+                else System.out.print("* ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+
+    public int maxW = Integer.MIN_VALUE; //存储背包中物品总重量的最大值
+
+    /**
+     * 假设背包可承受重量100，物品个数10，物品重量存储在数组a中，那可以这样调用函数：
+     * f(0, 0, a, 10, 100)
+     *
+     * @param i     表示考察到哪个物品了
+     * @param cw    表示当前已经装进去的物品的重量和
+     * @param items 表示每个物品的重量
+     * @param n     表示物品个数
+     * @param w     背包重量
+     */
+    public void f(int i, int cw, int[] items, int n, int w) {
+        if (cw == w || i == n) { // cw==w表示装满了;i==n表示已经考察完所有的物品
+            if (cw > maxW) maxW = cw;
+            return;
+        }
+        //当前物品不装进背包，第 11 行的递归调用表示不选择当前物品，直接考虑下一个（第 i+1 个），故 cw 不更新
+        f(i + 1, cw, items, n, w);
+        if (cw + items[i] <= w) {// 已经超过可以背包承受的重量的时候，就不要再装了
+            f(i + 1, cw + items[i], items, n, w);//当前物品装进背包
+        }
+    }
+
+
+    /**
+     * BF算法
+     * 检查起始位置分别是 0、1、2…n-m 且长度为 m 的 n-m+1 个子串，看有没有跟模式串匹配的
+     * indexOf(xxx)方法直接就返回了
+     */
+    public static int bfFind(String S, String T, int pos) {
+        char[] arr1 = S.toCharArray();
+        char[] arr2 = T.toCharArray();
+        int i = 0, j = 0;
+        while (i < arr1.length && j < arr2.length) {
+            if (arr1[i] == arr2[j]) {
+                i++;
+                j++;
+            } else {
+                i = i - j + 1;
+                j = 0;
+            }
+        }
+        if (j == arr2.length) return i - j;
+        else return -1;
+    }
+
+
+    /**
+     * 奇数在前，偶数在后
+     * 先计算出奇数的个数count，然后用双指针来遍历，一个从头遍历到count，一个从数组尾部遍历到count。
+     * 从前向后找到一个偶数的下标，从后向前找到一个奇数的下标，然后交换对应的值。直到遍历完整个数组。
+     * 时间复杂度为O（n），空间复杂度为O（1）。
+     * https://blog.csdn.net/ucsasuke/article/details/96192857
+     */
+    private static void fun(int[] arr) {
+        int front = 0, end = arr.length - 1;//设置两个指针，一个指向头部，一个指向尾部
+        if (arr.length == 0) {//数组长度为0则返回
+            return;
+        }
+
+        while (front < end) {
+            while (front < arr.length && arr[front] % 2 == 1) {//从前往后找偶数
+                front++;
+            }
+            while (end >= 0 && arr[end] % 2 == 0) {//从后往前找奇数
+                end--;
+            }
+            if (front < end) {//将前面的偶数与后面奇数交换位置
+                int temp = arr[front];
+                arr[front] = arr[end];
+                arr[end] = temp;
+            }
+        }
+    }
 
 
     /**
@@ -51,7 +180,7 @@ public class LeetCode {
     public int[] twoSum(int[] nums, int target) {
         for (int i = 0; i < nums.length; i++) {
             for (int j = i + 1; j < nums.length; j++) {
-                if (nums[j] == target - nums[i]) {
+                if (nums[j] + nums[i] == target) {
                     int[] xx = new int[]{i, j};
                     System.out.println(xx[0] + "----" + xx[1]);
                     return xx;
@@ -67,8 +196,8 @@ public class LeetCode {
      * 双指针法：其中 i 是慢指针，而 j 是快指针。
      */
 
-    public int removeDuplicates(int[] nums) {
-        if (nums.length == 0) return 0;
+    public void removeDuplicates(int[] nums) {
+        if (nums.length == 0) return;
         int i = 0;
         for (int j = 1; j < nums.length; j++) {
             if (nums[j] != nums[i]) {
@@ -76,73 +205,9 @@ public class LeetCode {
                 nums[i] = nums[j];
             }
         }
-
-        System.out.println("nums = [" + (i + 1) + "]");
         for (int num : nums) {
             System.out.print(num + " ");
         }
-        return i + 1;
-    }
-
-
-    /**
-     * 旋转数组(看规律)  O(n)
-     * 输入: [-1,-100,3,99] 和 k = 2
-     * 输出: [3,99,-1,-100]
-     * 解释:
-     * 向右旋转 1 步: [99,-1,-100,3]
-     * 向右旋转 2 步: [3,99,-1,-100]
-     * 翻转 O(1)
-     */
-    public void rotate(int[] nums, int k) {
-        //-100 -1  99 3
-        // 旋转即是元素顺序轮转的意思
-        if (nums.length < 2 || k < 1 || k % nums.length == 0) {
-            return;
-        }
-        // 处理 k 大于 数组长度的情况
-        if (k > nums.length) {
-            k = k % nums.length;
-        }
-        // 对前 n - k(7-3) 个元素 [1,2,3,4] 进行逆转后得到 [4,3,2,1]
-        reverse(nums, 0, nums.length - 1 - k);
-        // 对后k个元素 [5,6,7] 进行逆转后得到 [7,6,5]
-        reverse(nums, nums.length - k, nums.length - 1);
-        // 将前后元素 [4,3,2,1,7,6,5] 逆转得到：[5,6,7,1,2,3,4]
-        reverse(nums, 0, nums.length - 1);
-    }
-
-    // 逆转数组指定区间内的元素，比如 [1,2,3,4] 逆转后变成  [4,3,2,1]
-    private void reverse(int[] nums, int start, int end) {
-        while (start < end) {
-            int temp = nums[start];
-            nums[start++] = nums[end];
-            nums[end--] = temp;
-        }
-    }
-
-
-    public void rotate2(int[] nums, int k) {
-        if (nums.length < 2 || k < 1 || k % nums.length == 0) {
-            return;
-        }
-        // O(n) 的空间复杂度
-        int[] result = new int[nums.length];
-
-        // 用另外一个数组记录元素旋转后的位置
-        for (int i = 0; i < nums.length; i++) {
-            int fIndex = (i + k) % nums.length;//k后面就是原来的顺序
-            result[fIndex] = nums[i];
-        }
-        // 赋值给原数组
-        for (int i = 0; i < nums.length; i++) {
-            nums[i] = result[i];
-        }
-
-        for (int num : nums) {
-            System.out.print(num + " ");
-        }
-
     }
 
 
@@ -224,8 +289,29 @@ public class LeetCode {
 
     /**
      * 俩个数组交集
+     * 算法复杂度为O(N + M)
      */
-    public int[] intersect1(int[] nums1, int[] nums2) {
+    public LinkedList<Integer> intersect(int[] A, int[] B) {
+        if (A == null || B == null || A.length == 0 || B.length == 0) return null;
+        LinkedList<Integer> list = new LinkedList<>();
+        int pointerA = 0;
+        int pointerB = 0;
+        while (pointerA < A.length && pointerB < B.length) {
+            if (A[pointerA] < B[pointerB]) pointerA++;
+            else if (A[pointerA] > B[pointerB]) pointerB++;
+            else {
+                list.add(A[pointerA]);
+                pointerA++;
+                pointerB++;
+            }
+        }
+
+        return list;
+
+    }
+
+
+    public int[] intersect2(int[] nums1, int[] nums2) {
         List<Integer> list1 = new ArrayList<>();
         for (int num : nums1) {
             list1.add(num);
@@ -249,28 +335,6 @@ public class LeetCode {
         return res;
     }
 
-
-    public int[] intersect2(int[] nums1, int[] nums2) {
-        int len1 = nums1.length;
-        int len2 = nums2.length;
-        boolean[] bl = new boolean[len2];
-        ArrayList<Integer> al = new ArrayList<Integer>();
-        for (int i = 0; i < len1; i++) {
-            for (int j = 0; j < len2; j++) {
-                if (nums1[i] == nums2[j] && bl[j] == false) {
-                    al.add(nums1[i]);
-                    bl[j] = true;
-                    break;
-                }
-            }
-        }
-        int[] in = new int[al.size()];
-        int e = 0;
-        for (int i : al)
-            in[e++] = i;
-
-        return in;
-    }
 
     /**
      * 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
@@ -314,10 +378,6 @@ public class LeetCode {
 
     /**
      * 数组中的第K个最大元素
-     *
-     * @param nums
-     * @param k
-     * @return
      */
     public int findKthLargest(int[] nums, int k) {
         int len = nums.length;
@@ -337,6 +397,11 @@ public class LeetCode {
         return nums[pivot];
     }
 
+    /**
+     * 给定一个int数组，找出出现次数最多的数字（出现次数超过数组长度的一半）
+     * 方式一：快速排序先对这个数组进行排序，
+     * 在已排序的数组中，位于中间位置的数字就是超过数组长度一半的那个数。
+     */
     private int partition(int[] nums, int left, int right) {
         int pivot = nums[left];
         while (left < right) {
@@ -424,22 +489,7 @@ public class LeetCode {
      * s = "loveleetcode",
      * 返回 2.
      */
-    @TargetApi(Build.VERSION_CODES.N)
     public int firstUniqChar(String s) {
-        HashMap<Character, Integer> map = new HashMap<>();
-        for (char c : s.toCharArray()) {
-            map.put(c, map.getOrDefault(c, 0) + 1);
-        }
-        int n = s.length();
-        for (int i = 0; i < n; i++) {
-            if (map.get(s.charAt(i)) == 1) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public int firstUniqChar2(String s) {
         HashMap<Character, Integer> map = new HashMap<>();
         for (char c : s.toCharArray()) {
             int value;
@@ -481,54 +531,6 @@ public class LeetCode {
         return true;
     }
 
-    /**
-     * 实现strStr()
-     * 输入: haystack = "hello", needle = "ll"
-     * 输出: 2
-     */
-    public int strStr(String haystack, String needle) {
-        int start = 0;
-        // 如果剩下的字母不够needle长度就停止遍历
-        while (start <= haystack.length() - needle.length()) {
-            int i1 = start, i2 = 0;
-            while (i2 < needle.length() && haystack.charAt(i1) == needle.charAt(i2)) {
-                i1++;
-                i2++;
-            }
-            if (i2 == needle.length()) return start;
-            start++;
-        }
-        return -1;
-    }
-
-    public int strStr2(String haystack, String needle) {
-        if (needle.equals(""))
-            return 0;
-        else if (!haystack.contains(needle))
-            return -1;
-        else {
-            return haystack.indexOf(needle);
-        }
-    }
-
-    /**
-     * 最长公共前缀
-     */
-    public String longestCommonPrefix(String[] strs) {
-        if (strs.length == 0) return "";
-        String prefix = strs[0];
-        for (int i = 1; i < strs.length; i++) {
-            // 找出S1与Si间的最长公共字符串
-            // indexOf：当存在串时返回>0；不存串时返回-1
-            // 只要不存在串，就缩减串的规模，再进行查找
-            while (strs[i].indexOf(prefix) != 0) {
-                prefix = prefix.substring(0, prefix.length() - 1);
-                if (prefix.isEmpty()) return "";
-            }
-        }
-        System.out.println("prefix:" + prefix);
-        return prefix;
-    }
 
     /**
      * 从数组和List中随机抽取若干不重复的元素.
@@ -582,18 +584,94 @@ public class LeetCode {
         return newArray;
     }
 
+    /**
+     * 旋转数组(看规律)  O(n)
+     * 输入: [-1,-100,3,99] 和 k = 2
+     * 输出: [3,99,-1,-100]
+     * 解释:
+     * 向右旋转 1 步: [99,-1,-100,3]
+     * 向右旋转 2 步: [3,99,-1,-100]
+     * 翻转 O(1)
+     */
+    public void rotate(int[] nums, int k) {
+        //-100 -1  99 3
+        // 旋转即是元素顺序轮转的意思
+        if (nums.length < 2 || k < 1 || k % nums.length == 0) {
+            return;
+        }
+        // 处理 k 大于 数组长度的情况
+        if (k > nums.length) {
+            k = k % nums.length;
+        }
+        // 对前 n - k(7-3) 个元素 [1,2,3,4] 进行逆转后得到 [4,3,2,1]
+        reverse(nums, 0, nums.length - 1 - k);
+        // 对后k个元素 [5,6,7] 进行逆转后得到 [7,6,5]
+        reverse(nums, nums.length - k, nums.length - 1);
+        // 将前后元素 [4,3,2,1,7,6,5] 逆转得到：[5,6,7,1,2,3,4]
+        reverse(nums, 0, nums.length - 1);
+    }
 
-    public void onther() {
-        int a = 10;
-        int b = 5;
-        //怎么在不引入其他变量的情况下,让a和b互换？
-        a = a + b;
-        b = a - b;
-        a = a - b;
-        System.out.println("b=" + b);
-        System.out.println("a=" + a);
+    // 逆转数组指定区间内的元素，比如 [1,2,3,4] 逆转后变成  [4,3,2,1]
+    private void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start++] = nums[end];
+            nums[end--] = temp;
+        }
+    }
+
+
+    public void rotate2(int[] nums, int k) {
+        if (nums.length < 2 || k < 1 || k % nums.length == 0) {
+            return;
+        }
+        // O(n) 的空间复杂度
+        int[] result = new int[nums.length];
+
+        // 用另外一个数组记录元素旋转后的位置
+        for (int i = 0; i < nums.length; i++) {
+            int fIndex = (i + k) % nums.length;//k后面就是原来的顺序
+            result[fIndex] = nums[i];
+        }
+        // 赋值给原数组
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = result[i];
+        }
+
+        for (int num : nums) {
+            System.out.print(num + " ");
+        }
 
     }
+
+    /**
+     * 如何把 n 个数据的所有排列都找出来
+     * int[]a = a={1, 2, 3, 4}; printPermutations(a, 4, 4);
+     * n 个“n−1 个数据的排列”
+     *
+     * @param k 表示要处理的子数组的数据个数
+     */
+    public void printPermutations(int[] data, int n, int k) {
+        if (k == 1) {
+            for (int i = 0; i < n; ++i) {
+                System.out.print(data[i] + " ");
+            }
+            System.out.println();
+        }
+
+        for (int i = 0; i < k; ++i) {
+            int tmp = data[i];
+            data[i] = data[k - 1];
+            data[k - 1] = tmp;
+
+            printPermutations(data, n, k - 1);
+
+            tmp = data[i];
+            data[i] = data[k - 1];
+            data[k - 1] = tmp;
+        }
+    }
+
 
     //============================动态规划============================
 
@@ -691,13 +769,40 @@ public class LeetCode {
 //            g = f - g;  //已经求和过的f减去g，会得到求和前的f，赋值给g
 //        }
         int a = 0, b = 1;
-        int temp=a + b;
+        int temp = a + b;
         for (int i = 2; i <= n; i++) {
             temp = a + b;
             a = b;
             b = temp;
         }
         return temp;
+    }
+
+
+    /**
+     * 题目：一个人迈步上台阶，一次可以迈1阶、2阶、3阶，这样，到1阶的走法有1中，
+     * 到2阶的走法有2中，到3阶的走法有4种，那么到第n级的走法有多少种？
+     * 【分析】走到n阶前，可能位于n-1阶，再迈1步1阶即可；可能为n-2阶，再迈1步2阶即可；可能位于n-3阶，
+     * 再迈1步3阶即可。递归公式：f(n)= f(n-1)+ f(n-1)+ f(n-2)。
+     */
+    public static int stepCounter(int n) {
+        if (n <= 0) throw new IllegalArgumentException("参数错误，n必须大于0！");
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        if (n == 3) return 4;
+        return stepCounter(n - 1) + stepCounter(n - 2) + stepCounter(n - 3);
+    }
+
+    public void onther() {
+        int a = 10;
+        int b = 5;
+        //怎么在不引入其他变量的情况下,让a和b互换？
+        a = a + b;
+        b = a - b;
+        a = a - b;
+        System.out.println("b=" + b);
+        System.out.println("a=" + a);
+
     }
 
 
