@@ -29,18 +29,6 @@ public class BinarySearch {
         return -1;
     }
 
-    /**
-     * 数组倒序
-     */
-    public static int[] rerves(int[] array) {
-        for (int i = 0; i < array.length / 2; i++) {
-            int tmp = array[i];
-            array[i] = array[array.length - 1 - i];
-            array[array.length - 1 - i] = tmp;
-        }
-        return array;
-    }
-
 
     /**
      * 假设按照升序排序的数组在预先未知的某个点上进行了旋转。
@@ -74,6 +62,47 @@ public class BinarySearch {
             }
         }
         return -1;
+    }
+
+
+    /**
+     * 无序数组中的第K个最大元素
+     * 可以用归并和快排
+     * findKthLargest(new int[]{4, 2, 5, 12, 3}, 3);   4
+     * 倒数  k - 1换成 len-k就行了
+     */
+    public int findKthLargest(int[] nums, int k) {
+        int len = nums.length;
+        int left = 0, right = len - 1;
+        int pivot = 0;
+        while (k - 1 != (pivot = partition(nums, left, right))) {
+            //第k大应该在第K-1位，找每个数字应该在的位置
+            if (pivot < k - 1) {//在右边
+                left = pivot + 1;
+                right = len - 1;
+            } else {//在左边
+                left = 0;
+                right = pivot - 1;
+            }
+        }
+        return nums[pivot];
+    }
+
+    /**
+     * 给定一个int数组，找出出现次数最多的数字（出现次数超过数组长度的一半）
+     * 方式一：快速排序先对这个数组进行排序，
+     * 在已排序的数组中，位于中间位置的数字就是超过数组长度一半的那个数。
+     */
+    private int partition(int[] nums, int left, int right) {
+        int pivot = nums[left];
+        while (left < right) {
+            while (left < right && nums[right] >= pivot) right--;
+            nums[left] = nums[right];
+            while (left < right && nums[left] <= pivot) left++;
+            nums[right] = nums[left];
+        }
+        nums[left] = pivot;
+        return left;
     }
 
     /**
@@ -138,6 +167,19 @@ public class BinarySearch {
         return -1;
     }
 
+    /**
+     * 38.数字在排序数组中出现的次数
+     * 利用二分查找算法（logn）,遍历的话是n
+     */
+    public int getNumberOfK(int[] array, int k) {
+        if (array == null || array.length == 0) return 0;
+        //使用二分查找思想，分别查找数字第一次和最后一次出现的位置
+        int firstK = bsearch1(array, array.length, k);
+        int lastK = bsearch2(array, array.length, k);
+        if (firstK != -1 && lastK != -1) return lastK - firstK + 1;  //返回重复出现次数
+        return 0;  //未找到则返回0
+    }
+
 
     /**
      * 变体三：查找第一个大于等于给定值的元素
@@ -179,14 +221,17 @@ public class BinarySearch {
         return -1;
     }
 
+
     public static void main(String[] args) {
         BinarySearch bs = new BinarySearch();
 //        System.out.println("Testing normal data");
 //        System.out.println(
 //                bs.binarySearch(new int[]{1, 2, 10, 15, 100}, 15));
-
+//        System.out.println(
+//                bs.search(new int[]{4, 5, 6, 7, 0, 1, 2}, 0));
         System.out.println(
-                bs.search(new int[]{4, 5, 6, 7, 0, 1, 2}, 0));
+                bs.getNumberOfK(new int[]{1, 2, 3, 3, 3, 5, 6}, 3) + "---");
+
 
     }
 }

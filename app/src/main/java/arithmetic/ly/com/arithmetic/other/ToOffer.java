@@ -50,22 +50,6 @@ public class ToOffer {
 
 
     /**
-     * 12.数值的整数次方
-     */
-    public double Power(double base, int exponent) {
-        int n = Math.abs(exponent);
-        if (n == 0) return 1;
-        if (n == 1) return base;
-        //递归：若n为偶数，则a^n=a^(n/2)*a^(n/2)；若n为奇数，则a^n=(a^(n-1)/2)*(a^((n-1)/2))*a，时间复杂度为O(log(n))
-        double result = Power(base, n >> 1);  //将n的二进制右移一位，意味着除以2，求得a^(n/2)或a^((n-1)/2)
-        result *= result;  //将a^(n/2)或a^((n-1)/2)进行平方，变为a^n或a^(n-1)
-        if ((n & 1) == 1) result *= base;  //在n的二进制右移递归后，若n为奇数，二进制最低位一定是1，这样就再乘一次a。偶数二进制的最低位为0
-        if (exponent < 0) result = 1 / result;  //若指数为负数，则求倒数
-        return result;
-    }
-
-
-    /**
      * 13.输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，
      * 所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
      */
@@ -256,32 +240,6 @@ public class ToOffer {
     }
 
     /*
-     * 18.操作给定的二叉树，将其变换为原二叉树的镜像。（画图形象化）
-     * 二叉树的镜像定义：源二叉树
-    	    8
-    	   /  \
-    	  6   10
-    	 / \  / \
-    	5  7 9 11
-    	镜像二叉树
-    	    8
-    	   /  \
-    	  10   6
-    	 / \  / \
-    	11 9 7  5
-     * */
-    public void Mirror(TreeNode root) {//前序遍历
-        if (root != null) { //当前树根节点不为空时，交换自己的左右子树根节点
-            TreeNode temp = root.left;
-            root.left = root.right;
-            root.right = temp;
-            Mirror(root.left);  //递归交换左子树的左右子树根节点
-            Mirror(root.right);  //递归交换右子树的左右子树根节点
-        }
-    }
-
-
-    /*
      * 24.输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。
      *  int[] array = {5, 7, 6, 9, 11, 10, 8};
         int[] array={7,4,6,5};
@@ -326,73 +284,6 @@ public class ToOffer {
             if (min == m5) i5++;
         }
         return list.get(list.size() - 1);  //返回列表中最后一个丑数即为从小到大的第N个丑数
-    }
-
-
-    /*
-     * 35.第一次只出现一次的字符
-     * 在一个字符串(0<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,并返回它的位置, 如果没有则返回 -1（需要区分大小写）。
-     * */
-    public int firstNotRepeatingChar(String str) {
-        if (str == null || str.length() == 0) return -1;
-        HashMap<Character, Integer> map = new HashMap<Character, Integer>();  //利用一个HashMap散列表存储每个字符出现的次数，字符为键次数为值
-        for (int i = 0; i < str.length(); i++) {  //遍历字符串，如果散列表中没有该字符的键就新建一个该字符的键，将值即出现次数设为1，若有说明该字符出现过，将值加一更新出现次数
-            if (map.containsKey(str.charAt(i))) {
-                int count = map.get(str.charAt(i));
-                map.put(str.charAt(i), ++count);  //++在前是因为先将出现次数加1，再更新该字符的出现次数
-            } else {
-                map.put(str.charAt(i), 1);
-            }
-        }
-        for (int i = 0; i < str.length(); i++) {  //遍历字符串，对每一个当前字符都去查找散列表对应键的值是不是1，找到就返回该字符在字符串中的位置
-            if (map.get(str.charAt(i)) == 1) return i;
-        }
-        return -1;  //若没有找到只出现一次的字符，则返回-1
-    }
-
-
-    /**
-     * 38.数字在排序数组中出现的次数
-     * 利用二分查找算法（logn）,遍历的话是n
-     */
-    public int getNumberOfK(int[] array, int k) {
-        if (array == null || array.length == 0) return 0;
-        //使用二分查找思想，分别查找数字第一次和最后一次出现的位置
-        int firstK = getFirstK(array, k, 0, array.length - 1);
-        int lastK = getLastK(array, k, 0, array.length - 1);
-        if (firstK != -1 && lastK != -1) return lastK - firstK + 1;  //返回重复出现次数
-        return 0;  //未找到则返回0
-    }
-
-    private int getFirstK(int[] array, int k, int start, int end) {
-        if (start > end) return -1;
-        int mid = (start + end) >> 1;  //在二进制中按位右移一位相当于除以2
-        if (array[mid] > k) {
-            return getFirstK(array, k, start, mid - 1);
-        } else if (array[mid] < k) {
-            return getFirstK(array, k, mid + 1, end);
-        } else if (mid - 1 >= 0 && array[mid - 1] == k) {  //如果找到的中点的前一个元素也是该重复元素，说明可能前面还有几个重复元素，则以中点前一位为下一轮终点再查找一次
-            return getFirstK(array, k, start, mid - 1);
-        } else {
-            return mid;  //最终找到的中点即该元素第一次出现的地方
-        }
-    }
-
-    private int getLastK(int[] array, int k, int start, int end) {
-        int mid = (start + end) >> 1;  //在二进制中按位右移一位相当于除以2，在循环外创建变量可避免每次循环都创建一个mid变量，浪费内存
-        while (start <= end) {
-            if (array[mid] > k) {
-                end = mid - 1;
-            } else if (array[mid] < k) {
-                start = mid + 1;
-            } else if (mid + 1 < array.length && array[mid + 1] == k) {  //如果找到的中点的后一个元素也是该重复元素，说明可能后面还有几个重复元素，则以中点后一位为下一轮起点再查找一次
-                start = mid + 1;
-            } else {
-                return mid;  //最终找到的中点即该元素最后一次出现的地方
-            }
-            mid = (start + end) >> 1;  //每一轮二分查找结束后查找起点或终点都会变化，所以需要更新中点
-        }
-        return -1;
     }
 
 

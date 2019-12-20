@@ -61,7 +61,7 @@ public class SortTest {
      */
     public void bubbleSort(int[] a) {
         for (int i = 0; i < a.length - 1; i++) {//外层循环控制排序趟数
-            for (int j = i; j < a.length - 1 - i; j++) {//内层循环控制每一趟排序多少次
+            for (int j = i; j < a.length - 1 - i; j++) {//内层循环控制每一趟排序多少次,选择一个数和i进行比较
                 if (a[j] > a[j + 1]) {
                     int temp = a[j];
                     a[j] = a[j + 1];
@@ -255,10 +255,60 @@ public class SortTest {
 
     public static void main(String[] args) {
         SortTest sortTest = new SortTest();
-        int[] arr = {9, 4, 2, 6, 7, 3, 10, 33, 88, 1, 17};
-//        sortTest.bubbleSort(arr);
-        sortTest.selectSort(arr);
-//        sortTest.insertSort(arr);
-        sortTest.printArr(arr);
+//        int[] arr = {9, 4, 2, 6, 7, 3, 10, 33, 88, 1, 17};
+////        sortTest.bubbleSort(arr);
+//        sortTest.selectSort(arr);
+////        sortTest.insertSort(arr);
+//        sortTest.printArr(arr);
+//        System.out.println(sortTest.findKthLargest(new int[]{4, 2, 5, 12, 3}, 3) + "--");
+        int[] num1 = {1, 2, 3, 0, 0, 0};
+        int[] num2 = {2, 5, 6};
+        sortTest.merge2(num1, num2);
     }
+
+
+    /**
+     * 有序的合并俩个数组
+     */
+    private void merge2(int[] num1, int[] num2) {//left0,mid0,right1
+        //在排序前，先建好一个长度等于原数组长度的临时数组，避免递归中频繁开辟空间
+        int a = num1.length;
+        int b = num2.length;
+        int[] tmpArray = new int[a + b];
+        int rightStart = 0;//右序列指针
+        int leftStart = 0;//左序列指针
+        int temp = 0;//临时数组指针
+        //比较两个小数组相应下标位置的数组大小，小的先放进新数组
+        while (leftStart < a && rightStart < b) {
+            if (num1[leftStart] <= num2[rightStart]) {
+                //相当于tmpArray[third]=a[left];third++;left++三步合一步
+                tmpArray[temp++] = num1[leftStart++];
+            } else {
+                tmpArray[temp++] = num2[rightStart++];
+            }
+        }
+        //如果左边还有数据需要拷贝，把左边数组剩下的拷贝到新数组
+        while (leftStart < a) {
+            tmpArray[temp++] = num1[leftStart++];
+        }
+        //如果右边还有数据......
+        while (rightStart < b) {
+            tmpArray[temp++] = num2[rightStart++];
+        }
+        int slow = 0;
+        int fast = 0;
+        int[] newArray = new int[tmpArray.length];
+        while (fast < tmpArray.length) {
+            if (tmpArray[fast] != 0) {
+                newArray[slow] = tmpArray[fast];
+                ++slow;
+            }
+            ++fast;
+        }
+        for (int i : newArray) {
+            System.out.println(i + "---");
+        }
+
+    }
+
 }

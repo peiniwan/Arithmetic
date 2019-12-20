@@ -161,7 +161,7 @@ public class LinkedUtils {
 
 
     /**
-     * 循环删除链表某个节点值
+     * 循环删除链表某个节点值,跟下面类似
      */
     public ListNode removeNode(ListNode head, int value) {
         if (head == null) {

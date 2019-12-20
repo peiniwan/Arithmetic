@@ -1,6 +1,8 @@
 package arithmetic.ly.com.arithmetic.other;
 
 
+import android.graphics.Paint;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,14 +41,25 @@ public class LeetCode {
 //        int fibonacci = leetCode.fibonacci_2(8);
 //        System.out.println("fibonacci"+fibonacci);
 
-        String a = "abbbbaaaccssdd";
-        String b = "acc";
-        System.out.println(bfFind(a, b, 3));
+//        String a = "abbbbaaaccssdd";
+//        String b = "acc";
+//        System.out.println(bfFind(a, b, 3));
 
 ////        leetCode.cal8queens(0);
 //        int[] a = new int[]{4, 1, 2};
 //        leetCode.f(0, 0, a, 3, 9);
 //        System.out.println("args = [" + leetCode.maxW + "]");
+
+//        LinkedList<Integer> intersect = leetCode.intersect(new int[]{1, 2, 8, 9}, new int[]{1, 4, 6, 7});
+//        for (Integer integer : intersect) {
+//            System.out.println("args = [" + integer + "]");
+//        }
+
+
+        int a[][] = new int[2][2];
+        int b[][] = {{1, 2}, {3, 4}};
+        leetCode.rotate(b);
+
     }
 
     //============================数组============================\
@@ -123,7 +136,7 @@ public class LeetCode {
 
 
     /**
-     * BF算法
+     * BF算法（交集）
      * 检查起始位置分别是 0、1、2…n-m 且长度为 m 的 n-m+1 个子串，看有没有跟模式串匹配的
      * indexOf(xxx)方法直接就返回了
      */
@@ -305,9 +318,7 @@ public class LeetCode {
                 pointerB++;
             }
         }
-
         return list;
-
     }
 
 
@@ -375,43 +386,16 @@ public class LeetCode {
         return r;
     }
 
-
     /**
-     * 数组中的第K个最大元素
+     * 数组倒序
      */
-    public int findKthLargest(int[] nums, int k) {
-        int len = nums.length;
-        int left = 0, right = len - 1;
-        int pivot = 0;
-        while (len - k != (pivot = partition(nums, left, right))) {
-            //4所在的问题就是2，那就找到了
-            //第k大应该在第K位，找每个数字应该在的位置，正好第0个4就是第K位，就找到了
-            if (pivot < len - k) {
-                left = pivot + 1;
-                right = len - 1;
-            } else {
-                left = 0;
-                right = pivot - 1;
-            }
+    public static int[] rerves(int[] array) {
+        for (int i = 0; i < array.length / 2; i++) {
+            int tmp = array[i];
+            array[i] = array[array.length - 1 - i];
+            array[array.length - 1 - i] = tmp;
         }
-        return nums[pivot];
-    }
-
-    /**
-     * 给定一个int数组，找出出现次数最多的数字（出现次数超过数组长度的一半）
-     * 方式一：快速排序先对这个数组进行排序，
-     * 在已排序的数组中，位于中间位置的数字就是超过数组长度一半的那个数。
-     */
-    private int partition(int[] nums, int left, int right) {
-        int pivot = nums[left];
-        while (left < right) {
-            while (left < right && nums[right] >= pivot) right--;
-            nums[left] = nums[right];
-            while (left < right && nums[left] <= pivot) left++;
-            nums[right] = nums[left];
-        }
-        nums[left] = pivot;
-        return left;
+        return array;
     }
 
 
@@ -531,6 +515,38 @@ public class LeetCode {
         return true;
     }
 
+    /**
+     * 12.数值的整数次方
+     */
+    public double Power(double base, int exponent) {
+        int n = Math.abs(exponent);
+        if (n == 0) return 1;
+        if (n == 1) return base;
+        //递归：若n为偶数，则a^n=a^(n/2)*a^(n/2)；若n为奇数，则a^n=(a^(n-1)/2)*(a^((n-1)/2))*a，时间复杂度为O(log(n))
+        double result = Power(base, n >> 1);  //将n的二进制右移一位，意味着除以2，求得a^(n/2)或a^((n-1)/2)
+        result *= result;  //将a^(n/2)或a^((n-1)/2)进行平方，变为a^n或a^(n-1)
+        if ((n & 1) == 1) result *= base;  //在n的二进制右移递归后，若n为奇数，二进制最低位一定是1，这样就再乘一次a。偶数二进制的最低位为0
+        if (exponent < 0) result = 1 / result;  //若指数为负数，则求倒数
+        return result;
+    }
+
+
+    public double Power2(double base, int exponent) {
+        double result = 1.000;
+        int ex = Math.abs(exponent);
+        boolean flag = false;
+        if (exponent < 0) {
+            flag = true;
+        }
+        while (ex > 0) {
+            result *= base;
+            ex--;
+        }
+        if (flag) {
+            result = 1 / result;
+        }
+        return result;
+    }
 
     /**
      * 从数组和List中随机抽取若干不重复的元素.
@@ -561,27 +577,41 @@ public class LeetCode {
         return newArray;
     }
 
-    public int[] getRandomArray2(int[] paramArray, int count) {
-        if (paramArray.length < count) {
-            return paramArray;
-        }
-        int[] newArray = new int[count];
-        Random random = new Random();
-        int temp = 0;//接收产生的随机数
-        List<Integer> list = new ArrayList<Integer>();
-        for (int i = 1; i <= count; i++) {
-            temp = random.nextInt(paramArray.length);//将产生的随机数作为被抽数组的索引
-            if (!(list.contains(temp))) {
-                newArray[i - 1] = paramArray[temp];
-                list.add(temp);
-            } else {
-                i--;//重新设置
+    /**
+     * 48. 旋转图像
+     * nXn整型二维数组顺时针旋转90度
+     * 最直接的想法是先转置矩阵，然后翻转每一行。
+     * 时间复杂度O(N^2)。空间复杂度：O(1) 由于旋转操作是 就地 完成的
+     * 1,2
+     * 3,4
+     * 1,3
+     * 2,4
+     */
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+
+        // transpose matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                int tmp = matrix[j][i];
+                matrix[j][i] = matrix[i][j];
+                matrix[i][j] = tmp;
             }
         }
-        for (int s : newArray) {
-            System.out.println("String:" + s);
+        // reverse each row
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n / 2; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[i][n - j - 1];
+                matrix[i][n - j - 1] = tmp;
+            }
         }
-        return newArray;
+        for (int[] ints : matrix) {
+            for (int anInt : ints) {
+                System.out.println("anInt:" + anInt);
+            }
+        }
+
     }
 
     /**

@@ -10,9 +10,9 @@ public class TreeOther {
 
     /**
      * 通过前序遍历的数据反向生成二叉树
-     *          A
-     *       B       C
-     *   D     E   #     F
+     * A
+     * B       C
+     * D     E   #     F
      * #   #  # #     #    #
      * ABD##E##C#F##
      */
@@ -167,6 +167,8 @@ public class TreeOther {
      * 前：ABDECF
      * 中：DBEAFC
      * 后：DEBFCA
+     * 因为要在遍历完节点的左子树后接着遍历节点的右子树，为了能找到该节点，需要使用栈来进行暂存。
+     * 中序和后序也都涉及到回溯，所以都需要用到栈。
      */
     public static void preorderTraversal(TreeNode root) {
         // 用来暂存节点的栈
@@ -216,6 +218,12 @@ public class TreeOther {
         }
     }
 
+
+    /**
+     * 后序遍历在决定是否可以输出当前节点的值的时候，需要考虑其左右子树是否都已经遍历完成。
+     * 所以需要设置一个lastVisit游标。
+     *
+     */
     public static void postorderTraversal(TreeNode root) {
         Stack<TreeNode> treeNodeStack = new Stack<TreeNode>();
         TreeNode node = root;
@@ -227,7 +235,8 @@ public class TreeOther {
             }
 //查看当前栈顶元素
             node = treeNodeStack.peek();
-//如果其右子树也为空，或者右子树已经访问
+//如果其右子树也为空(说明已经遍历完了)，若lastVisit等于当前考查节点的右子树，
+// 表示该节点的左右子树都已经遍历完成，则可以输出当前节点。
 //则可以直接输出当前节点的值
             if (node.getRight() == null || node.getRight() == lastVisit) {
                 System.out.print(node.getValue() + " ");
@@ -294,7 +303,6 @@ public class TreeOther {
             }
         }
     }
-
 
     /**
      * 删除比较复杂，看文章
