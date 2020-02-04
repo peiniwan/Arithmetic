@@ -1,47 +1,26 @@
 package arithmetic.ly.com.arithmetic.other;
 
-import android.annotation.TargetApi;
-import android.os.Build;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-
-/**
- * Created by liuyu1 on 2018/2/9.
- */
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class StringUtils {
 
     public static void main(String[] args) {
-        /**
-         * 给定一个字符串数组。按照字典顺序进行从小到大的排序。
-         *
-         *思路：
-         * 1,对数组排序。可以用选择，冒泡都行。
-         * 2,问题：以前排的是整数，比较用的比较运算符，可是现在是字符串对象。
-         *   字符串对象怎么比较呢？对象中提供了用于字符串对象比较的功能。
-         *
-         *   将字符串变成数组。对数组反转。将数组变成字符串。
-         */
-        String[] arr = {"nba", "abc", "cba", "zz", "qq", "haha"};
-        printArray(arr); // 原来的
-        sortString(arr);
-        printArray(arr); // 比较后的
-
-        String str = "shag klh";
-        String out = reverseString(str);
-//        String out = reverse(str);
-        System.out.println(out);
-
-        countWordInString("ddfdffwgfddd berterg   sdfwersdf");
+        String a = "abbbbaaaccssdd";
+        String b = "acc";
+        System.out.println(bfFind(a, b, 3));
     }
 
 
+    /**
+     * 给定一个字符串数组。按照字典顺序进行从小到大的排序。
+     */
     public static void sortString(String[] arr) {
-        for (int i = 0; i < arr.length ; i++) {
-            for (int j = 0; j < arr.length-i-1; j++) {
-                if (arr[j].compareTo(arr[j+1]) > 0)// 字符串比较用compareTo方法
-                    swap(arr, j, j+1);
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr.length - i - 1; j++) {
+                if (arr[j].compareTo(arr[j + 1]) > 0)// 字符串比较用compareTo方法
+                    swap(arr, j, j + 1);
             }
         }
     }
@@ -51,17 +30,6 @@ public class StringUtils {
         arr[i] = arr[j];
         arr[j] = temp;
     }
-
-    public static void printArray(String[] arr) {
-        System.out.print("[");
-        for (int i = 0; i < arr.length; i++) {
-            if (i != arr.length - 1)
-                System.out.print(arr[i] + ", ");
-            else
-                System.out.println(arr[i] + "]");
-        }
-    }
-
 
     /**
      * 用递归实现字符串反转
@@ -77,83 +45,202 @@ public class StringUtils {
 
 
     /**
-     * 将字符串反转
-     *
-     * @param str
-     * @return
+     * 给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+     * s = "loveleetcode",
+     * 返回 2.
      */
-    private static String reverseString(String str) {
-        // 将字符串变成数组
-        char[] chs = str.toCharArray();
-
-        // 将数组反正，也就是收尾调换
-        reverseArray(chs);
-
-        return new String(chs);
+    public int firstUniqChar(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            int value;
+            if (map.get(c) == null) {
+                value = 1;
+            } else {
+                value = map.get(c) + 1;
+            }
+            map.put(c, value);
+        }
+        for (int i = 0; i < s.length(); i++) {
+            if (map.get(s.charAt(i)) == 1) {
+                System.out.println(i);
+                return i;
+            }
+        }
+        return -1;
     }
 
-    private static void reverseArray(char[] chs) {
-        char temp;
-        for (int start = 0, end = chs.length - 1; start < end; start++, end--) {
-            temp = chs[start];
-            chs[start] = chs[end];
-            chs[end] = temp;
+
+    // 下面都是双指针
+
+    /**
+     * 是否是字串，BF算法（交集）
+     * 检查起始位置分别是 0、1、2…n-m 且长度为 m 的 n-m+1 个子串，看有没有跟模式串匹配的
+     * indexOf(xxx)方法直接就返回了
+     * 时间复杂度：O(n* m)
+     */
+    public static int bfFind(String S, String T, int pos) {
+        char[] arr1 = S.toCharArray();
+        char[] arr2 = T.toCharArray();
+        int i = 0, j = 0;
+        while (i < arr1.length && j < arr2.length) {
+            if (arr1[i] == arr2[j]) {
+                i++;
+                j++;
+            } else {
+                //++操作，为什么-j，因为相同时ij都+过，其他情况j是0
+                i = i - j + 1;
+                j = 0;
+            }
+        }
+        if (j == arr2.length) return i - j;
+        else return -1;
+    }
+
+
+    /**
+     * 151. 翻转字符串里的单词
+     * 输入: "  hello world!  "
+     * 输出: "world! hello"//去掉多余的空格
+     */
+    public String reverseWords(String s) {
+        if (s == null) return null;
+        char[] s_arr = s.toCharArray();
+        int n = s_arr.length;
+        // 翻转这个数组
+        reverse(s_arr, 0, n - 1);
+        // 翻转每个单词
+        word_reverse(s_arr, n);
+        // 去除多余空格
+        String s1 = clean_space(s_arr, n);
+        System.out.println(s1);
+        return s1;
+    }
+
+
+    private void word_reverse(char[] s_arr, int n) {
+        int i = 0;
+        int j = 0;
+        while (j < n) {
+            // 找到第一个首字母,画图看
+            while (i < n && s_arr[i] == ' ') i++;
+            j = i;
+            // 末位置
+            while (j < n && s_arr[j] != ' ') j++;
+            reverse(s_arr, i, j - 1);
+            i = j;//继续找
+        }
+    }
+
+    /**
+     * 替换空格
+     */
+    private String clean_space(char[] s_arr, int n) {
+        int i = 0;
+        int j = 0;
+        while (j < n) {
+            while (j < n && s_arr[j] == ' ') j++;
+            while (j < n && s_arr[j] != ' ') s_arr[i++] = s_arr[j++];
+            while (j < n && s_arr[j] == ' ') j++;
+            if (j < n) s_arr[i++] = ' ';//自己加了个空格
+        }
+        return new String(s_arr).substring(0, i);
+    }
+
+    private void reverse(char[] s_arr, int i, int j) {
+        while (i < j) {
+            char t = s_arr[i];
+            s_arr[i++] = s_arr[j];
+            s_arr[j--] = t;
+        }
+    }
+
+    private static void reverse2(char[] arr, int start, int end) {
+        for (int i = start, j = end; i <= j; i++, j--) {
+            char temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
         }
     }
 
 
     /**
-     * 统计给定文件中给定字符串的出现次数
-     *
-     * @param filename 文件名
-     * @param word     字符串
-     * @return 字符串在文件中出现的次数
+     * 反转字符串中的元音字符
+     * 英文字母一共26个，其中由5个元音字母和21个辅音字母组成。
+     * 使用双指针，一个指针从头向尾遍历，一个指针从尾到头遍历，
+     * 当两个指针都遍历到元音字符时，交换这两个元音字符。
+     * 时间复杂度为 O(N)：只需要遍历所有元素一次
+     * 空间复杂度 O(1)：只需要使用两个额外变量
      */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static int countWordInFile(String filename, String word) {
-        int counter = 0;
-        try (FileReader fr = new FileReader(filename)) {
-            try (BufferedReader br = new BufferedReader(fr)) {
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    int index = -1;
-                    while (line.length() >= word.length() && (index = line.indexOf(word)) >= 0) {
-                        counter++;
-                        line = line.substring(index + word.length());
-                    }
-                }
+    private final static HashSet<Character> vowels = new HashSet<>(
+            Arrays.asList('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'));
+
+    public String reverseVowels(String s) {
+        if (s == null) return null;
+        int i = 0, j = s.length() - 1;
+        char[] result = new char[s.length()];
+        while (i <= j) {
+            char ci = s.charAt(i);
+            char cj = s.charAt(j);
+            if (!vowels.contains(ci)) {
+                result[i++] = ci;
+            } else if (!vowels.contains(cj)) {
+                result[j--] = cj;
+            } else {
+                result[i++] = cj;
+                result[j--] = ci;
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
-        return counter;
+        return new String(result);
     }
 
     /**
-     * 统计给定字符串中字符出现的次数
+     * 验证回文字符串
+     * 每次都判断两个指针指向的字符是否相同
      */
-    public static int countWordInString(String s) {
-        int len1 = s.length();//获取原来的字符串长度
-        String[] strings = s.split("");
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < strings.length; i++) {
-            if (stringBuilder.toString().contains(strings[i])) {
-                continue;
+    public boolean isPalindrome(String s) {
+        int size = s.length(), i = 0, j = size - 1;
+        s = s.toLowerCase();
+
+        while (i < j) {//非数字/字符则跳过
+            if (!(s.charAt(i) >= 'a' && s.charAt(i) <= 'z') && !(s.charAt(i) >= '0' && s.charAt(i) <= '9')) {
+                i++;
+            } else if (!(s.charAt(j) >= 'a' && s.charAt(j) <= 'z') && !(s.charAt(j) >= '0' && s.charAt(j) <= '9')) {
+                j--;
+            } else {
+                if (s.charAt(i++) != s.charAt(j++)) return false;
+//                i++;
+//                j--;
             }
-            stringBuilder.append(strings[i]);
-            String s1 = s.replaceAll(strings[i], "");
-            int len2 = s1.length();
-            int lenTimes = len1 - len2;//出现的次数
-            System.out.println(strings[i] + "的个数：" + lenTimes);
         }
-
-
-        int count = 0;
-//        for (int i = 0; i < s.length(); i++) {
-//            if (s.charAt(i) == c) {
-//                count++;
-//            }
-//        }
-        return count;
+        return true;
     }
+
+    /**
+     * 给定一个非空字符串 s，最多删除一个字符。判断是否能成为回文字符串。
+     * 输入: "aba"
+     * 输出: True
+     * 输入: "abca"
+     * 输出: True
+     * 解释: 你可以删除c字符。
+     */
+    public boolean validPalindrome(String s) {
+        for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
+            if (s.charAt(i) != s.charAt(j)) {
+                // 子串是回文
+                return isPalindrome(s, i, j - 1) || isPalindrome(s, i + 1, j);
+            }
+        }
+        return true;
+    }
+
+    private boolean isPalindrome(String s, int i, int j) {
+        while (i < j) {
+            if (s.charAt(i++) != s.charAt(j--)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }

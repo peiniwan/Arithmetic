@@ -46,12 +46,11 @@ public class LinkedUtils {
             return head;
         }
         Stack<ListNode> stack = new Stack<>();
-        ListNode pre = null;
         while (head.next != null) {
             stack.push(head);
             head = head.next;
         }
-        pre = head;
+        ListNode pre = head;
         while (!stack.isEmpty()) {
             head.next = stack.pop();
             head = head.next;
@@ -75,28 +74,8 @@ public class LinkedUtils {
         }
         return reverse;
         // 出来后 head=second=2(3)           reverse=1(null)
-        //       head=second=3(null)     reverse =2(1)
+        //       head=second=3(null)     reverse =2(1) = 没出来时的head
         //       head=null(null)        reverse =3(2)1
-    }
-
-    /**
-     * 递归反转链表(打印)
-     */
-    public ListNode reverseLinkedList(ListNode head) {
-        // size == 0 or size == 1
-        if (head == null || head.next == null) {
-            //第一次出来的是3,他的nextnull
-            return head;
-        }
-        //先一般再特殊，先假设可以反转，缩小问题规模程度1
-        //写完一般后再一行一行看可能会出现什么问题
-        //递归执行完后，递归上面的方法就不回执行了
-        //2-1-null
-        ListNode newHead = reverseLinkedList(head.next);
-        head.next.next = head;//2->1
-        head.next = null;//1->null
-//      head是2，第一次出来3的next是2，2的next是null
-        return newHead;
     }
 
     //==================== 增删改查 ==================
@@ -139,7 +118,6 @@ public class LinkedUtils {
         }
         node.next = current;//最后current 1 null  previous 2  1
         previous.next = node;// node.next设为index后面的节点，index.next设为node
-        pos = 0;
         return head;
     }
 
@@ -413,11 +391,11 @@ public class LinkedUtils {
 //        ListNode.printLinkedList(creator.removeNode(
 //                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
 
-        ListNode.printLinkedList(creator.findKthToTail(
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
+//        ListNode.printLinkedList(creator.findKthToTail(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
 
-//        ListNode.printLinkedList(creator.reverseLink(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+        ListNode.printLinkedList(creator.reverseLink(
+                creator.createLinkedList(Arrays.asList(1, 2, 3))));
 
     }
 

@@ -266,9 +266,30 @@ public class SortTest {
         sortTest.merge2(num1, num2);
     }
 
+    /**
+     * 归并两个有序数组
+     * 把归并结果存到第一个数组上。
+     * 需要从尾开始遍历，否则在 nums1 上归并得到的值会覆盖还未进行归并比较的值。
+     */
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int index1 = m - 1, index2 = n - 1;
+        int indexMerge = m + n - 1;
+        while (index1 >= 0 || index2 >= 0) {
+            if (index1 < 0) {
+                nums1[indexMerge--] = nums2[index2--];
+            } else if (index2 < 0) {//一个短一个长，index2<0了，设置nums1的数字
+                nums1[indexMerge--] = nums1[index1--];
+            } else if (nums1[index1] > nums2[index2]) {
+                nums1[indexMerge--] = nums1[index1--];
+            } else {
+                nums1[indexMerge--] = nums2[index2--];
+            }
+        }
+    }
+
 
     /**
-     * 有序的合并俩个数组
+     * 归并两个有序数组(不对)
      */
     private void merge2(int[] num1, int[] num2) {//left0,mid0,right1
         //在排序前，先建好一个长度等于原数组长度的临时数组，避免递归中频繁开辟空间
@@ -310,5 +331,7 @@ public class SortTest {
         }
 
     }
+
+
 
 }

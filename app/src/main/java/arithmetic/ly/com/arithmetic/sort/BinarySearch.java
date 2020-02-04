@@ -1,7 +1,5 @@
 package arithmetic.ly.com.arithmetic.sort;
 
-import android.os.Bundle;
-
 public class BinarySearch {
 
     /**
@@ -66,10 +64,11 @@ public class BinarySearch {
 
 
     /**
-     * 无序数组中的第K个最大元素
-     * 可以用归并和快排
+     * 215：无序数组中的第K个最大元素
+     * 可以用归并和快排(分治思想)
      * findKthLargest(new int[]{4, 2, 5, 12, 3}, 3);   4
      * 倒数  k - 1换成 len-k就行了
+     * 时间复杂度就为 O(n)
      */
     public int findKthLargest(int[] nums, int k) {
         int len = nums.length;
@@ -126,6 +125,7 @@ public class BinarySearch {
     }
 
     /**
+     * 34. 在排序数组中查找元素的第一个和最后一个位置
      * 变体一：查找第一个值等于给定值的元素
      * 如下面这样一个有序数组，其中，a[5]，a[6]，a[7] 的值都等于 8，是重复的数据。
      * 我们希望查找第一个等于 8 的数据，也就是下标是 5 的元素。
