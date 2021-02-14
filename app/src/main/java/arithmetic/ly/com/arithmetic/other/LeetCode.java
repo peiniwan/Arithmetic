@@ -7,6 +7,8 @@ public class LeetCode {
 
     public static void main(String[] args) {
         LeetCode leetCode = new LeetCode();
+        ArrayTest arrayTest = new ArrayTest();
+        arrayTest.twoSum2(new int[]{2, 7, 11, 15},9);
     }
 
     //============================动态规划============================

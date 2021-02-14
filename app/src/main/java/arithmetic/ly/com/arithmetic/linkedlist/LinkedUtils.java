@@ -37,47 +37,6 @@ public class LinkedUtils {
 
     }
 
-
-    /**
-     * 反转链表，可以用栈,递归本质就是一个栈，理解递归
-     */
-    public ListNode printListFromTailToHead(ListNode head) {
-        if (head == null || head.next == null) {
-            return head;
-        }
-        Stack<ListNode> stack = new Stack<>();
-        while (head.next != null) {
-            stack.push(head);
-            head = head.next;
-        }
-        ListNode pre = head;
-        while (!stack.isEmpty()) {
-            head.next = stack.pop();
-            head = head.next;
-        }
-        head.next = null;
-        return pre;
-    }
-
-
-    /**
-     * 循环反转链表
-     * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
-     */
-    public ListNode reverseLink(ListNode head) {
-        ListNode reverse = null;  //用一个新的空链表存放反转后的链表
-        while (head != null) {  //当原链表的节点没有被剥离完时不断循环
-            ListNode second = head.next;    //初始化原链表首节点的下一个节点
-            head.next = reverse;  //head.next当作是个变量，原链表首节点的下一个节点链接到新链表的首节点处
-            reverse = head;     //下一跳节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
-            head = second;   //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
-        }
-        return reverse;
-        // 出来后 head=second=2(3)           reverse=1(null)
-        //       head=second=3(null)     reverse =2(1) = 没出来时的head
-        //       head=null(null)        reverse =3(2)1
-    }
-
     //==================== 增删改查 ==================
 
     /**
@@ -91,7 +50,7 @@ public class LinkedUtils {
 
     /**
      * 插入尾节点
-     * （重要）找到未节点，注意这里是当元素的下一个元素为空的时候这个节点即为未节点
+     * 找到未节点，注意这里是当元素的下一个元素为空的时候这个节点即为未节点
      */
     public ListNode addLastNode(ListNode head, int data) {
         ListNode node = new ListNode(data);
@@ -144,9 +103,6 @@ public class LinkedUtils {
     public ListNode removeNode(ListNode head, int value) {
         if (head == null) {
             return null;
-        }
-        while (head != null && head.val == value) {
-            head = head.next;
         }
         ListNode prev = head;
         while (prev.next != null) {
@@ -277,6 +233,7 @@ public class LinkedUtils {
      * 这是为什么呢？考虑下面这种情况（记作情况 A）- 假如快跑者只落后慢跑者一步，在下一次迭代中，它们就会分别跑了一步或两步并相遇。
      * 其他情况又会怎样呢？例如，我们没有考虑快跑者在慢跑者之后两步或三步的情况。但其实不难想到，因为在下一次或者下下次迭代后，
      * 又会变成上面提到的情况 A。
+     * https://leetcode-cn.com/problems/linked-list-cycle/solution/141-huan-xing-lian-biao-by-ac_fun-dyet/
      */
     public boolean hasCycle2(ListNode head) {
         if (head == null || head.next == null) {
@@ -296,6 +253,46 @@ public class LinkedUtils {
 
 
     /**
+     * 循环反转链表
+     * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
+     */
+    public ListNode reverseLink(ListNode head) {
+        ListNode reverse = null;  //用一个新的空链表存放反转后的链表
+        while (head != null) {  //当原链表的节点没有被剥离完时不断循环
+            ListNode second = head.next;    //初始化原链表首节点的下一个节点
+            head.next = reverse;  //head.next当作是个变量，原链表首节点的下一个节点链接到新链表的首节点处
+            reverse = head;     //下一节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
+            head = second;   //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
+        }
+        return reverse;
+        // 出来后 head=second=2(3)           reverse=1(null)
+        //       head=second=3(null)     reverse =2(1) = 没出来时的head
+        //       head=null(null)        reverse =3(2)1
+    }
+
+
+    /**
+     * 反转链表，可以用栈,递归本质就是一个栈，理解递归
+     */
+    public ListNode printListFromTailToHead(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        Stack<ListNode> stack = new Stack<>();
+        while (head.next != null) {
+            stack.push(head);
+            head = head.next;
+        }
+        ListNode pre = head;
+        while (!stack.isEmpty()) {
+            head.next = stack.pop();
+            head = head.next;
+        }
+        head.next = null;
+        return pre;
+    }
+
+    /**
      * 将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
      * 输入：1->2->4, 1->3->4
      * 输出：1->1->2->3->4->4
@@ -313,7 +310,7 @@ public class LinkedUtils {
     }
 
     /**
-     * 37.两个链表的第一个公共节点(公共节点就考虑set)
+     * 52.两个链表的第一个公共节点(公共节点就考虑set)
      * 空间复杂度（m+n）时间复杂度（m+n）
      */
     public ListNode findFirstCommonNode(ListNode pHead1, ListNode pHead2) {
@@ -333,46 +330,46 @@ public class LinkedUtils {
     }
 
     /**
-     * 37.两个链表的第一个公共节点(2)
-     * 长链表先走n步，第一个相同的就是公共节点
+     * 52.两个链表的第一个公共节点(2)
+     * 长链表先走n步，第一个相同的就是公共节点    如果相同的再前面就找不到了???
      * 时间复杂度（m+n）空间复杂度（不需要栈了，小）
      */
-    public static ListNode findFirstCommonNode2(ListNode head1, ListNode head2) {
-        int len1 = getListLength(head1);
-        int len2 = getListLength(head2);
-        ListNode longListNode = null;
-        ListNode shortListNode = null;
-        int dif = 0;
-        if (len1 > len2) {
-            longListNode = head1;
-            shortListNode = head2;
-            dif = len1 - len2;
-        } else {
-            longListNode = head2;
-            shortListNode = head1;
-            dif = len2 - len1;
+    public ListNode findFirstCommonNode2(ListNode headA, ListNode headB) {
+        //统计链表A和链表B的长度
+        int lenA = length(headA), lenB = length(headB);
+
+        //如果节点长度不一样，节点多的先走，直到他们的长度一样为止
+        while (lenA != lenB) {
+            if (lenA > lenB) {
+                //如果链表A长，那么链表A先走
+                headA = headA.next;
+                lenA--;
+            } else {
+                //如果链表B长，那么链表B先走
+                headB = headB.next;
+                lenB--;
+            }
         }
-        for (int i = 0; i < dif; i++) {
-            longListNode = longListNode.next;
+
+        //然后开始比较，如果他俩不相等就一直往下走
+        while (headA != headB) {
+            headA = headA.next;
+            headB = headB.next;
         }
-        while (longListNode != null && shortListNode != null
-                && longListNode != shortListNode) {
-            longListNode = longListNode.next;
-            shortListNode = shortListNode.next;
-        }
-        return longListNode;
+        //走到最后，最终会有两种可能，一种是headA为空，
+        //也就是说他们俩不相交。还有一种可能就是headA
+        //不为空，也就是说headA就是他们的交点
+        return headA;
     }
 
-    private static int getListLength(ListNode head1) {
-        int result = 0;
-        if (head1 == null)
-            return result;
-        ListNode point = head1;
-        while (point != null) {
-            point = point.next;
-            result++;
+    //统计链表的长度
+    private int length(ListNode node) {
+        int length = 0;
+        while (node != null) {
+            node = node.next;
+            length++;
         }
-        return result;
+        return length;
     }
 
 
@@ -389,13 +386,19 @@ public class LinkedUtils {
 //                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
 
 //        ListNode.printLinkedList(creator.removeNode(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
+//                creator.createLinkedList(Arrays.asList(1, 6, 3, 4, 5, 7, 8)), 5));
 
 //        ListNode.printLinkedList(creator.findKthToTail(
 //                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
 
-        ListNode.printLinkedList(creator.reverseLink(
-                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+//        ListNode.printLinkedList(creator.reverseLink(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+
+
+        creator.findFirstCommonNode2(
+                creator.createLinkedList(Arrays.asList(1, 2, 3)),
+                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6, 7))
+        );
 
     }
 

@@ -11,36 +11,6 @@ import java.util.Random;
 import java.util.Set;
 
 public class ArrayTest {
-    /**
-     * 169. 多数元素
-     * 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
-     * 另一种方法：先排序，那么众数的下标为（n/2）
-     */
-    public int majorityElement(int[] nums) {
-        Map<Integer, Integer> counts = countNums(nums);
-
-        Map.Entry<Integer, Integer> majorityEntry = null;
-        for (Map.Entry<Integer, Integer> Entry : counts.entrySet()) {
-            if (majorityEntry == null || Entry.getValue() > majorityEntry.getValue()) {
-                majorityEntry = Entry;
-            }
-        }
-
-        return majorityEntry.getKey();
-    }
-
-
-    private Map<Integer, Integer> countNums(int[] nums) {
-        Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
-        for (int num : nums) {
-            if (!counts.containsKey(num)) {
-                counts.put(num, 1);
-            } else {
-                counts.put(num, counts.get(num) + 1);
-            }
-        }
-        return counts;
-    }
 
     /**
      * 俩数之和等于第三个数
@@ -60,7 +30,7 @@ public class ArrayTest {
     }
 
     /**
-     * 有序数组的 Two Sum 双指针
+     * (有序数组)的Two Sum 双指针
      * Input: numbers={2, 7, 11, 15}, target=9
      * Output: index1=1, index2=2
      * 时间复杂度为 O(N)。只使用了两个额外变量，空间复杂度为 O(1)。
@@ -113,7 +83,7 @@ public class ArrayTest {
      * 由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
      * 输入: 8   输出: 2, 8 的平方根是 2.82842...,
      * 因为aa可能超过Integer.MAX_VALUE。所以可以比较a和b/a的大小。
-     * 夹逼定理：从两边向中间以二分的方式进行夹击。
+     * 夹挤定理：从两边向中间以二分的方式进行夹击。
      */
     public int mySqrt(int x) {
         if (x == 1 || x == 0) {
@@ -136,43 +106,6 @@ public class ArrayTest {
             }
         }
         return mid;
-    }
-
-
-    /**
-     * 15. 三数之和=0
-     * 首先对数组进行排序，排序后固定一个数 nums[i]，
-     * 再使用左右指针指向 nums[i]后面的两端，数字分别为 nums[L] 和 nums[R]，
-     * 计算三个数的和 sum 判断是否满足为 0，满足则添加进结果集
-     * 如果 nums[i]大于 0，则三数之和必然无法等于 0，结束循环，因为是排过序的
-     * 如果 nums[i] == nums[i−1]，则说明该数字重复，会导致结果重复，所以应该跳过
-     * 当 sum == 0 时，nums[L] == nums[L+1] 则会导致结果重复，应该跳过，L++
-     * 当 sum == 0 时，nums[R] == nums[R−1] 则会导致结果重复，应该跳过，R--
-     * 时间复杂度：O(n^2),n 为数组长度
-     */
-    public static List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> ans = new ArrayList();
-        int len = nums.length;
-        if (nums == null || len < 3) return ans;
-        Arrays.sort(nums); // 排序
-        for (int i = 0; i < len; i++) {
-            if (nums[i] > 0) break; // 如果当前数字大于0，则三数之和一定大于0，所以结束循环
-            if (i > 0 && nums[i] == nums[i - 1]) continue; // 去重
-            int L = i + 1;
-            int R = len - 1;
-            while (L < R) {//和后面的都比一遍
-                int sum = nums[i] + nums[L] + nums[R];
-                if (sum == 0) {
-                    ans.add(Arrays.asList(nums[i], nums[L], nums[R]));
-                    while (L < R && nums[L] == nums[L + 1]) L++; // 去重
-                    while (L < R && nums[R] == nums[R - 1]) R--; // 去重
-                    L++;
-                    R--;
-                } else if (sum < 0) L++;
-                else if (sum > 0) R--;
-            }
-        }
-        return ans;
     }
 
 
@@ -313,6 +246,38 @@ public class ArrayTest {
             }
         }
         return set.iterator().next();
+    }
+
+
+    /**
+     * 169. 多数元素
+     * 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
+     * 另一种方法：先排序，那么众数的下标为（n/2）
+     */
+    public int majorityElement(int[] nums) {
+        Map<Integer, Integer> counts = countNums(nums);
+
+        Map.Entry<Integer, Integer> majorityEntry = null;
+        for (Map.Entry<Integer, Integer> Entry : counts.entrySet()) {
+            if (majorityEntry == null || Entry.getValue() > majorityEntry.getValue()) {
+                majorityEntry = Entry;
+            }
+        }
+
+        return majorityEntry.getKey();
+    }
+
+
+    private Map<Integer, Integer> countNums(int[] nums) {
+        Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+        for (int num : nums) {
+            if (!counts.containsKey(num)) {
+                counts.put(num, 1);
+            } else {
+                counts.put(num, counts.get(num) + 1);
+            }
+        }
+        return counts;
     }
 
 
@@ -532,6 +497,43 @@ public class ArrayTest {
             }
         }
 
+    }
+
+
+    /**
+     * 15. 三数之和=0
+     * 首先对数组进行排序，排序后固定一个数 nums[i]，
+     * 再使用左右指针指向 nums[i]后面的两端，数字分别为 nums[L] 和 nums[R]，
+     * 计算三个数的和 sum 判断是否满足为 0，满足则添加进结果集
+     * 如果 nums[i]大于 0，则三数之和必然无法等于 0，结束循环，因为是排过序的
+     * 如果 nums[i] == nums[i−1]，则说明该数字重复，会导致结果重复，所以应该跳过
+     * 当 sum == 0 时，nums[L] == nums[L+1] 则会导致结果重复，应该跳过，L++
+     * 当 sum == 0 时，nums[R] == nums[R−1] 则会导致结果重复，应该跳过，R--
+     * 时间复杂度：O(n^2),n 为数组长度
+     */
+    public static List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> ans = new ArrayList();
+        int len = nums.length;
+        if (nums == null || len < 3) return ans;
+        Arrays.sort(nums); // 排序
+        for (int i = 0; i < len; i++) {
+            if (nums[i] > 0) break; // 如果当前数字大于0，则三数之和一定大于0，所以结束循环
+            if (i > 0 && nums[i] == nums[i - 1]) continue; // 去重
+            int L = i + 1;
+            int R = len - 1;
+            while (L < R) {//和后面的都比一遍
+                int sum = nums[i] + nums[L] + nums[R];
+                if (sum == 0) {
+                    ans.add(Arrays.asList(nums[i], nums[L], nums[R]));
+                    while (L < R && nums[L] == nums[L + 1]) L++; // 去重
+                    while (L < R && nums[R] == nums[R - 1]) R--; // 去重
+                    L++;
+                    R--;
+                } else if (sum < 0) L++;
+                else if (sum > 0) R--;
+            }
+        }
+        return ans;
     }
 
     /**

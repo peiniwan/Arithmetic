@@ -28,7 +28,7 @@ public class SortTest {
                     break;
                 }
             }
-            a[j + 1] = value; // 插入数据
+            a[j + 1] = value; // 插入数据x`
         }
     }
 
@@ -68,6 +68,25 @@ public class SortTest {
                     a[j + 1] = temp;
                 }
             }
+        }
+    }
+
+    // 冒泡排序，a表示数组，n表示数组大小
+    public void bubbleSort2(int[] a, int n) {
+        if (n <= 1) return;
+
+        for (int i = 0; i < n; ++i) {
+            // 提前退出冒泡循环的标志位
+            boolean flag = false;
+            for (int j = 0; j < n - i - 1; ++j) { //-i：比较元素减少，-1：避免角标越界
+                if (a[j] > a[j + 1]) { // 交换
+                    int tmp = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = tmp;
+                    flag = true;  // 表示有数据交换
+                }
+            }
+            if (!flag) break;  // 没有数据交换，提前退出
         }
     }
 
@@ -245,6 +264,48 @@ public class SortTest {
         }
     }
 
+    public int[] countSort2(int[] A) {
+        // 找出数组A中的最大值、最小值
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        for (int num : A) {
+            max = Math.max(max, num);
+            min = Math.min(min, num);
+        }
+        // 初始化计数数组count
+        // 长度为最大值减最小值加1
+        int[] count = new int[max - min + 1];
+        // 对计数数组各元素赋值
+        for (int num : A) {
+            // A中的元素要减去最小值，再作为新索引
+            count[num - min]++;
+        }
+        // 创建结果数组
+        int[] result = new int[A.length];
+        // 创建结果数组的起始索引
+        int index = 0;
+        // 遍历计数数组，将计数数组的索引填充到结果数组中
+        for (int i = 0; i < count.length; i++) {
+            while (count[i] > 0) {
+                // 再将减去的最小值补上
+                result[index++] = i + min;
+                count[i]--;
+            }
+        }
+        // 返回结果数组
+        return result;
+    }
+
+    private int getMaxValue(int[] arr) {
+        int maxValue = arr[0];
+        for (int value : arr) {
+            if (maxValue < value) {
+                maxValue = value;
+            }
+        }
+        return maxValue;
+    }
+
 
     public void printArr(int[] arr) {
         for (int num : arr) {
@@ -261,9 +322,12 @@ public class SortTest {
 ////        sortTest.insertSort(arr);
 //        sortTest.printArr(arr);
 //        System.out.println(sortTest.findKthLargest(new int[]{4, 2, 5, 12, 3}, 3) + "--");
-        int[] num1 = {1, 2, 3, 0, 0, 0};
+        int[] num1 = {4, 5, 6, 1, 2, 3};
         int[] num2 = {2, 5, 6};
-        sortTest.merge2(num1, num2);
+//        sortTest.merge2(num1, num2);
+//        sortTest.bubbleSort2(num1,6);
+        sortTest.insertionSort(num1, 6);
+        sortTest.printArr(num1);
     }
 
     /**
@@ -333,5 +397,13 @@ public class SortTest {
     }
 
 
+    public class CountingSort {
+        protected void sort() {
+
+        }
+    }
+
 
 }
+
+

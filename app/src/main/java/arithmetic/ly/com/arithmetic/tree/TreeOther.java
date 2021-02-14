@@ -175,6 +175,7 @@ public class TreeOther {
      * 后：DEBFCA
      * 因为要在遍历完节点的左子树后接着遍历节点的右子树，为了能找到该节点，需要使用栈来进行暂存。
      * 中序和后序也都涉及到回溯，所以都需要用到栈。
+     * https://www.jianshu.com/p/456af5480cee
      */
     public static void preorderTraversal(TreeNode root) {
         List<Integer> list = new ArrayList<Integer>();
