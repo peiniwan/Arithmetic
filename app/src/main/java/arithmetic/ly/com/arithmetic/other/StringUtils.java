@@ -1,8 +1,11 @@
 package arithmetic.ly.com.arithmetic.other;
 
+import android.os.RemoteException;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+
 
 public class StringUtils {
 
@@ -207,7 +210,7 @@ public class StringUtils {
             } else if (!(s.charAt(j) >= 'a' && s.charAt(j) <= 'z') && !(s.charAt(j) >= '0' && s.charAt(j) <= '9')) {
                 j--;
             } else {
-                if (s.charAt(i++) != s.charAt(j++)) return false;
+                if (s.charAt(i++) != s.charAt(j--)) return false;
 //                i++;
 //                j--;
             }
@@ -240,6 +243,23 @@ public class StringUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * string转int
+     * 0-9   48-59
+     */
+    public int stringToInt(String mun) {
+        char[] nums = mun.toCharArray();
+        int length = nums.length;
+        int result = 0;
+        for (int i = 0; i < length; i++) {
+            int temp = nums[i];
+            if (temp > 47 && temp < 58) {
+                result += (temp - 48) * Math.pow(10, length - 1 - i);
+            }
+        }
+        return result;
     }
 
 

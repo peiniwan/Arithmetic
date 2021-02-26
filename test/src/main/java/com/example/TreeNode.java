@@ -1,11 +1,10 @@
-package arithmetic.ly.com.arithmetic.tree;
+package com.example;
+
+/**
+ * Created by 拯救者 on 2018/2/17.
+ */
 
 public class TreeNode<T> {
-    private final T value;
-    private TreeNode left;
-    private TreeNode right;
-    private TreeNode parent;
-
     public TreeNode(T value) {
         this.value = value;
         this.left = null;
@@ -13,9 +12,12 @@ public class TreeNode<T> {
         this.parent = null;
     }
 
+
     public T getValue() {
         return value;
     }
+
+    private final T value;
 
     public TreeNode getLeft() {
         return left;
@@ -43,7 +45,12 @@ public class TreeNode<T> {
         return parent;
     }
 
-    private void setParent(TreeNode parent) {
+    public void setParent(TreeNode parent) {
         this.parent = parent;
     }
+
+    private TreeNode left;
+    private TreeNode right;
+    private TreeNode parent;
+
 }

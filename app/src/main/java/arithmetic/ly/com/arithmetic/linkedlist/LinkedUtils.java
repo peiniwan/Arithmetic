@@ -165,7 +165,7 @@ public class LinkedUtils {
                 System.out.println("k不应该大于链表长度");
                 return null;
             }
-            fastNode = fastNode.next;
+            fastNode = fastNode.next;//3
         }
         while (fastNode.next != null) {
             slowNode = slowNode.next;

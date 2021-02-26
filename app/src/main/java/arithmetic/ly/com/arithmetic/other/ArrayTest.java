@@ -13,6 +13,59 @@ import java.util.Set;
 public class ArrayTest {
 
     /**
+     * 归并两个有序数组
+     * 把归并结果存到第一个数组上。
+     * 需要从尾开始遍历，否则在 nums1 上归并得到的值会覆盖还未进行归并比较的值。
+     */
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int index1 = m - 1, index2 = n - 1;
+        int indexMerge = m + n - 1;
+        while (index1 >= 0 || index2 >= 0) {
+            if (index1 < 0) {
+                nums1[indexMerge--] = nums2[index2--];
+            } else if (index2 < 0) {//一个短一个长，index2<0了，设置nums1的数字
+                nums1[indexMerge--] = nums1[index1--];
+            } else if (nums1[index1] > nums2[index2]) {
+                nums1[indexMerge--] = nums1[index1--];
+            } else {
+                nums1[indexMerge--] = nums2[index2--];
+            }
+        }
+    }
+
+
+    /**
+     * 169. 多数元素
+     * 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
+     * 另一种方法：先排序，那么众数的下标为（n/2）
+     */
+    public int majorityElement(int[] nums) {
+        Map<Integer, Integer> counts = countNums(nums);
+
+        Map.Entry<Integer, Integer> majorityEntry = null;
+        for (Map.Entry<Integer, Integer> Entry : counts.entrySet()) {
+            if (majorityEntry == null || Entry.getValue() > majorityEntry.getValue()) {
+                majorityEntry = Entry;
+            }
+        }
+
+        return majorityEntry.getKey();
+    }
+
+
+    private Map<Integer, Integer> countNums(int[] nums) {
+        Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+        for (int num : nums) {
+            if (!counts.containsKey(num)) {
+                counts.put(num, 1);
+            } else {
+                counts.put(num, counts.get(num) + 1);
+            }
+        }
+        return counts;
+    }
+
+    /**
      * 俩数之和等于第三个数
      * n^2
      */
@@ -110,6 +163,44 @@ public class ArrayTest {
 
 
     /**
+     * 15. 三数之和=0
+     * 首先对数组进行排序，排序后固定一个数 nums[i]，
+     * 再使用左右指针指向 nums[i]后面的两端，数字分别为 nums[L] 和 nums[R]，
+     * 计算三个数的和 sum 判断是否满足为 0，满足则添加进结果集
+     * 如果 nums[i]大于 0，则三数之和必然无法等于 0，结束循环，因为是排过序的
+     * 如果 nums[i] == nums[i−1]，则说明该数字重复，会导致结果重复，所以应该跳过
+     * 当 sum == 0 时，nums[L] == nums[L+1] 则会导致结果重复，应该跳过，L++
+     * 当 sum == 0 时，nums[R] == nums[R−1] 则会导致结果重复，应该跳过，R--
+     * 时间复杂度：O(n^2),n 为数组长度
+     * 1 -6 5 4
+     */
+    public static List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> ans = new ArrayList();
+        int len = nums.length;
+        if (nums == null || len < 3) return ans;
+        Arrays.sort(nums); // 排序
+        for (int i = 0; i < len; i++) {
+            if (nums[i] > 0) break; // 如果当前数字大于0，则三数之和一定大于0，所以结束循环
+            if (i > 0 && nums[i] == nums[i - 1]) continue; // 去重
+            int L = i + 1;
+            int R = len - 1;
+            while (L < R) {//和后面的都比一遍
+                int sum = nums[i] + nums[L] + nums[R];
+                if (sum == 0) {
+                    ans.add(Arrays.asList(nums[i], nums[L], nums[R]));
+                    while (L < R && nums[L] == nums[L + 1]) L++; // 去重
+                    while (L < R && nums[R] == nums[R - 1]) R--; // 去重
+                    L++;
+                    R--;
+                } else if (sum < 0) L++;
+                else if (sum > 0) R--;
+            }
+        }
+        return ans;
+    }
+
+
+    /**
      * 奇数在前，偶数在后
      * 先计算出奇数的个数count，然后用双指针来遍历，一个从头遍历到count，一个从数组尾部遍历到count。
      * 从前向后找到一个偶数的下标，从后向前找到一个奇数的下标，然后交换对应的值。直到遍历完整个数组。
@@ -188,7 +279,7 @@ public class ArrayTest {
      * 删除排序数组中的重复项
      * 双指针法：其中 i 是慢指针，而 j 是快指针。
      */
-    public void removeDuplicates(int[] nums) {
+    public static void removeDuplicates(int[] nums) {
         if (nums.length == 0) return;
         int i = 0;
         for (int j = 1; j < nums.length; j++) {
@@ -250,38 +341,6 @@ public class ArrayTest {
 
 
     /**
-     * 169. 多数元素
-     * 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
-     * 另一种方法：先排序，那么众数的下标为（n/2）
-     */
-    public int majorityElement(int[] nums) {
-        Map<Integer, Integer> counts = countNums(nums);
-
-        Map.Entry<Integer, Integer> majorityEntry = null;
-        for (Map.Entry<Integer, Integer> Entry : counts.entrySet()) {
-            if (majorityEntry == null || Entry.getValue() > majorityEntry.getValue()) {
-                majorityEntry = Entry;
-            }
-        }
-
-        return majorityEntry.getKey();
-    }
-
-
-    private Map<Integer, Integer> countNums(int[] nums) {
-        Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
-        for (int num : nums) {
-            if (!counts.containsKey(num)) {
-                counts.put(num, 1);
-            } else {
-                counts.put(num, counts.get(num) + 1);
-            }
-        }
-        return counts;
-    }
-
-
-    /**
      * 40.一个整型数组里除了两个数字之外，其他的数字都出现了偶数次。请写程序找出这两个只出现一次的数字。
      * num1,num2分别为长度为1的数组。传出参数
      * 将num1[0],num2[0]设置为返回结果
@@ -308,10 +367,10 @@ public class ArrayTest {
 
 
     /**
-     * 俩个数组交集
+     * 两个有序数组交集
      * 算法复杂度为O(N + M)
      */
-    public LinkedList<Integer> intersect(int[] A, int[] B) {
+    public static LinkedList<Integer> intersect(int[] A, int[] B) {
         if (A == null || B == null || A.length == 0 || B.length == 0) return null;
         LinkedList<Integer> list = new LinkedList<>();
         int pointerA = 0;
@@ -327,6 +386,7 @@ public class ArrayTest {
         }
         return list;
     }
+
 
 
     public int[] intersect2(int[] nums1, int[] nums2) {
@@ -499,43 +559,6 @@ public class ArrayTest {
 
     }
 
-
-    /**
-     * 15. 三数之和=0
-     * 首先对数组进行排序，排序后固定一个数 nums[i]，
-     * 再使用左右指针指向 nums[i]后面的两端，数字分别为 nums[L] 和 nums[R]，
-     * 计算三个数的和 sum 判断是否满足为 0，满足则添加进结果集
-     * 如果 nums[i]大于 0，则三数之和必然无法等于 0，结束循环，因为是排过序的
-     * 如果 nums[i] == nums[i−1]，则说明该数字重复，会导致结果重复，所以应该跳过
-     * 当 sum == 0 时，nums[L] == nums[L+1] 则会导致结果重复，应该跳过，L++
-     * 当 sum == 0 时，nums[R] == nums[R−1] 则会导致结果重复，应该跳过，R--
-     * 时间复杂度：O(n^2),n 为数组长度
-     */
-    public static List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> ans = new ArrayList();
-        int len = nums.length;
-        if (nums == null || len < 3) return ans;
-        Arrays.sort(nums); // 排序
-        for (int i = 0; i < len; i++) {
-            if (nums[i] > 0) break; // 如果当前数字大于0，则三数之和一定大于0，所以结束循环
-            if (i > 0 && nums[i] == nums[i - 1]) continue; // 去重
-            int L = i + 1;
-            int R = len - 1;
-            while (L < R) {//和后面的都比一遍
-                int sum = nums[i] + nums[L] + nums[R];
-                if (sum == 0) {
-                    ans.add(Arrays.asList(nums[i], nums[L], nums[R]));
-                    while (L < R && nums[L] == nums[L + 1]) L++; // 去重
-                    while (L < R && nums[R] == nums[R - 1]) R--; // 去重
-                    L++;
-                    R--;
-                } else if (sum < 0) L++;
-                else if (sum > 0) R--;
-            }
-        }
-        return ans;
-    }
-
     /**
      * 旋转数组(看规律)  O(n)
      * 输入: [-1,-100,3,99] 和 k = 2
@@ -570,5 +593,15 @@ public class ArrayTest {
             nums[start++] = nums[end];
             nums[end--] = temp;
         }
+    }
+
+    public static void main(String[] args) {
+        removeDuplicates(new int[]{1, 1, 2, 3, 4, 5, 5, 6});
+        intersect(new int[]{1, 3, 2, 5, 6, 4}, new int[]{3, 4, 5, 6, 7, 8});
+        HashMap<String, Integer> hashMap = new HashMap<>();
+        hashMap.put("a",123);
+        hashMap.put("a",233);
+        System.out.print(hashMap.get("a")+"----");
+
     }
 }
