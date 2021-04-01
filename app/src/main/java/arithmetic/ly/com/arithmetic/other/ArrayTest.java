@@ -12,6 +12,42 @@ import java.util.Set;
 
 public class ArrayTest {
 
+    public static void main(String[] args) {
+        removeDuplicates(new int[]{1, 1, 2, 3, 4, 5, 5, 6});
+        intersect(new int[]{1, 3, 2, 5, 6, 4}, new int[]{3, 4, 5, 6, 7, 8});
+        HashMap<String, Integer> hashMap = new HashMap<>();
+        hashMap.put("a",123);
+        hashMap.put("a",233);
+//        System.out.print(hashMap.get("a")+"----");
+
+
+        System.out.print(lengthOfLongestSubstring("abcabcbb"));
+    }
+
+    /**
+     * 简化路径  71
+     */
+
+
+    /**
+     * 无重复字符的最长子串  剑指 Offer 48
+     */
+    public static int lengthOfLongestSubstring(String s) {
+        Set<Character> set = new HashSet<>();
+        int left = 0, right = 0, res = 0;
+        while(right < s.length()){
+            char c = s.charAt(right++);
+            //存在重复的字符，则移动左指针，直到滑动窗口中不含有该字符
+            while(set.contains(c)){
+                set.remove(s.charAt(left++));
+            }
+            set.add(c);
+            res = Math.max(res, right-left);
+        }
+        return res;
+    }
+
+
     /**
      * 归并两个有序数组
      * 把归并结果存到第一个数组上。
@@ -70,15 +106,32 @@ public class ArrayTest {
      * n^2
      */
     public int[] twoSum(int[] nums, int target) {
+
+        //时间复杂度 O(N^2)，空间复杂度 O(1)
         for (int i = 0; i < nums.length; i++) {
             for (int j = i + 1; j < nums.length; j++) {
-                if (nums[j] + nums[i] == target) {
+                if (nums[j] == target - nums[i]) {
                     int[] xx = new int[]{i, j};
                     System.out.println(xx[0] + "----" + xx[1]);
                     return xx;
                 }
             }
         }
+
+//        //由于哈希表的查询时间为 O(1)，算法的时间复杂度降低到 O(N)，
+//        // 但是需要 O(N) 的空间复杂度来存储哈希表。不过综合来看，是要比暴力解法高效的
+//        int n = nums.length;
+//        HashMap<Integer, Integer> index = new HashMap<>();
+//        for (int i = 0; i < nums.length; i++) {
+//            index.put(nums[i],i);
+//        }
+//        for (int i = 0; i < nums.length; i++) {
+//            int other =  target - nums[i];
+//            if(index.containsKey(other) && index.get(other)!=-1){
+//                 return new int[i,index.get(other)];
+//            }
+//        }
+
         return null;
     }
 
@@ -595,13 +648,5 @@ public class ArrayTest {
         }
     }
 
-    public static void main(String[] args) {
-        removeDuplicates(new int[]{1, 1, 2, 3, 4, 5, 5, 6});
-        intersect(new int[]{1, 3, 2, 5, 6, 4}, new int[]{3, 4, 5, 6, 7, 8});
-        HashMap<String, Integer> hashMap = new HashMap<>();
-        hashMap.put("a",123);
-        hashMap.put("a",233);
-        System.out.print(hashMap.get("a")+"----");
 
-    }
 }

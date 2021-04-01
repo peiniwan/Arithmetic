@@ -74,7 +74,16 @@ public class LeetCode {
             b = temp;
         }
         return temp;
+
+//        int a = 1, b = 2;
+//        for (int i = 3; i <= n; i++) {
+//            int temp = a + b;
+//            a = b;
+//            b = temp;
+//        }
+//        return b;
     }
+
 
 
     /**

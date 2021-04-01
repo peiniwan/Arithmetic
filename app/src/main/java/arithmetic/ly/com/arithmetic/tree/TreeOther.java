@@ -1,6 +1,7 @@
 package arithmetic.ly.com.arithmetic.tree;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -421,5 +422,199 @@ public class TreeOther {
             }
         }
     }
+
+
+    //这是力扣第 116 题，看下题目：把二叉树的每一层节点都用 next 指针连接起来：
+    // 主函数
+    TreeNode connect(TreeNode root) {
+        if (root == null) return null;
+        connectTwoNode(root.left, root.right);
+        return root;
+    }
+
+    // 辅助函数
+    void connectTwoNode(TreeNode node1, TreeNode node2) {
+        if (node1 == null || node2 == null) {
+            return;
+        }
+        /**** 前序遍历位置 ****/
+        // 将传入的两个节点连接
+//        node1.next = node2;
+
+        // 连接相同父节点的两个子节点
+        connectTwoNode(node1.left, node1.right);
+        connectTwoNode(node2.left, node2.right);
+        // 连接跨越父节点的两个子节点
+        connectTwoNode(node1.right, node2.left);
+    }
+
+
+    // 114：给你二叉树的根结点 root ，请你将它展开为一个单链表：
+//    展开后的单链表应该同样使用 TreeNode ，其中 right 子指针指向链表中下一个结点，而左子指针始终为 null 。
+//    展开后的单链表应该与二叉树 先序遍历 顺序相同。
+    // 定义：将以 root 为根的树拉平为链表
+    void flatten(TreeNode root) {
+        // base case
+        if (root == null) return;
+
+        flatten(root.left);
+        flatten(root.right);
+
+        /**** 后序遍历位置 ****/
+        // 1、左右子树已经被拉平成一条链表
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+
+        // 2、将左子树作为右子树
+        root.left = null;
+        root.right = left;
+
+        // 3、将原先的右子树接到当前右子树的末端
+        TreeNode p = root;
+        while (p.right != null) {
+            p = p.right;
+        }
+        p.right = right;
+    }
+
+
+    //654:构造最大二叉树
+    /* 主函数 */
+    TreeNode constructMaximumBinaryTree(int[] nums) {
+        return build(nums, 0, nums.length - 1);
+    }
+
+    /* 将 nums[lo..hi] 构造成符合条件的树，返回根节点 */
+    TreeNode build(int[] nums, int lo, int hi) {
+        // base case
+        if (lo > hi) {
+            return null;
+        }
+
+        // 找到数组中的最大值和对应的索引
+        int index = -1, maxVal = Integer.MIN_VALUE;
+        for (int i = lo; i <= hi; i++) {
+            if (maxVal < nums[i]) {
+                index = i;
+                maxVal = nums[i];
+            }
+        }
+
+        TreeNode root = new TreeNode(maxVal);
+        // 递归调用构造左右子树
+        root.left = build(nums, lo, index - 1);
+        root.right = build(nums, index + 1, hi);
+
+        return root;
+    }
+
+
+    //105:通过前序和中序遍历结果构造二叉树
+    /* 主函数 */
+    TreeNode buildTree(int[] preorder, int[] inorder) {
+        return build(preorder, 0, preorder.length - 1,
+                inorder, 0, inorder.length - 1);
+    }
+
+
+    TreeNode build(int[] preorder, int preStart, int preEnd,
+                   int[] inorder, int inStart, int inEnd) {
+
+        if (preStart > preEnd) {
+            return null;
+        }
+
+        // root 节点对应的值就是前序遍历数组的第一个元素
+        int rootVal = preorder[preStart];
+        // rootVal 在中序遍历数组中的索引
+        int index = 0;
+        for (int i = inStart; i <= inEnd; i++) {
+            if (inorder[i] == rootVal) {
+                index = i;
+                break;
+            }
+        }
+
+        int leftSize = index - inStart;
+
+        // 先构造出当前根节点
+        TreeNode root = new TreeNode(rootVal);
+        // 递归构造左右子树
+        root.left = build(preorder, preStart + 1, preStart + leftSize,
+                inorder, inStart, index - 1);
+
+        root.right = build(preorder, preStart + leftSize + 1, preEnd,
+                inorder, index + 1, inEnd);
+        return root;
+    }
+
+    //106:通过后序和中序遍历结果构造二叉树
+    TreeNode buildTree2(int[] inorder, int[] postorder) {
+        return build2(inorder, 0, inorder.length - 1,
+                postorder, 0, postorder.length - 1);
+    }
+
+    TreeNode build2(int[] inorder, int inStart, int inEnd,
+                   int[] postorder, int postStart, int postEnd) {
+
+        if (inStart > inEnd) {
+            return null;
+        }
+        // root 节点对应的值就是后序遍历数组的最后一个元素
+        int rootVal = postorder[postEnd];
+        // rootVal 在中序遍历数组中的索引
+        int index = 0;
+        for (int i = inStart; i <= inEnd; i++) {
+            if (inorder[i] == rootVal) {
+                index = i;
+                break;
+            }
+        }
+        // 左子树的节点个数
+        int leftSize = index - inStart;
+        TreeNode root = new TreeNode(rootVal);
+//        // 递归构造左右子树
+//        root.left = build(inorder, inStart, index - 1,
+//                postorder, postStart, postStart + leftSize - 1);
+//
+//        root.right = build(inorder, index + 1, inEnd,
+//                postorder, postStart + leftSize, postEnd - 1);
+        return root;
+    }
+
+
+    //652:寻找重复子树
+    // 记录所有子树以及出现的次数
+    HashMap<String, Integer> memo = new HashMap<>();
+    // 记录重复的子树根节点
+    LinkedList<TreeNode> res = new LinkedList<>();
+
+    /* 主函数 */
+    List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        traverse(root);
+        return res;
+    }
+
+    /* 辅助函数 */
+    String traverse(TreeNode root) {
+        if (root == null) {
+            return "#";
+        }
+
+        String left = traverse(root.left);
+        String right = traverse(root.right);
+
+        String subTree = left + "," + right+ "," + root.val;
+
+        int freq = memo.getOrDefault(subTree, 0);
+        // 多次重复也只会被加入结果集一次
+        if (freq == 1) {
+            res.add(root);
+        }
+        // 给子树对应的出现次数加一
+        memo.put(subTree, freq + 1);
+        return subTree;
+    }
+
 
 }

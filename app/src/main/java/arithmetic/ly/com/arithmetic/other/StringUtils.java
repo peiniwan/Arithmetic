@@ -81,7 +81,7 @@ public class StringUtils {
      * indexOf(xxx)方法直接就返回了
      * 时间复杂度：O(n* m)
      */
-    public static int bfFind(String S, String T, int pos) {
+    public static int bfFind(String S, String T) {
         char[] arr1 = S.toCharArray();
         char[] arr2 = T.toCharArray();
         int i = 0, j = 0;

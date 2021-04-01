@@ -207,6 +207,24 @@ public class LinkedUtils {
         return pos;
     }
 
+    public static ListNode findNthFromEnd(ListNode head, int n){
+        ListNode p1 = head;
+        ListNode p2 = head;
+        //把p2指针移动到正数第n个结点
+        for(int i=1; i<n; i++){
+            p2 = p2.next;
+            if(p2 == null){
+                throw new IllegalArgumentException("参数n超出链表长度！");
+            }
+        }
+        //p1和p2一起右移，直到p2指向链表尾结点
+        while (p2.next != null){
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        return p1;
+    }
+
 
     /**
      * 环形链表
@@ -249,6 +267,129 @@ public class LinkedUtils {
             fast = fast.next.next;
         }
         return true;
+    }
+
+
+    ListNode reverse(ListNode head) {
+        if (head.next == null) return head;
+        ListNode last = reverse(head.next);
+        head.next.next = head;
+        head.next = null;
+        return last;
+    }
+
+    ListNode successor =null;
+    // 反转以 head 为起点的 n 个节点，返回新的头结点
+    ListNode reverseN(ListNode head, int n) {
+        if (n == 1) {
+            // 记录第 n + 1 个节点
+            successor = head.next;
+            return head;
+        }
+        // 以 head.next 为起点，需要反转前 n - 1 个节点
+        ListNode last = reverseN(head.next, n - 1);
+
+        head.next.next = head;
+        // 让反转之后的 head 节点和后面的节点连起来
+        head.next = successor;
+        return last;
+    }
+
+    ListNode reverseBetween(ListNode head, int m, int n) {
+        // base case
+        if (m == 1) {
+            return reverseN(head, n);
+        }
+        // 前进到反转的起点触发 base case
+        head.next = reverseBetween(head.next, m - 1, n - 1);
+        return head;
+    }
+
+
+    // 反转以 a 为头结点的链表
+    ListNode reverse3(ListNode a) {
+        ListNode pre, cur, nxt;
+        pre = null; cur = a; nxt = a;
+        while (cur != null) {
+            nxt = cur.next;
+            // 逐个结点反转
+            cur.next = pre;
+            // 更新指针位置
+            pre = cur;
+            cur = nxt;
+        }
+        // 返回反转后的头结点
+        return pre;
+    }
+
+    /** 反转区间 [a, b) 的元素，注意是左闭右开 */
+    ListNode reverse2(ListNode a, ListNode b) {
+        ListNode pre, cur, nxt;
+        pre = null; cur = a; nxt = a;
+        // while 终止的条件改一下就行了
+        while (cur != b) {
+            nxt = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = nxt;
+        }
+        // 返回反转后的头结点
+        return pre;
+    }
+
+    /**
+     * 如何k个一组反转链表
+     * https://labuladong.github.io/algo/%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E7%B3%BB%E5%88%97/k%E4%B8%AA%E4%B8%80%E7%BB%84%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8.html
+     * @param head
+     * @param k
+     * @return
+     */
+    ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null) return null;
+        // 区间 [a, b) 包含 k 个待反转元素
+        ListNode a, b;
+        a = b = head;
+        for (int i = 0; i < k; i++) {
+            // 不足 k 个，不需要反转，base case
+            if (b == null) return head;
+            b = b.next;
+        }
+        // 反转前 k 个元素
+        ListNode newHead = reverse2(a, b);
+        // 递归反转后续链表并连接起来
+        a.next = reverseKGroup(b, k);
+        return newHead;
+    }
+
+
+    /* 倒序打印单链表中的元素值 */
+    void traverse(ListNode head) {
+        if (head == null) return;
+        traverse(head.next);
+        // 后序遍历代码
+//        print(head.val);
+    }
+
+
+    /**
+     * 回文链表（简单）
+     * https://labuladong.github.io/algo/%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E7%B3%BB%E5%88%97/%E5%88%A4%E6%96%AD%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8.html
+     */
+    // 左侧指针
+    ListNode left;
+
+    boolean isPalindrome(ListNode head) {
+        left = head;
+        return traverse2(head);
+    }
+
+    boolean traverse2(ListNode right) {
+        if (right == null) return true;
+        boolean res = traverse2(right.next);
+        // 后序遍历代码
+        res = res && (right.val == left.val);
+        left = left.next;
+        return res;
     }
 
 
@@ -395,12 +536,18 @@ public class LinkedUtils {
 //                creator.createLinkedList(Arrays.asList(1, 2, 3))));
 
 
-        creator.findFirstCommonNode2(
-                creator.createLinkedList(Arrays.asList(1, 2, 3)),
-                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6, 7))
-        );
+//        creator.findFirstCommonNode2(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3)),
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6, 7))
+//        );
+
+
+       ListNode.printLinkedList(creator.reverse(creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6))));
 
     }
+
+
+
 
 
 }

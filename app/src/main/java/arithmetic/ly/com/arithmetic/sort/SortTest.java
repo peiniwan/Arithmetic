@@ -23,6 +23,7 @@ public class SortTest {
             for (; j >= 0; --j) {
                 if (a[j] > value) {//5>4
                     // 4的位置改成5,数据移动，将大于temp的往后移动一位
+                    //从右向左比较元素的同时，进行元素复制
                     a[j + 1] = a[j];
                 } else {
                     break;
@@ -93,6 +94,8 @@ public class SortTest {
 
     /**
      * 快速排序
+     *
+     * https://mp.weixin.qq.com/s/PQLC7qFjb74kt6PdExP8mw
      */
     public void quickSort(int[] a) {
         if (a.length > 0) {
@@ -114,13 +117,14 @@ public class SortTest {
             while (low < high && a[high] >= temp) {
                 high--;
             }
-            a[low] = a[high];//将比基数小的数放到基数前面
+            //位置交换
+            a[low] = a[high];//将比基数小的数放到前面
             while (low < high && a[low] <= temp) {
                 low++;
             }
-            a[high] = a[low];//将比基数大的数放到基数后面
+            a[high] = a[low];//将比基数大的数放到后面
         }
-        a[low] = temp;//插入到排序后正确的位置，low就是基数应该在的位置
+        a[low] = temp;//low==high 插入到排序后正确的位置，low就是基数应该在的位置
         return low;
     }
 
@@ -151,7 +155,7 @@ public class SortTest {
     public void mergeSort(int[] a, int left, int right) {
         if (left < right) {
             int middle = (left + right) / 2;
-            mergeSort(a, left, middle);//左边归并排序，使得左子序列有序
+            mergeSort(a, left, middle);//左边归并排序，使得左子序列有序，他里面是merge过得，所以有序
             mergeSort(a, middle + 1, right);//右边归并排序，使得右子序列有序
             merge(a, left, middle, right);//将两个有序子数组合并操作
         }
@@ -414,6 +418,7 @@ public class SortTest {
         for(int divider=1;divider<=max;divider*=10){
             countSort2(array,divider);
         }
+
     }
 
 
