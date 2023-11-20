@@ -18,40 +18,15 @@ public class ArrayTest {
         HashMap<String, Integer> hashMap = new HashMap<>();
         hashMap.put("a",123);
         hashMap.put("a",233);
-//        System.out.print(hashMap.get("a")+"----");
-
-
-        System.out.print(lengthOfLongestSubstring("abcabcbb"));
-    }
-
-    /**
-     * 简化路径  71
-     */
-
-
-    /**
-     * 无重复字符的最长子串  剑指 Offer 48
-     */
-    public static int lengthOfLongestSubstring(String s) {
-        Set<Character> set = new HashSet<>();
-        int left = 0, right = 0, res = 0;
-        while(right < s.length()){
-            char c = s.charAt(right++);
-            //存在重复的字符，则移动左指针，直到滑动窗口中不含有该字符
-            while(set.contains(c)){
-                set.remove(s.charAt(left++));
-            }
-            set.add(c);
-            res = Math.max(res, right-left);
-        }
-        return res;
+        System.out.print(hashMap.get("a")+"----");
     }
 
 
     /**
      * 归并两个有序数组
      * 把归并结果存到第一个数组上。
-     * 需要从尾开始遍历，否则在 nums1 上归并得到的值会覆盖还未进行归并比较的值。
+     * 需要从尾开始遍历，如果我们从数组的开头开始遍历，那么在将数组元素插入到合并后的数组时，
+     * 就需要移动后面的元素，这将导致效率低下。
      */
     public void merge(int[] nums1, int m, int[] nums2, int n) {
         int index1 = m - 1, index2 = n - 1;
@@ -309,6 +284,8 @@ public class ArrayTest {
         if (num == 0) {
             return false;
         }
+        //如果最终 num 的值变为1，说明它只包含质因数 2、3 和 5，即是丑数，
+        // 此时返回 true。否则，说明 num 还包含其他质因数，不是丑数，返回 false。
         while (num != 1) {
             if (num % 2 == 0) {
                 num /= 2;
@@ -329,8 +306,9 @@ public class ArrayTest {
 
 
     /**
-     * 删除排序数组中的重复项
+     * 删除（排序数组）中的重复项
      * 双指针法：其中 i 是慢指针，而 j 是快指针。
+     * i 指向当前不重复的元素位置，而 j 则用来遍历数组中的元素
      */
     public static void removeDuplicates(int[] nums) {
         if (nums.length == 0) return;

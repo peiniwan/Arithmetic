@@ -8,6 +8,41 @@ import java.util.Stack;
 
 public class LinkedUtils {
 
+    // 运行Java文件
+    // <option name="delegatedBuild" value="false" />
+    ///Users/tal/android/Arithmetic/.idea/gradle.xml
+    public static void main(String[] args) {
+        LinkedUtils creator = new LinkedUtils();
+
+//        ListNode.printLinkedList(creator.reverseLinkedList(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+
+//        ListNode.printLinkedList(creator.reverseLoopLinkedList(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+
+        //ListNode.printLinkedList(creator.removeNthFromEnd(
+        //        creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
+
+//        ListNode.printLinkedList(creator.removeNode(
+//                creator.createLinkedList(Arrays.asList(1, 6, 3, 4, 5, 7, 8)), 5));
+
+//        ListNode.printLinkedList(creator.findKthToTail(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
+
+        ListNode.printLinkedList(creator.reverseLink(
+                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+
+
+//        creator.findFirstCommonNode2(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3)),
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6, 7))
+//        );
+
+
+        //ListNode.printLinkedList(creator.reverse(creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6))));
+
+    }
+
     public static class ListNode {
         public int val;
         public ListNode next;
@@ -270,6 +305,129 @@ public class LinkedUtils {
     }
 
 
+    /**
+     * 循环反转链表
+     * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
+     */
+    public ListNode reverseLink(ListNode head) {ListNode reverse = null;  //用一个新的空链表存放反转后的链表
+        while (head != null) {  //当原链表的节点没有被剥离完时不断循环
+            ListNode second = head.next;    //初始化原链表首节点的下一个节点
+            head.next = reverse;  //head.next当作是个变量，原链表首节点的下一个节点链接到新链表的首节点处
+            reverse = head;     //下一节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
+            head = second;   //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
+        }
+        return reverse;
+        // 第一次出来 head=second=2(3)           reverse=1(null)
+        // 第二次   head.next 3   = reverse（1 null）  head就变成了=2(1) 因为这步把3变成了1 null
+        // 出来后就是  head=second=3(null)     reverse =2(1) = 没出来时的head
+        //  第三次出来     head=null(null)        reverse =3(2)1
+    }
+
+
+    /**
+     * 反转链表，可以用栈,递归本质就是一个栈，理解递归
+     */
+    public ListNode printListFromTailToHead(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        Stack<ListNode> stack = new Stack<>();
+        while (head.next != null) {
+            stack.push(head);
+            head = head.next;
+        }
+        ListNode pre = head;
+        //从栈中弹出每个节点，并将它们添加到新的链表的末尾。
+        //我们将当前节点的next字段设置为栈中弹出的节点，然后将当前节点更新为新添加的节点
+        while (!stack.isEmpty()) {
+            head.next = stack.pop();
+            head = head.next;
+        }
+        head.next = null;
+        return pre;
+    }
+
+    /**
+     * 将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+     * 输入：1->2->4, 1->3->4
+     * 输出：1->1->2->3->4->4
+     */
+    public ListNode Merge(ListNode list1, ListNode list2) {
+        if (list1 == null) return list2;//注意鲁棒性
+        if (list2 == null) return list1;
+        if (list1.val <= list2.val) {  //利用归并排序的递归思想，将两个链表的较小节点链接起来
+            list1.next = Merge(list1.next, list2);  //如果list1当前节点小于list2当前节点，链表放入较小节点并将索引往后一个节点，与list2的原较大节点继续比较
+            return list1;
+        } else {
+            list2.next = Merge(list2.next, list1);  //如果list2当前节点小于list1当前节点，链表放入较小节点并将索引往后一个节点，与list1的原较大节点继续比较
+            return list2;
+        }
+    }
+
+    /**
+     * 52.两个链表的第一个公共节点(公共节点就考虑set)
+     * 空间复杂度（m+n）时间复杂度（m+n）
+     */
+    public ListNode findFirstCommonNode(ListNode pHead1, ListNode pHead2) {
+        ListNode current1 = pHead1;  //设置两个遍历两个链表的游标，初始位置在两个链表首节点
+        ListNode current2 = pHead2;
+        HashSet<ListNode> set = new HashSet<ListNode>();  //利用HashSet存放遍历过的第一条链表
+        while (current1 != null) {
+            set.add(current1);
+            current1 = current1.next;
+        }
+        while (current2 != null) {
+            if (set.contains(current2))
+                return current2;  //如果HashSet中存有和current2游标节点相同的第一条链表中的节点，则找到公共节点
+            current2 = current2.next;
+        }
+        return null;  //如果没找到公共节点，或公共节点为空，返回null
+    }
+
+    /**
+     * 52.两个链表的第一个公共节点(2)
+     * 长链表先走n步，第一个相同的就是公共节点    如果相同的再前面就找不到了???
+     * 时间复杂度（m+n）空间复杂度（不需要栈了，小）
+     */
+    public ListNode findFirstCommonNode2(ListNode headA, ListNode headB) {
+        //统计链表A和链表B的长度
+        int lenA = length(headA), lenB = length(headB);
+
+        //如果节点长度不一样，节点多的先走，直到他们的长度一样为止
+        while (lenA != lenB) {
+            if (lenA > lenB) {
+                //如果链表A长，那么链表A先走
+                headA = headA.next;
+                lenA--;
+            } else {
+                //如果链表B长，那么链表B先走
+                headB = headB.next;
+                lenB--;
+            }
+        }
+
+        //然后开始比较，如果他俩不相等就一直往下走
+        while (headA != headB) {
+            headA = headA.next;
+            headB = headB.next;
+        }
+        //走到最后，最终会有两种可能，一种是headA为空，
+        //也就是说他们俩不相交。还有一种可能就是headA
+        //不为空，也就是说headA就是他们的交点
+        return headA;
+    }
+
+    //统计链表的长度
+    private int length(ListNode node) {
+        int length = 0;
+        while (node != null) {
+            node = node.next;
+            length++;
+        }
+        return length;
+    }
+
+
     ListNode reverse(ListNode head) {
         if (head.next == null) return head;
         ListNode last = reverse(head.next);
@@ -390,160 +548,6 @@ public class LinkedUtils {
         res = res && (right.val == left.val);
         left = left.next;
         return res;
-    }
-
-
-    /**
-     * 循环反转链表
-     * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
-     */
-    public ListNode reverseLink(ListNode head) {
-        ListNode reverse = null;  //用一个新的空链表存放反转后的链表
-        while (head != null) {  //当原链表的节点没有被剥离完时不断循环
-            ListNode second = head.next;    //初始化原链表首节点的下一个节点
-            head.next = reverse;  //head.next当作是个变量，原链表首节点的下一个节点链接到新链表的首节点处
-            reverse = head;     //下一节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
-            head = second;   //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
-        }
-        return reverse;
-        // 出来后 head=second=2(3)           reverse=1(null)
-        //       head=second=3(null)     reverse =2(1) = 没出来时的head
-        //       head=null(null)        reverse =3(2)1
-    }
-
-
-    /**
-     * 反转链表，可以用栈,递归本质就是一个栈，理解递归
-     */
-    public ListNode printListFromTailToHead(ListNode head) {
-        if (head == null || head.next == null) {
-            return head;
-        }
-        Stack<ListNode> stack = new Stack<>();
-        while (head.next != null) {
-            stack.push(head);
-            head = head.next;
-        }
-        ListNode pre = head;
-        while (!stack.isEmpty()) {
-            head.next = stack.pop();
-            head = head.next;
-        }
-        head.next = null;
-        return pre;
-    }
-
-    /**
-     * 将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
-     * 输入：1->2->4, 1->3->4
-     * 输出：1->1->2->3->4->4
-     */
-    public ListNode Merge(ListNode list1, ListNode list2) {
-        if (list1 == null) return list2;//注意鲁棒性
-        if (list2 == null) return list1;
-        if (list1.val <= list2.val) {  //利用归并排序的递归思想，将两个链表的较小节点链接起来
-            list1.next = Merge(list1.next, list2);  //如果list1当前节点小于list2当前节点，链表放入较小节点并将索引往后一个节点，与list2的原较大节点继续比较
-            return list1;
-        } else {
-            list2.next = Merge(list2.next, list1);  //如果list2当前节点小于list1当前节点，链表放入较小节点并将索引往后一个节点，与list1的原较大节点继续比较
-            return list2;
-        }
-    }
-
-    /**
-     * 52.两个链表的第一个公共节点(公共节点就考虑set)
-     * 空间复杂度（m+n）时间复杂度（m+n）
-     */
-    public ListNode findFirstCommonNode(ListNode pHead1, ListNode pHead2) {
-        ListNode current1 = pHead1;  //设置两个遍历两个链表的游标，初始位置在两个链表首节点
-        ListNode current2 = pHead2;
-        HashSet<ListNode> set = new HashSet<ListNode>();  //利用HashSet存放遍历过的第一条链表
-        while (current1 != null) {
-            set.add(current1);
-            current1 = current1.next;
-        }
-        while (current2 != null) {
-            if (set.contains(current2))
-                return current2;  //如果HashSet中存有和current2游标节点相同的第一条链表中的节点，则找到公共节点
-            current2 = current2.next;
-        }
-        return null;  //如果没找到公共节点，或公共节点为空，返回null
-    }
-
-    /**
-     * 52.两个链表的第一个公共节点(2)
-     * 长链表先走n步，第一个相同的就是公共节点    如果相同的再前面就找不到了???
-     * 时间复杂度（m+n）空间复杂度（不需要栈了，小）
-     */
-    public ListNode findFirstCommonNode2(ListNode headA, ListNode headB) {
-        //统计链表A和链表B的长度
-        int lenA = length(headA), lenB = length(headB);
-
-        //如果节点长度不一样，节点多的先走，直到他们的长度一样为止
-        while (lenA != lenB) {
-            if (lenA > lenB) {
-                //如果链表A长，那么链表A先走
-                headA = headA.next;
-                lenA--;
-            } else {
-                //如果链表B长，那么链表B先走
-                headB = headB.next;
-                lenB--;
-            }
-        }
-
-        //然后开始比较，如果他俩不相等就一直往下走
-        while (headA != headB) {
-            headA = headA.next;
-            headB = headB.next;
-        }
-        //走到最后，最终会有两种可能，一种是headA为空，
-        //也就是说他们俩不相交。还有一种可能就是headA
-        //不为空，也就是说headA就是他们的交点
-        return headA;
-    }
-
-    //统计链表的长度
-    private int length(ListNode node) {
-        int length = 0;
-        while (node != null) {
-            node = node.next;
-            length++;
-        }
-        return length;
-    }
-
-
-    public static void main(String[] args) {
-        LinkedUtils creator = new LinkedUtils();
-
-//        ListNode.printLinkedList(creator.reverseLinkedList(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
-
-//        ListNode.printLinkedList(creator.reverseLoopLinkedList(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
-
-//        ListNode.printLinkedList(creator.removeNthFromEnd(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 2));
-
-//        ListNode.printLinkedList(creator.removeNode(
-//                creator.createLinkedList(Arrays.asList(1, 6, 3, 4, 5, 7, 8)), 5));
-
-//        ListNode.printLinkedList(creator.findKthToTail(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
-
-//        ListNode.printLinkedList(creator.reverseLink(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
-
-
-//        creator.findFirstCommonNode2(
-//                creator.createLinkedList(Arrays.asList(1, 2, 3)),
-//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6, 7))
-//        );
-
-
-       ListNode.printLinkedList(creator.reverse(creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5, 6))));
-
     }
 
 

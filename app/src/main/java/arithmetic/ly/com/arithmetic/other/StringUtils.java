@@ -5,6 +5,7 @@ import android.os.RemoteException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 
 public class StringUtils {
@@ -12,7 +13,8 @@ public class StringUtils {
     public static void main(String[] args) {
         String a = "abbbbaaaccssdd";
         String b = "acc";
-        System.out.println(bfFind(a, b, 3));
+        System.out.println(bfFind(a, b));
+        //System.out.print(lengthOfLongestSubstring("abcabcbb"));
     }
 
 
@@ -261,6 +263,26 @@ public class StringUtils {
         }
         return result;
     }
+
+
+    /**
+     * 无重复字符的最长子串  剑指 Offer 48
+     */
+    public static int lengthOfLongestSubstring(String s) {
+        Set<Character> set = new HashSet<>();
+        int left = 0, right = 0, res = 0;
+        while(right < s.length()){
+            char c = s.charAt(right++);
+            //存在重复的字符，则移动左指针，直到滑动窗口中不含有该字符
+            while(set.contains(c)){
+                set.remove(s.charAt(left++));
+            }
+            set.add(c);
+            res = Math.max(res, right-left);
+        }
+        return res;
+    }
+
 
 
 }
