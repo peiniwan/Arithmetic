@@ -29,8 +29,11 @@ public class LinkedUtils {
 //        ListNode.printLinkedList(creator.findKthToTail(
 //                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)), 3));
 
-        ListNode.printLinkedList(creator.reverseLink(
-                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+//        ListNode.printLinkedList(creator.reverseLink(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3))));
+
+        ListNode.printLinkedList(creator.reverseList2(
+                creator.createLinkedList(Arrays.asList(1, 2, 3,4,5))));
 
 
 //        creator.findFirstCommonNode2(
@@ -163,10 +166,6 @@ public class LinkedUtils {
             num++;
         }
         if (num < k) return null;  //如果倒数第k个节点的索引在整个链表之外，返回空
-//        ListNode current2 = head;  //前面的current已经指向链表尾部，再用一个新的游标遍历链表
-//        for (int i = 0; i < num - k; i++) {  //遍历num-k-1次后，到达倒数第k个节点
-//            current2 = current2.next;
-//        }
         ListNode pre = head;
         ListNode cur = head;
         int pos = 0;
@@ -184,6 +183,8 @@ public class LinkedUtils {
      * 给定一个链表: 1->2->3->4->5, 和 n = 2.
      * 当删除了倒数第二个节点后，链表变为 1->2->3->5.
      * 快指针先移n个节点，接下来,快慢指针一起移动,两指针之间一直保持n个节点,当快指针到链表底了,操作慢指针,删除要删除的元素!
+     * 这样做的目的是创建一个间隔为n的“窗口”。当快指针到达链表末尾时，慢指针正好位于倒数第n个节点。
+     * 因为从开始到结束，两者之间始终保持着n个节点的距离。
      */
     public ListNode removeNthFromEnd(ListNode head, int k) {
         if (head == null)
@@ -242,24 +243,6 @@ public class LinkedUtils {
         return pos;
     }
 
-    public static ListNode findNthFromEnd(ListNode head, int n){
-        ListNode p1 = head;
-        ListNode p2 = head;
-        //把p2指针移动到正数第n个结点
-        for(int i=1; i<n; i++){
-            p2 = p2.next;
-            if(p2 == null){
-                throw new IllegalArgumentException("参数n超出链表长度！");
-            }
-        }
-        //p1和p2一起右移，直到p2指向链表尾结点
-        while (p2.next != null){
-            p1 = p1.next;
-            p2 = p2.next;
-        }
-        return p1;
-    }
-
 
     /**
      * 环形链表
@@ -305,47 +288,7 @@ public class LinkedUtils {
     }
 
 
-    /**
-     * 循环反转链表
-     * 利用三个指针把链表反转，关键是 r 指针保存断开的节点。
-     */
-    public ListNode reverseLink(ListNode head) {ListNode reverse = null;  //用一个新的空链表存放反转后的链表
-        while (head != null) {  //当原链表的节点没有被剥离完时不断循环
-            ListNode second = head.next;    //初始化原链表首节点的下一个节点
-            head.next = reverse;  //head.next当作是个变量，原链表首节点的下一个节点链接到新链表的首节点处
-            reverse = head;     //下一节点链接完成后，将原链表首节点放入到新链表中，成为新链表的首节点
-            head = second;   //从原链表中剥离掉原首节点，原链表首节点的下一个节点成为新的原链表首节点，用于下一次循环
-        }
-        return reverse;
-        // 第一次出来 head=second=2(3)           reverse=1(null)
-        // 第二次   head.next 3   = reverse（1 null）  head就变成了=2(1) 因为这步把3变成了1 null
-        // 出来后就是  head=second=3(null)     reverse =2(1) = 没出来时的head
-        //  第三次出来     head=null(null)        reverse =3(2)1
-    }
 
-
-    /**
-     * 反转链表，可以用栈,递归本质就是一个栈，理解递归
-     */
-    public ListNode printListFromTailToHead(ListNode head) {
-        if (head == null || head.next == null) {
-            return head;
-        }
-        Stack<ListNode> stack = new Stack<>();
-        while (head.next != null) {
-            stack.push(head);
-            head = head.next;
-        }
-        ListNode pre = head;
-        //从栈中弹出每个节点，并将它们添加到新的链表的末尾。
-        //我们将当前节点的next字段设置为栈中弹出的节点，然后将当前节点更新为新添加的节点
-        while (!stack.isEmpty()) {
-            head.next = stack.pop();
-            head = head.next;
-        }
-        head.next = null;
-        return pre;
-    }
 
     /**
      * 将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
@@ -427,16 +370,65 @@ public class LinkedUtils {
         return length;
     }
 
+//=================================== 反转链表 ==================================================
 
-    ListNode reverse(ListNode head) {
-        if (head.next == null) return head;
-        ListNode last = reverse(head.next);
-        head.next.next = head;
-        head.next = null;
-        return last;
+    /**
+     * 迭代反转链表
+     */
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) //链表为空或者仅1个数直接返回
+            return head;
+        ListNode p = head, newHead = null;
+        while (p != null) {                 //一直迭代到链尾
+            ListNode tmp = p.next;          //暂存p下一个地址，防止变化指针指向后找不到后续的数
+            p.next = newHead;               //p->next指向前一个空间
+            newHead = p;                    //新链表的头移动到p，扩长一步链表
+            p = tmp;                        //p指向原始链表p指向的下一个空间
+        }
+        return newHead;
     }
 
-    ListNode successor =null;
+    /**
+     * 递归反转
+     */
+    public ListNode reverseList2(ListNode h) {
+        if (h == null || h.next == null) { //链表为空直接返回，而head.next为空是递归基
+            return h;
+        }
+        ListNode newHead = reverseList2(h.next); //一直循环到链尾
+        h.next.next = h;                     //翻转链表的指向
+        h.next = null;                          //记得赋值NULL，防止链表错乱，避免两个节点互为next死循环
+        return newHead;     //不论当前节点是啥，都返回原本链表的最后一个节点-》也就是反转后的头节点
+    }
+
+
+    /**
+     * 反转链表，可以用栈,递归本质就是一个栈，理解递归
+     */
+    public ListNode printListFromTailToHead(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        Stack<ListNode> stack = new Stack<>();
+        while (head.next != null) {
+            stack.push(head);
+            head = head.next;
+        }
+        ListNode newNode = head;
+        //从栈中弹出每个节点，并将它们添加到新的链表的末尾。
+        //我们将当前节点的next字段设置为栈中弹出的节点，然后head = head.next 用于移动到反转列表的下一个节点去继续进行更新。
+        while (!stack.isEmpty()) {
+            head.next = stack.pop();
+            head = head.next;
+        }
+        head.next = null;
+        return newNode;
+    }
+
+
+
+    ListNode successor = null;
+
     // 反转以 head 为起点的 n 个节点，返回新的头结点
     ListNode reverseN(ListNode head, int n) {
         if (n == 1) {
@@ -467,7 +459,9 @@ public class LinkedUtils {
     // 反转以 a 为头结点的链表
     ListNode reverse3(ListNode a) {
         ListNode pre, cur, nxt;
-        pre = null; cur = a; nxt = a;
+        pre = null;
+        cur = a;
+        nxt = a;
         while (cur != null) {
             nxt = cur.next;
             // 逐个结点反转
@@ -480,10 +474,14 @@ public class LinkedUtils {
         return pre;
     }
 
-    /** 反转区间 [a, b) 的元素，注意是左闭右开 */
+    /**
+     * 反转区间 [a, b) 的元素，注意是左闭右开
+     */
     ListNode reverse2(ListNode a, ListNode b) {
         ListNode pre, cur, nxt;
-        pre = null; cur = a; nxt = a;
+        pre = null;
+        cur = a;
+        nxt = a;
         // while 终止的条件改一下就行了
         while (cur != b) {
             nxt = cur.next;
@@ -498,6 +496,7 @@ public class LinkedUtils {
     /**
      * 如何k个一组反转链表
      * https://labuladong.github.io/algo/%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E7%B3%BB%E5%88%97/k%E4%B8%AA%E4%B8%80%E7%BB%84%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8.html
+     *
      * @param head
      * @param k
      * @return
@@ -549,9 +548,6 @@ public class LinkedUtils {
         left = left.next;
         return res;
     }
-
-
-
 
 
 }
