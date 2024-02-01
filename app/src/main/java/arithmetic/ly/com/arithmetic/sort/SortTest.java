@@ -94,7 +94,7 @@ public class SortTest {
 
     /**
      * 快速排序
-     *
+     * <p>
      * https://mp.weixin.qq.com/s/PQLC7qFjb74kt6PdExP8mw
      */
     public void quickSort(int[] a) {
@@ -188,6 +188,29 @@ public class SortTest {
         //将temp中的元素全部拷贝到原数组中
         while (leftStart <= right) {
             a[leftStart] = tmpArray[leftStart++];
+        }
+    }
+
+
+    /**
+     * 归并两个有序数组
+     * 把归并结果存到第一个数组上。
+     * 需要从尾开始遍历，如果我们从数组的开头开始遍历，那么在将数组元素插入到合并后的数组时，
+     * 就需要移动后面的元素，这将导致效率低下。
+     */
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int index1 = m - 1, index2 = n - 1;
+        int indexMerge = m + n - 1;
+        while (index1 >= 0 || index2 >= 0) {
+            if (index1 < 0) {
+                nums1[indexMerge--] = nums2[index2--];
+            } else if (index2 < 0) {//一个短一个长，index2<0了，设置nums1的数字
+                nums1[indexMerge--] = nums1[index1--];
+            } else if (nums1[index1] > nums2[index2]) {
+                nums1[indexMerge--] = nums1[index1--];
+            } else {
+                nums1[indexMerge--] = nums2[index2--];
+            }
         }
     }
 
@@ -323,7 +346,7 @@ public class SortTest {
         int[] arr = {9, 4, 2, 6, 7, 3, 10, 33, 88, 1, 17};
 //        sortTest.bubbleSort(arr);
 //        sortTest.countSort0(arr);
-        sortTest.mergeSort(arr,0,arr.length-1);
+        sortTest.mergeSort(arr, 0, arr.length - 1);
 
         for (int i : arr) {
             System.out.println(i);
@@ -344,7 +367,6 @@ public class SortTest {
 //        int[] num2 = {2, 5, 6};
 //        sortTest.merge2(num1, num2)
     }
-
 
 
     public void countSort(int[] array) {
@@ -407,7 +429,7 @@ public class SortTest {
     /**
      * 基数排序
      */
-    public void radixSort(int[] array){
+    public void radixSort(int[] array) {
         //找出最大值
         int max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -415,19 +437,19 @@ public class SortTest {
                 max = array[i];
             }
         }//o(n)
-        for(int divider=1;divider<=max;divider*=10){
-            countSort2(array,divider);
+        for (int divider = 1; divider <= max; divider *= 10) {
+            countSort2(array, divider);
         }
 
     }
 
 
-    public void countSort2(int[] array,int divider) {
+    public void countSort2(int[] array, int divider) {
         //开辟内存空间，存储每个整数出现的次数
         int[] counts = new int[10];
         //统计每个整数出现的次数
         for (int i = 0; i < array.length; i++) {
-            counts[array[i]/divider%10]++;
+            counts[array[i] / divider % 10]++;
         }//o(n)
         //根据整数的出现次数，对整数进行排序
         int index = 0;
@@ -437,8 +459,6 @@ public class SortTest {
             }
         }//o(n)
     }
-
-
 
 
 }

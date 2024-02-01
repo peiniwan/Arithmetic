@@ -16,32 +16,9 @@ public class ArrayTest {
         removeDuplicates(new int[]{1, 1, 2, 3, 4, 5, 5, 6});
         intersect(new int[]{1, 3, 2, 5, 6, 4}, new int[]{3, 4, 5, 6, 7, 8});
         HashMap<String, Integer> hashMap = new HashMap<>();
-        hashMap.put("a",123);
-        hashMap.put("a",233);
-        System.out.print(hashMap.get("a")+"----");
-    }
-
-
-    /**
-     * 归并两个有序数组
-     * 把归并结果存到第一个数组上。
-     * 需要从尾开始遍历，如果我们从数组的开头开始遍历，那么在将数组元素插入到合并后的数组时，
-     * 就需要移动后面的元素，这将导致效率低下。
-     */
-    public void merge(int[] nums1, int m, int[] nums2, int n) {
-        int index1 = m - 1, index2 = n - 1;
-        int indexMerge = m + n - 1;
-        while (index1 >= 0 || index2 >= 0) {
-            if (index1 < 0) {
-                nums1[indexMerge--] = nums2[index2--];
-            } else if (index2 < 0) {//一个短一个长，index2<0了，设置nums1的数字
-                nums1[indexMerge--] = nums1[index1--];
-            } else if (nums1[index1] > nums2[index2]) {
-                nums1[indexMerge--] = nums1[index1--];
-            } else {
-                nums1[indexMerge--] = nums2[index2--];
-            }
-        }
+        hashMap.put("a", 123);
+        hashMap.put("a", 233);
+        System.out.print(hashMap.get("a") + "----");
     }
 
 
@@ -215,6 +192,7 @@ public class ArrayTest {
             while (L < R) {//和后面的都比一遍
                 int sum = nums[i] + nums[L] + nums[R];
                 if (sum == 0) {
+                    //不是只有一组是3数和为0
                     ans.add(Arrays.asList(nums[i], nums[L], nums[R]));
                     while (L < R && nums[L] == nums[L + 1]) L++; // 去重
                     while (L < R && nums[R] == nums[R - 1]) R--; // 去重
@@ -230,7 +208,7 @@ public class ArrayTest {
 
     /**
      * 奇数在前，偶数在后
-     * 先计算出奇数的个数count，然后用双指针来遍历，一个从头遍历到count，一个从数组尾部遍历到count。
+     * 用双指针来遍历，一个从头遍历到count，一个从数组尾部遍历到count。
      * 从前向后找到一个偶数的下标，从后向前找到一个奇数的下标，然后交换对应的值。直到遍历完整个数组。
      * 时间复杂度为O（n），空间复杂度为O（1）。
      */
@@ -285,7 +263,6 @@ public class ArrayTest {
             return false;
         }
         //如果最终 num 的值变为1，说明它只包含质因数 2、3 和 5，即是丑数，
-        // 此时返回 true。否则，说明 num 还包含其他质因数，不是丑数，返回 false。
         while (num != 1) {
             if (num % 2 == 0) {
                 num /= 2;
@@ -345,34 +322,8 @@ public class ArrayTest {
 
 
     /**
-     * 只出现一次的数字
-     * 除了某个元素只出现一次以外，其余每个元素均出现两次
-     */
-    public int singleNumber(int[] nums) {
-        Arrays.sort(nums);  // 排序数组
-        for (int i = 0; i < nums.length - 1; i += 2) {
-            // 找到不相等的一组，直接返回
-            if (nums[i] != nums[i + 1]) {
-                return nums[i];
-            }
-        }
-        return nums[nums.length - 1];
-    }
-
-    //去重法：最后剩下一个单独的元素，返回即可
-    public static int singleNumber2(int[] nums) {
-        Set<Integer> set = new HashSet<>();
-        for (int i = 0; i < nums.length; i++) {
-            if (!set.add(nums[i])) { // add成功返回true，如果set中已有相同数字，则add方法会返回false
-                set.remove(nums[i]); // 删除重复出现的数字
-            }
-        }
-        return set.iterator().next();
-    }
-
-
-    /**
      * 40.一个整型数组里除了两个数字之外，其他的数字都出现了偶数次。请写程序找出这两个只出现一次的数字。
+     * 解法1
      * num1,num2分别为长度为1的数组。传出参数
      * 将num1[0],num2[0]设置为返回结果
      * 和下面数组类似
@@ -396,6 +347,35 @@ public class ArrayTest {
         }
     }
 
+    /**
+     * 解法2
+     * 除了某个元素只出现一次以外，其余每个元素均出现两次
+     */
+    public int singleNumber(int[] nums) {
+        Arrays.sort(nums);  // 排序数组
+        for (int i = 0; i < nums.length - 1; i += 2) {
+            // 找到不相等的一组，直接返回
+            if (nums[i] != nums[i + 1]) {
+                return nums[i];
+            }
+        }
+        return nums[nums.length - 1];
+    }
+
+    /**
+     * 解法3
+     * 去重法：最后剩下一个单独的元素，返回即可
+     */
+    public static int singleNumber2(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (!set.add(nums[i])) { // add成功返回true，如果set中已有相同数字，则add方法会返回false
+                set.remove(nums[i]); // 删除重复出现的数字
+            }
+        }
+        return set.iterator().next();
+    }
+
 
     /**
      * 两个有序数组交集
@@ -417,7 +397,6 @@ public class ArrayTest {
         }
         return list;
     }
-
 
 
     public int[] intersect2(int[] nums1, int[] nums2) {
@@ -495,22 +474,14 @@ public class ArrayTest {
 
 
     /**
-     * 12.数值的整数次方
+     * x 的 n 次幂函数（即，xn）
+     * 输入：x = 2.00000, n = 10
+     * 输出：1024.00000
+     * 输入：x = 2.00000, n = -2
+     * 输出：0.25000
+     * 解释：2-2 = 1/22 = 1/4 = 0.25
      */
-    public double Power(double base, int exponent) {
-        int n = Math.abs(exponent);
-        if (n == 0) return 1;
-        if (n == 1) return base;
-        //递归：若n为偶数，则a^n=a^(n/2)*a^(n/2)；若n为奇数，则a^n=(a^(n-1)/2)*(a^((n-1)/2))*a，时间复杂度为O(log(n))
-        double result = Power(base, n >> 1);  //将n的二进制右移一位，意味着除以2，求得a^(n/2)或a^((n-1)/2)
-        result *= result;  //将a^(n/2)或a^((n-1)/2)进行平方，变为a^n或a^(n-1)
-        if ((n & 1) == 1) result *= base;  //在n的二进制右移递归后，若n为奇数，二进制最低位一定是1，这样就再乘一次a。偶数二进制的最低位为0
-        if (exponent < 0) result = 1 / result;  //若指数为负数，则求倒数
-        return result;
-    }
-
-
-    public double Power2(double base, int exponent) {
+    public double myPow(double base, int exponent) {
         double result = 1.000;
         boolean flag = false;
         if (exponent < 0) {

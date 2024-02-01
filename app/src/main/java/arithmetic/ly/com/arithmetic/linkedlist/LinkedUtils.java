@@ -33,7 +33,11 @@ public class LinkedUtils {
 //                creator.createLinkedList(Arrays.asList(1, 2, 3))));
 
         ListNode.printLinkedList(creator.reverseList2(
-                creator.createLinkedList(Arrays.asList(1, 2, 3,4,5))));
+                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5))));
+
+
+//        creator.findByData(
+//                creator.createLinkedList(Arrays.asList(1, 2, 3, 4, 5)),2);
 
 
 //        creator.findFirstCommonNode2(
@@ -216,15 +220,15 @@ public class LinkedUtils {
      */
     public int findByPos(ListNode head, int index) {
         int pos = 0;
-        ListNode current = head;
         while (pos != index) {
-            if (current.next == null) {
+            if (head.next == null) {
                 return -1;
             }
-            current = current.next;
+            head = head.next;
             pos++;
         }
-        return current.val;
+        System.out.print("findByPos--- "+head.val);
+        return head.val;
     }
 
     /**
@@ -232,15 +236,23 @@ public class LinkedUtils {
      */
     public int findByData(ListNode head, int data) {
         int pos = 0;
-        ListNode current = head;
-        while (current.val != data) {
-            if (current.next == null) {
+        while (head.val != data) {
+            if (head.next == null) {
                 return -1;
             }
-            current = current.next;
+            head = head.next;
             pos++;
         }
+        System.out.print("findByData--- "+pos);
         return pos;
+    }
+
+    /* 倒序打印单链表中的元素值 */
+    void traverse(ListNode head) {
+        if (head == null) return;
+        traverse(head.next);
+        // 后序遍历代码
+//        print(head.val);
     }
 
 
@@ -288,10 +300,8 @@ public class LinkedUtils {
     }
 
 
-
-
     /**
-     * 将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+     * 合并两个有序链表。新链表是通过拼接给定的两个链表的所有节点组成的。
      * 输入：1->2->4, 1->3->4
      * 输出：1->1->2->3->4->4
      */
@@ -299,13 +309,46 @@ public class LinkedUtils {
         if (list1 == null) return list2;//注意鲁棒性
         if (list2 == null) return list1;
         if (list1.val <= list2.val) {  //利用归并排序的递归思想，将两个链表的较小节点链接起来
-            list1.next = Merge(list1.next, list2);  //如果list1当前节点小于list2当前节点，链表放入较小节点并将索引往后一个节点，与list2的原较大节点继续比较
+            list1.next = Merge(list1.next, list2);  //如果list1当前节点小于list2当前节点，链表放入较小节点(不动，继续设置下一个)并将索引往后一个节点，与list2的原较大节点继续比较
             return list1;
         } else {
             list2.next = Merge(list2.next, list1);  //如果list2当前节点小于list1当前节点，链表放入较小节点并将索引往后一个节点，与list1的原较大节点继续比较
             return list2;
         }
     }
+
+    /**
+     * 合并两个有序链表
+     * 迭代解法
+     */
+    public ListNode mergeTwoLists2(ListNode list1, ListNode list2) {
+        ListNode list3 = new ListNode(0);
+        ListNode ptr1 = list1;
+        ListNode ptr2 = list2;
+        ListNode ptr3 = list3;
+        while (true) {
+            if (ptr1.next == null) {
+                ptr3.next = ptr2;
+                break;
+            }
+
+            if (ptr2.next == null) {
+                ptr3.next = ptr2;
+                break;
+            }
+            if (list1.val < list2.val) {
+                ptr3.next = ptr1;
+                ptr3 = ptr3.next;
+                ptr1 = ptr1.next;
+            } else {
+                ptr3.next = ptr2;
+                ptr3 = ptr3.next;
+                ptr2 = ptr2.next;
+            }
+        }
+        return list3;
+    }
+
 
     /**
      * 52.两个链表的第一个公共节点(公共节点就考虑set)
@@ -329,8 +372,9 @@ public class LinkedUtils {
 
     /**
      * 52.两个链表的第一个公共节点(2)
-     * 长链表先走n步，第一个相同的就是公共节点    如果相同的再前面就找不到了???
+     * 长链表先走n步，第一个相同的就是公共节点
      * 时间复杂度（m+n）空间复杂度（不需要栈了，小）
+     * 先获得两个链表的长度，然后在较长的链表上先走若干步(两链表长度之差)，接着同时在两个链表上遍历，找到的第一个相同的节点就是他们的第一个公共节点
      */
     public ListNode findFirstCommonNode2(ListNode headA, ListNode headB) {
         //统计链表A和链表B的长度
@@ -426,7 +470,6 @@ public class LinkedUtils {
     }
 
 
-
     ListNode successor = null;
 
     // 反转以 head 为起点的 n 个节点，返回新的头结点
@@ -495,7 +538,6 @@ public class LinkedUtils {
 
     /**
      * 如何k个一组反转链表
-     * https://labuladong.github.io/algo/%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E7%B3%BB%E5%88%97/k%E4%B8%AA%E4%B8%80%E7%BB%84%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8.html
      *
      * @param head
      * @param k
@@ -517,37 +559,4 @@ public class LinkedUtils {
         a.next = reverseKGroup(b, k);
         return newHead;
     }
-
-
-    /* 倒序打印单链表中的元素值 */
-    void traverse(ListNode head) {
-        if (head == null) return;
-        traverse(head.next);
-        // 后序遍历代码
-//        print(head.val);
-    }
-
-
-    /**
-     * 回文链表（简单）
-     * https://labuladong.github.io/algo/%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E7%B3%BB%E5%88%97/%E5%88%A4%E6%96%AD%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8.html
-     */
-    // 左侧指针
-    ListNode left;
-
-    boolean isPalindrome(ListNode head) {
-        left = head;
-        return traverse2(head);
-    }
-
-    boolean traverse2(ListNode right) {
-        if (right == null) return true;
-        boolean res = traverse2(right.next);
-        // 后序遍历代码
-        res = res && (right.val == left.val);
-        left = left.next;
-        return res;
-    }
-
-
 }
