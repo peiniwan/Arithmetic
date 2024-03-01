@@ -21,6 +21,27 @@ public class ArrayTest {
         System.out.print(hashMap.get("a") + "----");
     }
 
+    /**
+     * 121. 买卖股票的最佳时机
+     * 给定一个数组 prices ，它的第 i 个元素 prices[i] 表示一支给定股票第 i 天的价格。
+     * 你只能选择 某一天 买入这只股票，并选择在 未来的某一个不同的日子 卖出该股票。设计一个算法来计算你所能获取的最大利润。
+     * 返回你可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 0 。
+     * https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/solutions/136684/121-mai-mai-gu-piao-de-zui-jia-shi-ji-by-leetcode-/?envType=study-plan-v2&envId=top-100-liked
+     * 时间复杂度：O(n)，只需要遍历一次。
+     * 空间复杂度：O(1)，只使用了常数个变量。
+     */
+    public int maxProfit(int prices[]) {
+        int minprice = Integer.MAX_VALUE;
+        int maxprofit = 0;
+        for (int i = 0; i < prices.length; i++) {
+            if (prices[i] < minprice) {
+                minprice = prices[i];
+            } else if (prices[i] - minprice > maxprofit) {
+                maxprofit = prices[i] - minprice;
+            }
+        }
+        return maxprofit;
+    }
 
     /**
      * 169. 多数元素
@@ -58,7 +79,6 @@ public class ArrayTest {
      * n^2
      */
     public int[] twoSum(int[] nums, int target) {
-
         //时间复杂度 O(N^2)，空间复杂度 O(1)
         for (int i = 0; i < nums.length; i++) {
             for (int j = i + 1; j < nums.length; j++) {
@@ -69,23 +89,22 @@ public class ArrayTest {
                 }
             }
         }
-
-//        //由于哈希表的查询时间为 O(1)，算法的时间复杂度降低到 O(N)，
-//        // 但是需要 O(N) 的空间复杂度来存储哈希表。不过综合来看，是要比暴力解法高效的
-//        int n = nums.length;
-//        HashMap<Integer, Integer> index = new HashMap<>();
-//        for (int i = 0; i < nums.length; i++) {
-//            index.put(nums[i],i);
-//        }
-//        for (int i = 0; i < nums.length; i++) {
-//            int other =  target - nums[i];
-//            if(index.containsKey(other) && index.get(other)!=-1){
-//                 return new int[i,index.get(other)];
-//            }
-//        }
-
         return null;
     }
+
+
+    //复杂度 n n
+    public int[] twoSum3(int[] nums, int target) {
+        Map<Integer, Integer> hashMap = new HashMap<Integer, Integer>();
+        for (int i = 0; i < nums.length; ++i) {
+            if (hashMap.containsKey(target - nums[i])) {
+                return new int[]{hashMap.get(target - nums[i]), i};
+            }
+            hashMap.put(nums[i], i);
+        }
+        return new int[0];
+    }
+
 
     /**
      * (有序数组)的Two Sum 双指针
@@ -347,11 +366,27 @@ public class ArrayTest {
         }
     }
 
+
+    /**
+     *
+     136. 只出现一次的数字
+     * 给你一个 非空 整数数组 nums ，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+     * 相同的是0，最后数组中的全部元素的异或运算结果为数组中只出现一次的数字。
+     */
+    public int singleNumber(int[] nums) {
+        int single = 0;
+        for (int num : nums) {
+            single ^= num;
+        }
+        return single;
+    }
+
+
     /**
      * 解法2
      * 除了某个元素只出现一次以外，其余每个元素均出现两次
      */
-    public int singleNumber(int[] nums) {
+    public int singleNumber3(int[] nums) {
         Arrays.sort(nums);  // 排序数组
         for (int i = 0; i < nums.length - 1; i += 2) {
             // 找到不相等的一组，直接返回
@@ -396,28 +431,6 @@ public class ArrayTest {
             }
         }
         return list;
-    }
-
-
-    public int[] intersect2(int[] nums1, int[] nums2) {
-        List<Integer> list1 = new ArrayList<>();
-        for (int num : nums1) {
-            list1.add(num);
-        }
-        List<Integer> list2 = new ArrayList<>();
-        for (int num : nums2) {
-            if (list1.contains(num)) {
-                list2.add(num);
-                // 从 list1 除去已匹配的数值
-                list1.remove(Integer.valueOf(num));
-            }
-        }
-        int[] res = new int[list2.size()];
-        int i = 0;
-        for (int num : list2) {
-            res[i++] = num;
-        }
-        return res;
     }
 
 

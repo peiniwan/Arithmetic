@@ -1,10 +1,13 @@
 package arithmetic.ly.com.arithmetic.linkedlist;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+
+import arithmetic.ly.com.arithmetic.other.LeetCode;
 
 public class LinkedUtils {
 
@@ -227,7 +230,7 @@ public class LinkedUtils {
             head = head.next;
             pos++;
         }
-        System.out.print("findByPos--- "+head.val);
+        System.out.print("findByPos--- " + head.val);
         return head.val;
     }
 
@@ -243,7 +246,7 @@ public class LinkedUtils {
             head = head.next;
             pos++;
         }
-        System.out.print("findByData--- "+pos);
+        System.out.print("findByData--- " + pos);
         return pos;
     }
 
@@ -257,7 +260,7 @@ public class LinkedUtils {
 
 
     /**
-     * 环形链表
+     * 141 环形链表
      * 我们遍历所有结点并在哈希表中存储每个结点的引用（或内存地址）。如果当前结点为空结点 null（即已检测到链表尾部的下一个结点），
      * 那么我们已经遍历完整个链表，并且该链表不是环形链表。如果当前结点的引用已经存在于哈希表中，那么返回 true（即该链表为环形链表）。
      */
@@ -301,7 +304,38 @@ public class LinkedUtils {
 
 
     /**
-     * 合并两个有序链表。新链表是通过拼接给定的两个链表的所有节点组成的。
+     * 234、 回文链表 head = [1,2,2,1]
+     * 1.复制链表值到数组列表中。
+     * 2.使用双指针法判断是否为回文。
+     * 总的时间复杂度：O(2n)=O(n)
+     * 空间复杂度：O(n)
+     */
+    public boolean isPalindrome(ListNode head) {
+        List<Integer> vals = new ArrayList<Integer>();
+
+        // 将链表的值复制到数组中
+        ListNode currentNode = head;
+        while (currentNode != null) {
+            vals.add(currentNode.val);
+            currentNode = currentNode.next;
+        }
+
+        // 使用双指针判断是否回文
+        int front = 0;
+        int back = vals.size() - 1;
+        while (front < back) {
+            if (!vals.get(front).equals(vals.get(back))) {
+                return false;
+            }
+            front++;
+            back--;
+        }
+        return true;
+    }
+
+
+    /**
+     * 21. 合并两个有序链表。新链表是通过拼接给定的两个链表的所有节点组成的。
      * 输入：1->2->4, 1->3->4
      * 输出：1->1->2->3->4->4
      */
@@ -318,7 +352,7 @@ public class LinkedUtils {
     }
 
     /**
-     * 合并两个有序链表
+     * 21. 合并两个有序链表
      * 迭代解法
      */
     public ListNode mergeTwoLists2(ListNode list1, ListNode list2) {
@@ -351,6 +385,7 @@ public class LinkedUtils {
 
 
     /**
+     * 160. 相交链表
      * 52.两个链表的第一个公共节点(公共节点就考虑set)
      * 空间复杂度（m+n）时间复杂度（m+n）
      */
@@ -368,6 +403,18 @@ public class LinkedUtils {
             current2 = current2.next;
         }
         return null;  //如果没找到公共节点，或公共节点为空，返回null
+    }
+
+
+    //160. 相交链表
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null) return null;
+        ListNode pA = headA, pB = headB;
+        while (pA != pB) {
+            pA = pA == null ? headB : pA.next;
+            pB = pB == null ? headA : pB.next;
+        }
+        return pA;
     }
 
     /**
@@ -404,6 +451,7 @@ public class LinkedUtils {
         return headA;
     }
 
+
     //统计链表的长度
     private int length(ListNode node) {
         int length = 0;
@@ -425,7 +473,7 @@ public class LinkedUtils {
         ListNode p = head, newHead = null;
         while (p != null) {                 //一直迭代到链尾
             ListNode tmp = p.next;          //暂存p下一个地址，防止变化指针指向后找不到后续的数
-            p.next = newHead;               //p->next指向前一个空间
+            p.next = newHead;               //p->next指向前一个空间,和下面换了一下位置
             newHead = p;                    //新链表的头移动到p，扩长一步链表
             p = tmp;                        //p指向原始链表p指向的下一个空间
         }

@@ -1,12 +1,14 @@
 package arithmetic.ly.com.arithmetic.other;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class LeetCode {
 
     public static void main(String[] args) {
-        LeetCode leetCode = new LeetCode();
+        //LeetCode leetCode = new LeetCode();
         ArrayTest arrayTest = new ArrayTest();
         arrayTest.twoSum2(new int[]{2, 7, 11, 15},9);
     }
@@ -151,6 +153,30 @@ public class LeetCode {
         System.out.println("a=" + a);
 
     }
+
+
+    /**
+     * 118. 杨辉三角
+     * https://leetcode.cn/problems/pascals-triangle/solutions/510638/yang-hui-san-jiao-by-leetcode-solution-lew9/?envType=study-plan-v2&envId=top-100-liked
+     * 如果 j 等于 0 或者 j 等于 i，将值设为 1，因为杨辉三角两侧的数字总是1。
+     * 否则，取上一行 (i-1) 的 j-1 和 j 位置的数字之和作为当前位置的数字。
+     */
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> ret = new ArrayList<List<Integer>>();
+        for (int i = 0; i < numRows; ++i) {
+            List<Integer> row = new ArrayList<Integer>();
+            for (int j = 0; j <= i; ++j) {
+                if (j == 0 || j == i) {
+                    row.add(1);
+                } else {
+                    row.add(ret.get(i - 1).get(j - 1) + ret.get(i - 1).get(j));
+                }
+            }
+            ret.add(row);
+        }
+        return ret;
+    }
+
 
 
     //============================回溯（穷举）============================

@@ -2,8 +2,11 @@ package arithmetic.ly.com.arithmetic.tree;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
+
+import arithmetic.ly.com.arithmetic.other.LeetCode;
 
 
 public class BinaryTreeUtil {
@@ -24,15 +27,40 @@ public class BinaryTreeUtil {
         TreeNode treeNode = binaryTreeUtil.buildTreeNode(perInt, postInt);
         ArrayList<Integer> integers = binaryTreeUtil.preOrder(treeNode);
         for (Integer integer : integers) {
-            System.out.print(integer+" ");
+            System.out.print(integer + " ");
         }
     }
 
+
+    /**
+     * 543. 二叉树的直径
+     * 给你一棵二叉树的根节点，返回该树的 直径 。
+     * 二叉树的 直径 是指树中任意两个节点之间最长路径的 长度 。这条路径可能经过也可能不经过根节点 root 。
+     * 两节点之间路径的 长度 由它们之间边数表示。
+     * https://leetcode.cn/problems/diameter-of-binary-tree/description/?envType=study-plan-v2&envId=top-100-liked
+     */
+    int ans;
+    public int diameterOfBinaryTree(TreeNode root) {
+        ans = 1;
+        depth(root);
+        //从每个节点的路径节点讨论的，然后最后的直径是节点总数减一
+        return ans - 1;
+    }
+    public int depth(TreeNode node) {
+        if (node == null) {
+            return 0; // 访问到空节点了，返回0
+        }
+        int L = depth(node.left); // 左儿子为根的子树的深度
+        int R = depth(node.right); // 右儿子为根的子树的深度
+        ans = Math.max(ans, L+R+1); // 计算d_node即L+R+1 并更新ans
+        return Math.max(L, R) + 1; // 返回该节点为根的子树的深度
+    }
+
+
     /**
      * 1.二叉树的最大深度
-     *
-     * @param node
-     * @return
+     * 时间复杂度：O(n)，其中 n 为二叉树节点的个数。每个节点在递归中只被遍历一次。
+     * 空间复杂度：O(height) height 表示二叉树的高度。
      */
     int maxDeath(TreeNode node) {
         if (node == null) {
@@ -58,12 +86,12 @@ public class BinaryTreeUtil {
 
     int getMin(TreeNode root) {
         if (root == null) {
-            return Integer.MAX_VALUE;
+            return 0;
         }
         if (root.left == null && root.right == null) {
             return 1;
         }
-        return Math.min(getMin(root.left), getMin(root.right)) + 1;
+        return Math.min(getMin(root.left), getMin(root.right)) + 1; //
     }
 
     /**
@@ -142,42 +170,56 @@ public class BinaryTreeUtil {
 
     /**
      * 7.判断二叉树是否是完全二叉树
+     * 判断二叉树是否为完全二叉树
      *
-     * @param root
-     * @return
+     * @param root 二叉树的根节点
+     * @return 如果该二叉树为完全二叉树，则返回true，否则返回false
      */
     boolean isCompleteTreeNode(TreeNode root) {
+        // 如果根节点为空，肯定不是完全二叉树
         if (root == null) {
             return false;
         }
+        // 创建一个队列，将根节点加入队列中
         Queue<TreeNode> queue = new LinkedList<TreeNode>();
         queue.add(root);
+        // 结果默认为true
         boolean result = true;
+        // 标记是否有节点没有子节点
         boolean hasNoChild = false;
+        // 遍历队列中的节点
         while (!queue.isEmpty()) {
+            // 取出队首节点
             TreeNode current = queue.remove();
+            // 如果有节点没有子节点
             if (hasNoChild) {
+                // 如果当前节点有左右子节点，则该树不是完全二叉树，返回false
                 if (current.left != null || current.right != null) {
                     result = false;
                     break;
                 }
             } else {
+                // 如果当前节点有左右子节点
                 if (current.left != null && current.right != null) {
+                    // 将左右子节点加入队列中
                     queue.add(current.left);
                     queue.add(current.right);
-                } else if (current.left != null && current.right == null) {
+                } else if (current.left != null && current.right == null) { // 如果只有左子节点
+                    // 将左子节点加入队列中，并标记该节点之后的节点应该没有子节点
                     queue.add(current.left);
                     hasNoChild = true;
-                } else if (current.left == null && current.right != null) {
+                } else if (current.left == null && current.right != null) { // 如果只有右子节点，则肯定不是完全二叉树，返回false
                     result = false;
                     break;
-                } else {
+                } else { // 如果既没有左子节点也没有右子节点，则标记该节点之后的节点应该没有子节点
                     hasNoChild = true;
                 }
             }
         }
+        // 返回结果
         return result;
     }
+
 
     /**
      * 8.两个二叉树是否完全相同
@@ -198,6 +240,16 @@ public class BinaryTreeUtil {
         boolean left = isSameTreeNode(t1.left, t2.left);
         boolean right = isSameTreeNode(t1.right, t2.right);
         return left && right;
+    }
+
+    /**
+     * 101. 对称二叉树
+     * 如果一个树的左子树与右子树镜像对称，那么这个树是对称的。
+     * 因此，该问题可以转化为：两个树在什么情况下互为镜像？
+     */
+    public boolean isSymmetric(TreeNode root) {
+        //进行递归调用
+        return isMirror(root, root);
     }
 
     /**
@@ -237,29 +289,6 @@ public class BinaryTreeUtil {
         return root;
     }
 
-    /**
-     * 11.求两个二叉树的最低公共祖先节点
-     *
-     * @param root
-     * @param t1
-     * @param t2
-     * @return
-     */
-    TreeNode getLastCommonParent(TreeNode root, TreeNode t1, TreeNode t2) {
-        if (findNode(root.left, t1)) {
-            if (findNode(root.right, t2)) {
-                return root;
-            } else {
-                return getLastCommonParent(root.left, t1, t2);
-            }
-        } else {
-            if (findNode(root.left, t2)) {
-                return root;
-            } else {
-                return getLastCommonParent(root.right, t1, t2);
-            }
-        }
-    }
 
     // 查找节点node是否在当前 二叉树中
     boolean findNode(TreeNode root, TreeNode node) {
@@ -305,24 +334,22 @@ public class BinaryTreeUtil {
     }
 
     /**
+     * 94. 二叉树的中序遍历
      * 递归解法
-     *
-     * @param root
-     * @return
      */
-    ArrayList<Integer> preOrderReverse(TreeNode root) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        preOrder2(root, result);
-        return result;
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        inorder(root, res);
+        return res;
     }
 
-    void preOrder2(TreeNode root, ArrayList<Integer> result) {
+    public void inorder(TreeNode root, List<Integer> res) {
         if (root == null) {
             return;
         }
-        result.add(root.val);
-        preOrder2(root.left, result);
-        preOrder2(root.right, result);
+        inorder(root.left, res);
+        res.add(root.val);
+        inorder(root.right, res);
     }
 
 
@@ -588,7 +615,6 @@ public class BinaryTreeUtil {
         }
         return counts[n];
     }
-
 
 
 }
