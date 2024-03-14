@@ -34,44 +34,44 @@ public class QueueTest {
 
     /**
      * 两个队列实现一个栈
+     * 创建两个队列，比如 Queue<Integer> queue1 和 Queue<Integer> queue2。
+     * 入栈操作时，将元素添加到非空的队列中。如果两个队列都为空，可以选择将元素添加到 queue1 中。
+     * 出栈操作时，将一个队列中的元素依次转移到另一个空队列中，直到只剩下一个元素。这个剩下的元素就是要出栈的元素，将其移除并返回。
+     * 为了实现下一次的出栈操作，需要交换两个队列的引用。即将 queue2 的引用指向当前非空队列，将 queue1 的引用指向空队列。
      */
-    public static class StackWithQueue {
+    public class StackWithTwoQueues {
+        private Queue<Integer> queue1;
+        private Queue<Integer> queue2;
 
-        private static Queue<Object> queue1 = new LinkedList<>();
-        private static Queue<Object> queue2 = new LinkedList<Object>();
-
-        /*
-         * 向队列中执行入栈操作时，把元素添加到非空的队列中
-         */
-        public static void push(Object item) {
-            if (!queue1.isEmpty())
-                queue1.offer(item);
-            else
-                queue2.offer(item);
-            System.out.println("入栈元素为：" + item);
+        public StackWithTwoQueues() {
+            queue1 = new LinkedList<>();
+            queue2 = new LinkedList<>();
         }
 
-        public static void pop() {
-            if (!isEmpty()) {
-                if (queue1.isEmpty()) {
-                    while (queue2.size() > 1) {
-                        queue1.offer(queue2.poll());
-                    }
-                    System.out.println("出栈元素为：" + queue2.poll());
-                } else {
-                    while (queue1.size() > 1) {
-                        queue2.offer(queue1.poll());
-                    }
-                    System.out.println("出栈元素为：" + queue1.poll());
-                }
-            } else
-                throw new RuntimeException("栈为空，无法执行出栈操作");
+        public void push(int element) {
+            if (queue1.isEmpty()) {
+                queue2.offer(element);
+            } else {
+                queue1.offer(element);
+            }
         }
 
-        /*
-         * 检查栈是否为空
-         */
-        private static boolean isEmpty() {
+        public int pop() {
+            if (isEmpty()) {
+                throw new RuntimeException("Stack is empty.");
+            }
+
+            Queue<Integer> nonEmptyQueue = queue1.isEmpty() ? queue2 : queue1;
+            Queue<Integer> emptyQueue = queue1.isEmpty() ? queue1 : queue2;
+
+            while (nonEmptyQueue.size() > 1) {
+                emptyQueue.offer(nonEmptyQueue.poll());
+            }
+
+            return nonEmptyQueue.poll();
+        }
+
+        public boolean isEmpty() {
             return queue1.isEmpty() && queue2.isEmpty();
         }
     }
