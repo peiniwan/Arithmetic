@@ -75,7 +75,7 @@ public class StringUtils {
     }
 
 
-    // 下面都是双指针
+    //================ 下面都是双指针  ======================
 
     /**
      * 是否是字串，BF算法（交集）
@@ -99,6 +99,24 @@ public class StringUtils {
         }
         if (j == arr2.length) return i - j;
         else return -1;
+    }
+
+    /**
+     * 无重复字符的最长子串  剑指 Offer 48
+     */
+    public static int lengthOfLongestSubstring(String s) {
+        Set<Character> set = new HashSet<>();
+        int left = 0, right = 0, res = 0;
+        while(right < s.length()){
+            char c = s.charAt(right++);
+            //存在重复的字符，则移动左指针，直到滑动窗口中不含有该字符
+            while(set.contains(c)){
+                set.remove(s.charAt(left++));
+            }
+            set.add(c);
+            res = Math.max(res, right-left);
+        }
+        return res;
     }
 
 
@@ -265,23 +283,7 @@ public class StringUtils {
     }
 
 
-    /**
-     * 无重复字符的最长子串  剑指 Offer 48
-     */
-    public static int lengthOfLongestSubstring(String s) {
-        Set<Character> set = new HashSet<>();
-        int left = 0, right = 0, res = 0;
-        while(right < s.length()){
-            char c = s.charAt(right++);
-            //存在重复的字符，则移动左指针，直到滑动窗口中不含有该字符
-            while(set.contains(c)){
-                set.remove(s.charAt(left++));
-            }
-            set.add(c);
-            res = Math.max(res, right-left);
-        }
-        return res;
-    }
+
 
 
 

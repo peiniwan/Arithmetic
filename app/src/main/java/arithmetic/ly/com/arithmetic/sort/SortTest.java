@@ -55,30 +55,15 @@ public class SortTest {
         }
     }
 
-    /**
-     * 冒泡排序
-     * 每次i排序后最大的数到了最后边
-     * -i每进行一趟比较，每一趟少比较一次，一定程度上减少了算法的量
-     */
-    public void bubbleSort(int[] a) {
-        for (int i = 0; i < a.length - 1; i++) {//外层循环控制排序趟数
-            for (int j = 0; j < a.length - 1 - i; j++) {//内层循环控制每一趟排序多少次,选择一个数和i进行比较
-                if (a[j] > a[j + 1]) {
-                    int temp = a[j];
-                    a[j] = a[j + 1];
-                    a[j + 1] = temp;
-                }
-            }
-        }
-    }
 
     // 冒泡排序，a表示数组，n表示数组大小
-    public void bubbleSort2(int[] a, int n) {
+    public void bubbleSort(int[] a, int n) {
         if (n <= 1) return;
 
         for (int i = 0; i < n; ++i) {
             // 提前退出冒泡循环的标志位
             boolean flag = false;
+            //内层循环控制每一趟排序多少次,选择一个数和i进行比较
             for (int j = 0; j < n - i - 1; ++j) { //-i：比较元素减少，-1：避免角标越界
                 if (a[j] > a[j + 1]) { // 交换
                     int tmp = a[j];
@@ -166,7 +151,7 @@ public class SortTest {
         //在排序前，先建好一个长度等于原数组长度的临时数组，避免递归中频繁开辟空间
         int[] tmpArray = new int[a.length];
         int rightStart = middle + 1;//右序列指针
-        int leftStart = left;//左序列指针
+        int leftStart = left;//左序列指针，用来拷贝到原数组中
         int temp = left;//临时数组指针
         //比较两个小数组相应下标位置的数组大小，小的先放进新数组
         while (left <= middle && rightStart <= right) {
