@@ -11,7 +11,7 @@ import arithmetic.ly.com.arithmetic.other.LeetCode;
 
 public class LinkedUtils {
 
-    // 运行Java文件
+    // 运行Java文件,在idea里运行,需要修改gradle.xml文件
     // <option name="delegatedBuild" value="false" />
     ///Users/tal/android/Arithmetic/.idea/gradle.xml
     public static void main(String[] args) {
