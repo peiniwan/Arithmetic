@@ -33,31 +33,6 @@ public class BinaryTreeUtil {
 
 
     /**
-     * 543. 二叉树的直径
-     * 给你一棵二叉树的根节点，返回该树的 直径 。
-     * 二叉树的 直径 是指树中任意两个节点之间最长路径的 长度 。这条路径可能经过也可能不经过根节点 root 。
-     * 两节点之间路径的 长度 由它们之间边数表示。
-     * https://leetcode.cn/problems/diameter-of-binary-tree/description/?envType=study-plan-v2&envId=top-100-liked
-     */
-    int ans;
-    public int diameterOfBinaryTree(TreeNode root) {
-        ans = 1;
-        depth(root);
-        //从每个节点的路径节点讨论的，然后最后的直径是节点总数减一
-        return ans - 1;
-    }
-    public int depth(TreeNode node) {
-        if (node == null) {
-            return 0; // 访问到空节点了，返回0
-        }
-        int L = depth(node.left); // 左儿子为根的子树的深度
-        int R = depth(node.right); // 右儿子为根的子树的深度
-        ans = Math.max(ans, L+R+1); // 计算d_node即L+R+1 并更新ans
-        return Math.max(L, R) + 1; // 返回该节点为根的子树的深度
-    }
-
-
-    /**
      * 1.二叉树的最大深度
      * 时间复杂度：O(n)，其中 n 为二叉树节点的个数。每个节点在递归中只被遍历一次。
      * 空间复杂度：O(height) height 表示二叉树的高度。
@@ -128,10 +103,7 @@ public class BinaryTreeUtil {
 
     /**
      * 5.求二叉树中第k层节点的个数
-     *
-     * @param root
-     * @param k
-     * @return
+     * 通过递归不断减少 k，到达目标层时计数，最终返回第 k 层的结点数。
      */
     int numsOfkLevelTreeNode(TreeNode root, int k) {
         if (root == null || k < 1) {
@@ -147,79 +119,216 @@ public class BinaryTreeUtil {
 
 
     /**
-     * 6.判断二叉树是否是平衡二叉树
-     *
-     * @param node
-     * @return
+     * 39.输入一棵二叉树，判断该二叉树是否是平衡二叉树。
+     * 平衡二叉树,具有以下性质：
+     * 它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。
      */
-    boolean isBalanced(TreeNode node) {
-        return maxDeath2(node) != -1;
+    public boolean isBalanced(TreeOther.TreeNode root) {
+        return getDepth(root) != -1;  //在下面的获取树深度的方法中，如果返回值为-1说明不平衡，为0或者正整数就是平衡
     }
 
-    int maxDeath2(TreeNode node) {
-        if (node == null) {
-            return 0;
-        }
-        int left = maxDeath2(node.left);
-        int right = maxDeath2(node.right);
-        if (left == -1 || right == -1 || Math.abs(left - right) > 1) {
-            return -1;
-        }
-        return Math.max(left, right) + 1;
+    private int getDepth(TreeOther.TreeNode root) {  //这种方法运用了“剪枝”的思想，即二叉树从底部到顶部递归返回时，每个节点最多只遍历到一次，一旦条件不满足立刻取消遍历，而不是从顶向下每判断一个当前根节点就每次都把下面所有子树节点遍历一遍
+        if (root == null) return 0;  //如果当前根节点为空，深度返回0
+        int leftDepth = getDepth(root.left);  //递归到树底部计算当前根节点左子树的深度，从底向上计算过程中如果发现一处不平衡，直接返回-1，也不会再递归总根节点的右子树
+        if (leftDepth == -1) return -1;
+        int rightDepth = getDepth(root.right);  //在当前根节点左子树平衡的前提下再递归计算右子树的深度，如果右子树有一处不平衡也直接返回-1，递归结束
+        if (rightDepth == -1) return -1;
+        return Math.abs(rightDepth - leftDepth) > 1 ? -1 : Math.max(leftDepth, rightDepth) + 1;  //核心的计算树深度的代码，如果当前根节点的左右子树深度相差超过1则不平衡，否则返回当前根节点的深度
     }
 
     /**
-     * 7.判断二叉树是否是完全二叉树
-     * 判断二叉树是否为完全二叉树
-     *
-     * @param root 二叉树的根节点
-     * @return 如果该二叉树为完全二叉树，则返回true，否则返回false
+     * 543. 二叉树的直径
+     * 给你一棵二叉树的根节点，返回该树的 直径 。
+     * 二叉树的 直径 是指树中任意两个节点之间最长路径的 长度 。这条路径可能经过也可能不经过根节点 root 。
+     * 两节点之间路径的 长度 由它们之间边数表示。
+     * https://leetcode.cn/problems/diameter-of-binary-tree/description/?envType=study-plan-v2&envId=top-100-liked
      */
-    boolean isCompleteTreeNode(TreeNode root) {
-        // 如果根节点为空，肯定不是完全二叉树
-        if (root == null) {
-            return false;
+    int ans;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        ans = 1;
+        depth(root);
+        //从每个节点的路径节点讨论的，然后最后的直径是节点总数减一
+        return ans - 1;
+    }
+
+    public int depth(TreeNode node) {
+        if (node == null) {
+            return 0; // 访问到空节点了，返回0
         }
-        // 创建一个队列，将根节点加入队列中
+        int L = depth(node.left); // 左儿子为根的子树的深度
+        int R = depth(node.right); // 右儿子为根的子树的深度
+        ans = Math.max(ans, L + R + 1); // 计算d_node即L+R+1 并更新ans
+        return Math.max(L, R) + 1; // 返回该节点为根的子树的深度
+    }
+
+
+    //========================================================= 遍历 =============================================================
+
+    /**
+     * 前序遍历
+     * 根左右
+     */
+    public void preOrder(TreeOther.TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        System.out.print(root.val);
+        preOrder(root.left);
+        preOrder(root.right);
+    }
+
+
+    /**
+     * 中序遍历
+     * 左根右
+     */
+    public void inOrder(TreeOther.TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        inOrder(root.left);
+        System.out.print(root.val + " ");
+        inOrder(root.right);
+    }
+
+
+    /**
+     * 后序遍历
+     * 左右根
+     */
+    public void postOrder(TreeOther.TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        postOrder(root.left);
+        postOrder(root.right);
+        System.out.print(root.val);
+    }
+
+
+    /**
+     * 19.二叉树的层次遍历
+     */
+    ArrayList<ArrayList<Integer>> levelOrder(TreeNode root) {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+        if (root == null) {
+            return result;
+        }
         Queue<TreeNode> queue = new LinkedList<TreeNode>();
-        queue.add(root);
-        // 结果默认为true
-        boolean result = true;
-        // 标记是否有节点没有子节点
-        boolean hasNoChild = false;
-        // 遍历队列中的节点
+        queue.offer(root);
         while (!queue.isEmpty()) {
-            // 取出队首节点
-            TreeNode current = queue.remove();
-            // 如果有节点没有子节点
-            if (hasNoChild) {
-                // 如果当前节点有左右子节点，则该树不是完全二叉树，返回false
-                if (current.left != null || current.right != null) {
-                    result = false;
-                    break;
+            int size = queue.size();
+//            每次从队列中取出当前层的所有节点，将其值存入level列表。
+            ArrayList<Integer> level = new ArrayList<Integer>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                level.add(node.val);
+                if (node.left != null) {
+                    queue.offer(node.left);
                 }
-            } else {
-                // 如果当前节点有左右子节点
-                if (current.left != null && current.right != null) {
-                    // 将左右子节点加入队列中
-                    queue.add(current.left);
-                    queue.add(current.right);
-                } else if (current.left != null && current.right == null) { // 如果只有左子节点
-                    // 将左子节点加入队列中，并标记该节点之后的节点应该没有子节点
-                    queue.add(current.left);
-                    hasNoChild = true;
-                } else if (current.left == null && current.right != null) { // 如果只有右子节点，则肯定不是完全二叉树，返回false
-                    result = false;
-                    break;
-                } else { // 如果既没有左子节点也没有右子节点，则标记该节点之后的节点应该没有子节点
-                    hasNoChild = true;
+                if (node.right != null) {
+                    queue.offer(node.right);
                 }
             }
+            result.add(level);
         }
-        // 返回结果
         return result;
     }
 
+
+    /**
+     * 12.二叉树的前序遍历
+     * 迭代解法
+     *
+     * @param root
+     * @return
+     */
+    ArrayList<Integer> preOrder(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        if (root == null) {
+            return list;
+        }
+        stack.push(root);
+        while (!stack.empty()) {
+            TreeNode node = stack.pop();
+            list.add(node.val);
+            if (node.right != null) {
+                stack.push(node.right);
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+            }
+        }
+        return list;
+    }
+
+
+
+    /**
+     * 13.二叉树的中序遍历
+     *
+     * @param root
+     * @return
+     */
+    ArrayList<Integer> inOrder(TreeNode root) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode current = root;
+        while (current != null || !stack.empty()) {
+            while (current != null) {
+                stack.add(current);
+                current = current.left;
+            }
+            current = stack.peek();
+            stack.pop();
+            list.add(current.val);
+            current = current.right;
+        }
+        return list;
+    }
+
+
+    /**
+     * 15.前序遍历和后序遍历构造二叉树
+     *
+     * @param preorder
+     * @param inorder
+     * @return
+     */
+    TreeNode buildTreeNode(int[] preorder, int[] inorder) {
+        if (preorder.length != inorder.length) {
+            return null;
+        }
+        return myBuildTree(inorder, 0, inorder.length - 1, preorder, 0, preorder.length - 1);
+    }
+
+    TreeNode myBuildTree(int[] inorder, int instart, int inend, int[] preorder, int prestart, int preend) {
+        if (instart > inend) {
+            return null;
+        }
+//        TreeNode root = new TreeNode(preorder[prestart]);
+        TreeNode root = new TreeNode();
+        root.val = preorder[prestart];
+        int position = findPosition(inorder, instart, inend, preorder[prestart]);
+        root.left = myBuildTree(inorder, instart, position - 1, preorder, prestart + 1, prestart + position - instart);
+        root.right = myBuildTree(inorder, position + 1, inend, preorder, position - inend + preend + 1, preend);
+        return root;
+    }
+
+    int findPosition(int[] arr, int start, int end, int key) {
+        int i;
+        for (i = start; i <= end; i++) {
+            if (arr[i] == key) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    //===================================== 遍历end ========================================
 
     /**
      * 8.两个二叉树是否完全相同
@@ -307,131 +416,6 @@ public class BinaryTreeUtil {
 
 
     /**
-     * 12.二叉树的前序遍历
-     * 迭代解法
-     *
-     * @param root
-     * @return
-     */
-    ArrayList<Integer> preOrder(TreeNode root) {
-        Stack<TreeNode> stack = new Stack<TreeNode>();
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        if (root == null) {
-            return list;
-        }
-        stack.push(root);
-        while (!stack.empty()) {
-            TreeNode node = stack.pop();
-            list.add(node.val);
-            if (node.right != null) {
-                stack.push(node.right);
-            }
-            if (node.left != null) {
-                stack.push(node.left);
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 94. 二叉树的中序遍历
-     * 递归解法
-     */
-    public List<Integer> inorderTraversal(TreeNode root) {
-        List<Integer> res = new ArrayList<Integer>();
-        inorder(root, res);
-        return res;
-    }
-
-    public void inorder(TreeNode root, List<Integer> res) {
-        if (root == null) {
-            return;
-        }
-        inorder(root.left, res);
-        res.add(root.val);
-        inorder(root.right, res);
-    }
-
-
-    /**
-     * 13.二叉树的中序遍历
-     *
-     * @param root
-     * @return
-     */
-    ArrayList<Integer> inOrder(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        Stack<TreeNode> stack = new Stack<TreeNode>();
-        TreeNode current = root;
-        while (current != null || !stack.empty()) {
-            while (current != null) {
-                stack.add(current);
-                current = current.left;
-            }
-            current = stack.peek();
-            stack.pop();
-            list.add(current.val);
-            current = current.right;
-        }
-        return list;
-    }
-
-    /**
-     * 14.二叉树的后序遍历
-     *
-     * @param root
-     * @return
-     */
-    ArrayList<Integer> postOrder(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        if (root == null) {
-            return list;
-        }
-        list.addAll(postOrder(root.left));
-        list.addAll(postOrder(root.right));
-        list.add(root.val);
-        return list;
-    }
-
-
-    /**
-     * 15.前序遍历和后序遍历构造二叉树
-     *
-     * @param preorder
-     * @param inorder
-     * @return
-     */
-    TreeNode buildTreeNode(int[] preorder, int[] inorder) {
-        if (preorder.length != inorder.length) {
-            return null;
-        }
-        return myBuildTree(inorder, 0, inorder.length - 1, preorder, 0, preorder.length - 1);
-    }
-
-    TreeNode myBuildTree(int[] inorder, int instart, int inend, int[] preorder, int prestart, int preend) {
-        if (instart > inend) {
-            return null;
-        }
-//        TreeNode root = new TreeNode(preorder[prestart]);
-        TreeNode root = new TreeNode();
-        root.val = preorder[prestart];
-        int position = findPosition(inorder, instart, inend, preorder[prestart]);
-        root.left = myBuildTree(inorder, instart, position - 1, preorder, prestart + 1, prestart + position - instart);
-        root.right = myBuildTree(inorder, position + 1, inend, preorder, position - inend + preend + 1, preend);
-        return root;
-    }
-
-    int findPosition(int[] arr, int start, int end, int key) {
-        int i;
-        for (i = start; i <= end; i++) {
-            if (arr[i] == key) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    /**
      * 16.在二叉树中插入节点
      *
      * @param root
@@ -465,10 +449,9 @@ public class BinaryTreeUtil {
 
 
     /**
-     * 17.输入一个二叉树和一个整数，打印出二叉树中节点值的和等于输入整数所有的路径
+     * 17.输入一个二叉树和一个整数，打印出二叉树中节点值的和
+     * 等于输入整数所有的路径
      *
-     * @param
-     * @param
      */
     void findPath(TreeNode root, int i) {
         if (root == null) {
@@ -527,37 +510,6 @@ public class BinaryTreeUtil {
         }
     }
 
-    /**
-     * 19.二叉树的层次遍历
-     *
-     * @param root
-     * @return
-     */
-    ArrayList<ArrayList<Integer>> levelOrder(TreeNode root) {
-        ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
-        if (root == null) {
-            return result;
-        }
-        Queue<TreeNode> queue = new LinkedList<TreeNode>();
-        queue.offer(root);
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            ArrayList<Integer> level = new ArrayList<Integer>();
-            for (int i = 0; i < size; i++) {
-                TreeNode node = queue.poll();
-                level.add(node.val);
-                if (node.left != null) {
-                    queue.offer(node.left);
-                }
-                if (node.right != null) {
-                    queue.offer(node.right);
-                }
-            }
-            result.add(level);
-        }
-        return result;
-    }
-
 
     /**
      * 20.二叉树内两个节点的最长距离
@@ -568,8 +520,8 @@ public class BinaryTreeUtil {
      * 因此，递归求解即可
      */
     private static class Result {
-        int maxDistance;
-        int maxDepth;
+        int maxDistance;// 子树中的最大距离（即二叉树直径）
+        int maxDepth;  // 子树的最大深度（从该子树根到最远叶子的边数）
 
         public Result() {
         }
@@ -592,7 +544,12 @@ public class BinaryTreeUtil {
         Result lmd = getMaxDistanceResult(root.left);
         Result rmd = getMaxDistanceResult(root.right);
         Result result = new Result();
+        // 当前子树的最大深度 = 左右子树最大深度中的较大者 + 1
         result.maxDepth = Math.max(lmd.maxDepth, rmd.maxDepth) + 1;
+        // 当前子树的最大距离可能有三种情况：
+        // 1. 路径经过当前 root：等于左子树深度 + 右子树深度 （两边拼起来）
+        // 2. 在左子树内部：lmd.maxDistance
+        // 3. 在右子树内部：rmd.maxDistanc
         result.maxDistance = Math.max(lmd.maxDepth + rmd.maxDepth, Math.max(lmd.maxDistance, rmd.maxDistance));
         return result;
     }

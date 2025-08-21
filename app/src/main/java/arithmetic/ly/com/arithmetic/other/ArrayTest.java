@@ -15,10 +15,6 @@ public class ArrayTest {
     public static void main(String[] args) {
         removeDuplicates(new int[]{1, 1, 2, 3, 4, 5, 5, 6});
         intersect(new int[]{1, 3, 2, 5, 6, 4}, new int[]{3, 4, 5, 6, 7, 8});
-        HashMap<String, Integer> hashMap = new HashMap<>();
-        hashMap.put("a", 123);
-        hashMap.put("a", 233);
-        System.out.print(hashMap.get("a") + "----");
     }
 
     /**
@@ -43,6 +39,7 @@ public class ArrayTest {
         return maxprofit;
     }
 
+
     /**
      * 169. 多数元素
      * 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
@@ -52,9 +49,9 @@ public class ArrayTest {
         Map<Integer, Integer> counts = countNums(nums);
 
         Map.Entry<Integer, Integer> majorityEntry = null;
-        for (Map.Entry<Integer, Integer> Entry : counts.entrySet()) {
-            if (majorityEntry == null || Entry.getValue() > majorityEntry.getValue()) {
-                majorityEntry = Entry;
+        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
+            if (majorityEntry == null || entry.getValue() > majorityEntry.getValue()) {
+                majorityEntry = entry;
             }
         }
 
@@ -73,6 +70,17 @@ public class ArrayTest {
         }
         return counts;
     }
+
+
+    public int majorityElement2(int[] nums) {
+        int candidate = 0, count = 0;
+        for (int num : nums) {
+            if (count == 0) candidate = num;
+            count += (num == candidate) ? 1 : -1;
+        }
+        return candidate;
+    }
+
 
     /**
      * 俩数之和等于第三个数
@@ -94,15 +102,36 @@ public class ArrayTest {
 
 
     //复杂度 n n
-    public int[] twoSum3(int[] nums, int target) {
+//    遍历数组时，检查 target - nums[i] 是否已经出现过：
+//    如果出现过，就直接返回答案；
+//    如果没出现，就把当前元素存入 map。
+//    输入：nums = [2, 7, 11, 15], target = 9
+//    i=0，nums[0]=2，map={}，target-nums[i] = 7 不在 map，存 {2:0}
+//    i=1，nums[1]=7，map={2:0}，target-nums[i] = 2 在 map，找到！返回 {0,1}
+    public int[] twoSum2(int[] nums, int target) {
+        //存储“数值 -> 下标”
         Map<Integer, Integer> hashMap = new HashMap<Integer, Integer>();
         for (int i = 0; i < nums.length; ++i) {
             if (hashMap.containsKey(target - nums[i])) {
+                // 找到答案，返回两个下标
                 return new int[]{hashMap.get(target - nums[i]), i};
             }
             hashMap.put(nums[i], i);
         }
         return new int[0];
+    }
+
+    public int[] test(int[] nums,int target){
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int num = nums[i];
+            if(map.containsKey(target-num)){
+                return new int[]{map.get(target-num),i};
+            }else{
+                map.put(num,i);
+            }
+        }
+        return null;
     }
 
 
@@ -112,7 +141,7 @@ public class ArrayTest {
      * Output: index1=1, index2=2
      * 时间复杂度为 O(N)。只使用了两个额外变量，空间复杂度为 O(1)。
      */
-    public int[] twoSum2(int[] numbers, int target) {
+    public int[] twoSum3(int[] numbers, int target) {
         if (numbers == null) return null;
         int i = 0, j = numbers.length - 1;
         while (i < j) {
@@ -463,9 +492,9 @@ public class ArrayTest {
         }
         int r = 0;//存反转的数字
         while (x != 0) {
-            int n = x % 10;//取出最低位上的数字
-            r = r * 10 + n;//依次的反转存储得到反转的数字
-            x = x / 10;//降位 123/10=12
+            int n = x % 10;//取出最低位上的数字，123 % 10 = 3  第二步：2
+            r = r * 10 + n;//依次的反转存储得到反转的数字，0 * 10 + 3 = 3  第二步：3 * 10 + 2 = 32
+            x = x / 10;//降位 x= 123/10=12  r=3  第二步：r=32 x=1
             if (r > Integer.MAX_VALUE / 10 && x > 0 || r == Integer.MAX_VALUE / 10 && x > 7 || r < Integer.MIN_VALUE / 10 && x < 0 || r == Integer.MIN_VALUE / 10 && x < -8) {
                 return 0;
             }

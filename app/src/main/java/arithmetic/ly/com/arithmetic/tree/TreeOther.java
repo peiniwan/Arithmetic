@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 
 public class TreeOther {
-//todo 二叉树的层序遍历
 
     public static class TreeNode {
         int val = 0;
@@ -63,109 +63,8 @@ public class TreeOther {
     }
 
 
-    /**
-     * 获取二叉树的结点数
-     * 返回左子树和右子树个数的和，然后加上一个根节点view
-     */
-    private int getSize(TreeNode node) {
-        if (node == null) {
-            return 0;
-        } else {
-            return 1 + getSize(node.left) + getSize(node.right);
-        }
-    }
 
 
-    /**
-     * 求二叉树的高度
-     * 1.判断根节点是否为空
-     * 2.递归获取左子树的深度
-     * 3.递归获取右子树的深度
-     */
-    private int getHeight(TreeNode node) {
-        if (node == null) {
-            return 0;
-        } else {
-            int i = getHeight(node.left); //递归求出当前根节点左子树和右子树的深度
-            int j = getHeight(node.right);
-            return (i < j) ? j + 1 : i + 1;//从底向上递归返回左右子树深度的较大值，加1即当前根节点的深度
-        }
-    }
-
-    /**
-     * 前序遍历
-     * 根左右
-     */
-    public void preOrder(TreeNode root) {
-        if (root == null) {
-            return;
-        }
-        System.out.print(root.val);
-        preOrder(root.left);
-        preOrder(root.right);
-    }
-
-    /**
-     * 中序遍历
-     * 左根右
-     */
-    public void inOrder(TreeNode root) {
-        if (root == null) {
-            return;
-        }
-        inOrder(root.left);
-        System.out.print(root.val + " ");
-        inOrder(root.right);
-    }
-
-
-    /**
-     * 后序遍历
-     * 左右根
-     */
-    public void postOrder(TreeNode root) {
-        if (root == null) {
-            return;
-        }
-        postOrder(root.left);
-        postOrder(root.right);
-        System.out.print(root.val);
-    }
-
-
-    /**
-     * 翻转二叉树or镜像二叉树
-     * 使用递归遍历树，所有left换成right，所有right换成left
-     */
-    public TreeNode mirrorTreeNode(TreeNode root) {
-        if (root == null) {
-            return null;
-        }
-        TreeNode left = mirrorTreeNode(root.left);
-        TreeNode right = mirrorTreeNode(root.right);
-        root.left = (right);
-        root.right = (left);
-        return root;
-    }
-
-
-    /**
-     * 39.输入一棵二叉树，判断该二叉树是否是平衡二叉树。
-     * 平衡二叉树,具有以下性质：
-     * 它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。
-     */
-    public boolean isBalanced(TreeNode root) {
-        return getDepth(root) != -1;  //在下面的获取树深度的方法中，如果返回值为-1说明不平衡，为0或者正整数就是平衡
-    }
-
-    private int getDepth(TreeNode root) {  //这种方法运用了“剪枝”的思想，即二叉树从底部到顶部递归返回时，每个节点最多只遍历到一次，一旦条件不满足立刻取消遍历，而不是从顶向下每判断一个当前根节点就每次都把下面所有子树节点遍历一遍
-        if (root == null) return 0;  //如果当前根节点为空，深度返回0
-        int leftDepth = getDepth(root.left);  //递归到树底部计算当前根节点左子树的深度，从底向上计算过程中如果发现一处不平衡，直接返回-1，也不会再递归总根节点的右子树
-        if (leftDepth == -1) return -1;
-        int rightDepth = getDepth(root.right);  //在当前根节点左子树平衡的前提下再递归计算右子树的深度，如果右子树有一处不平衡也直接返回-1，递归结束
-        if (rightDepth == -1) return -1;
-        return Math.abs(rightDepth - leftDepth) > 1 ? -1 : Math.max(leftDepth, rightDepth) + 1;  //核心的计算树深度的代码，如果当前根节点的左右子树深度相差超过1则不平衡，否则返回当前根节点的深度
-    }
 
     /**
      * 12.二叉树的前序遍历
@@ -615,6 +514,59 @@ public class TreeOther {
         memo.put(subTree, freq + 1);
         return subTree;
     }
+
+    /**
+     * 7.判断二叉树是否是完全二叉树
+     * 判断二叉树是否为完全二叉树
+     *
+     * @param root 二叉树的根节点
+     * @return 如果该二叉树为完全二叉树，则返回true，否则返回false
+     */
+    boolean isCompleteTreeNode(BinaryTreeUtil.TreeNode root) {
+        // 如果根节点为空，肯定不是完全二叉树
+        if (root == null) {
+            return false;
+        }
+        // 创建一个队列，将根节点加入队列中
+        Queue<BinaryTreeUtil.TreeNode> queue = new LinkedList<BinaryTreeUtil.TreeNode>();
+        queue.add(root);
+        // 结果默认为true
+        boolean result = true;
+        // 标记是否有节点没有子节点
+        boolean hasNoChild = false;
+        // 遍历队列中的节点
+        while (!queue.isEmpty()) {
+            // 取出队首节点
+            BinaryTreeUtil.TreeNode current = queue.remove();
+            // 如果有节点没有子节点
+            if (hasNoChild) {
+                // 如果当前节点有左右子节点，则该树不是完全二叉树，返回false
+                if (current.left != null || current.right != null) {
+                    result = false;
+                    break;
+                }
+            } else {
+                // 如果当前节点有左右子节点
+                if (current.left != null && current.right != null) {
+                    // 将左右子节点加入队列中
+                    queue.add(current.left);
+                    queue.add(current.right);
+                } else if (current.left != null && current.right == null) { // 如果只有左子节点
+                    // 将左子节点加入队列中，并标记该节点之后的节点应该没有子节点
+                    queue.add(current.left);
+                    hasNoChild = true;
+                } else if (current.left == null && current.right != null) { // 如果只有右子节点，则肯定不是完全二叉树，返回false
+                    result = false;
+                    break;
+                } else { // 如果既没有左子节点也没有右子节点，则标记该节点之后的节点应该没有子节点
+                    hasNoChild = true;
+                }
+            }
+        }
+        // 返回结果
+        return result;
+    }
+
 
 
 }
