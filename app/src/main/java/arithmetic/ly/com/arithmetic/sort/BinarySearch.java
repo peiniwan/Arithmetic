@@ -18,6 +18,9 @@ public class BinarySearch {
         int b = arr.length - 1;
         while (a <= b) {
             int m = a + (b - a) / 2;
+            //k < arr[m],说明目标值比 arr[m] 小
+            //那么 k 一定在 左半区间
+            //返过来也一样，中间比较的元素比 k 大
             if (k < arr[m]) {
                 b = m - 1;
             } else if (k > arr[m]) {
@@ -103,17 +106,22 @@ public class BinarySearch {
     public int findKthLargest(int[] nums, int k) {
         int len = nums.length;
         int left = 0, right = len - 1;
-        int pivot = 0;
+        int pivot = 0; // pivot 的最终位置
+
+        // 目标位置：第 k 大元素在下标 (k-1)
+        // pivot 左边是 <= pivot，pivot 右边是 >= pivot，partition分区
         while (k - 1 != (pivot = partition(nums, left, right))) {
-            //第k大应该在第K-1位，找每个数字应该在的位置
-            if (pivot < k - 1) {//在右边
-                left = pivot + 1;
+            // 如果 pivot 小于 k-1，说明第 k 大在右半部分
+            if (pivot < k - 1) {
+                left = pivot + 1;   // 缩小到右边区间
                 right = len - 1;
-            } else {//在左边
+            } else {
+                // 否则第 k 大在左半部分
                 left = 0;
                 right = pivot - 1;
             }
         }
+        // 当 pivot == k-1，找到目标元素
         return nums[pivot];
     }
 
@@ -122,15 +130,34 @@ public class BinarySearch {
      * 方式一：快速排序先对这个数组进行排序，
      * 在已排序的数组中，位于中间位置的数字就是超过数组长度一半的那个数。
      */
+    /**
+     * 分区函数：以 nums[left] 作为枢轴 (pivot)，
+     * 把数组区间 [left, right] 分成两部分：
+     * - 左边都 <= pivot
+     * - 右边都 >= pivot
+     * 返回 pivot 的最终下标。
+     */
     private int partition(int[] nums, int left, int right) {
+        // 选择最左边的元素作为枢轴
         int pivot = nums[left];
+        // 循环直到左右指针相遇
         while (left < right) {
-            while (left < right && nums[right] >= pivot) right--;
+            // 从右往左找第一个 < pivot 的元素
+            while (left < right && nums[right] >= pivot) {
+                right--;
+            }
+            // 把这个元素放到左边坑位
             nums[left] = nums[right];
-            while (left < right && nums[left] <= pivot) left++;
+            // 从左往右找第一个 > pivot 的元素
+            while (left < right && nums[left] <= pivot) {
+                left++;
+            }
+            // 把这个元素放到右边坑位
             nums[right] = nums[left];
         }
+        // 最后把 pivot 放回正确的位置
         nums[left] = pivot;
+        // 返回 pivot 的最终下标
         return left;
     }
 
@@ -209,6 +236,9 @@ public class BinarySearch {
         if (firstK != -1 && lastK != -1) return lastK - firstK + 1;  //返回重复出现次数
         return 0;  //未找到则返回0
     }
+
+
+
 
 
     /**

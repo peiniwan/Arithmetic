@@ -121,20 +121,6 @@ public class ArrayTest {
         return new int[0];
     }
 
-    public int[] test(int[] nums,int target){
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            int num = nums[i];
-            if(map.containsKey(target-num)){
-                return new int[]{map.get(target-num),i};
-            }else{
-                map.put(num,i);
-            }
-        }
-        return null;
-    }
-
-
     /**
      * (有序数组)的Two Sum 双指针
      * Input: numbers={2, 7, 11, 15}, target=9
@@ -190,6 +176,7 @@ public class ArrayTest {
      * 输入: 8   输出: 2, 8 的平方根是 2.82842...,
      * 因为aa可能超过Integer.MAX_VALUE。所以可以比较a和b/a的大小。
      * 夹挤定理：从两边向中间以二分的方式进行夹击。
+     * 终止条件：找到一个 mid，它平方不大于 x，但 mid+1 的平方大于 x，说明 mid 就是平方根
      */
     public int mySqrt(int x) {
         if (x == 1 || x == 0) {
@@ -266,7 +253,8 @@ public class ArrayTest {
             return;
         }
         while (front < end) {
-            while (front < arr.length && arr[front] % 2 == 1) {//从前往后找偶数
+            //从前往后找偶数,一路跳过前面的奇数(要求奇数在前)，直到遇到一个 偶数停下。
+            while (front < arr.length && arr[front] % 2 == 1) {
                 front++;
             }
             while (end >= 0 && arr[end] % 2 == 0) {//从后往前找奇数
@@ -281,10 +269,10 @@ public class ArrayTest {
     }
 
     /*
-     * 34.丑数
-     * 包含的质数因子只有2、3和5的数被称作丑数（Ugly Number）。
+     * 34.丑数,包含的质数因子只有2、3和5的数被称作丑数（Ugly Number）。
      * 例如6、8都是丑数，但14不是，因为它包含质因子7。
-     * 习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。
+     * 习惯上我们把1当做是第一个丑数。
+     * 求按从小到大的顺序的第N个丑数。
      * */
     public int getUglyNumber(int num) {
         if (num <= 0) return 0;
@@ -310,7 +298,8 @@ public class ArrayTest {
         if (num == 0) {
             return false;
         }
-        //如果最终 num 的值变为1，说明它只包含质因数 2、3 和 5，即是丑数，
+        //如果最终 num 的值变为1，说明它只包含质因数 2、3 和 5，即是丑数
+        // 如果 num 还能被 2 整除，就把 2 除掉
         while (num != 1) {
             if (num % 2 == 0) {
                 num /= 2;
@@ -370,33 +359,6 @@ public class ArrayTest {
 
 
     /**
-     * 40.一个整型数组里除了两个数字之外，其他的数字都出现了偶数次。请写程序找出这两个只出现一次的数字。
-     * 解法1
-     * num1,num2分别为长度为1的数组。传出参数
-     * 将num1[0],num2[0]设置为返回结果
-     * 和下面数组类似
-     * 使用foreach比较简单
-     */
-    public void findNumsAppearOnce(int[] array, int num1[], int num2[]) {
-        HashMap<Integer, Integer> hashMap = new HashMap<Integer, Integer>();
-        for (int i : array) {
-            int val = 1;
-            if (hashMap.get(i) != null) {
-                hashMap.put(i, val + 1);
-            } else {
-                hashMap.put(i, val);
-            }
-        }
-        for (int i : array) {
-            if (hashMap.get(i) == 1) {
-                if (num1[0] == 0) num1[0] = i;
-                else num2[0] = i;
-            }
-        }
-    }
-
-
-    /**
      *
      136. 只出现一次的数字
      * 给你一个 非空 整数数组 nums ，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
@@ -439,6 +401,33 @@ public class ArrayTest {
         }
         return set.iterator().next();
     }
+
+    /**
+     * 40.一个整型数组里除了两个数字之外，其他的数字都出现了偶数次。请写程序找出这两个只出现一次的数字。
+     * 解法1
+     * num1,num2分别为长度为1的数组。传出参数
+     * 将num1[0],num2[0]设置为返回结果
+     * 和下面数组类似
+     * 使用foreach比较简单
+     */
+    public void findNumsAppearOnce(int[] array, int num1[], int num2[]) {
+        HashMap<Integer, Integer> hashMap = new HashMap<Integer, Integer>();
+        for (int i : array) {
+            int val = 1;
+            if (hashMap.get(i) != null) {
+                hashMap.put(i, val + 1);
+            } else {
+                hashMap.put(i, val);
+            }
+        }
+        for (int i : array) {
+            if (hashMap.get(i) == 1) {
+                if (num1[0] == 0) num1[0] = i;
+                else num2[0] = i;
+            }
+        }
+    }
+
 
 
     /**
@@ -483,6 +472,20 @@ public class ArrayTest {
             nums[i] = 0;
     }
 
+    public void moveZeroes2(int[] nums) {
+        int slow = 0; // 慢指针，指向下一个应该放非 0 元素的位置
+        //这样遍历一次数组，所有非 0 就会被稳定挪到前面，0 自然被挤到后面
+        for (int fast = 0; fast < nums.length; fast++) {
+            if (nums[fast] != 0) {
+                // 交换：把非 0 元素放到前面
+                int temp = nums[slow];
+                nums[slow] = nums[fast];
+                nums[fast] = temp;
+                slow++;
+            }
+        }
+    }
+
     /**
      * 整数反转
      */
@@ -515,6 +518,7 @@ public class ArrayTest {
     }
 
 
+
     /**
      * x 的 n 次幂函数（即，xn）
      * 输入：x = 2.00000, n = 10
@@ -540,7 +544,6 @@ public class ArrayTest {
         return result;
     }
 
-
     /**
      * 从数组和List中随机抽取若干不重复的元素.
      * 这里的重复是指索引位置重复
@@ -561,46 +564,27 @@ public class ArrayTest {
                 newArray[i - 1] = paramArray[temp];
                 list.add(temp);
             } else {
-                i--;//重新设置
+                i--;//每次循环完后，i 都会自动加 1,如果有，我们不希望这次算数（因为没放进 newArray）,重新设置
             }
         }
         return newArray;
     }
 
-    /**
-     * 48. 旋转图像
-     * nXn整型二维数组顺时针旋转90度
-     * 最直接的想法是先转置矩阵，然后翻转每一行。
-     * 时间复杂度O(N^2)。空间复杂度：O(1) 由于旋转操作是 就地 完成的
-     * 1,2
-     * 3,4
-     * 1,3
-     * 2,4
-     */
-    public void rotate(int[][] matrix) {
-        int n = matrix.length;
-        // transpose matrix
-        for (int i = 0; i < n; i++) {
-            for (int j = i; j < n; j++) {
-                int tmp = matrix[j][i];
-                matrix[j][i] = matrix[i][j];
-                matrix[i][j] = tmp;
+    public int[] getRandomArray2(int[] array,int count){
+        Random random = new Random();
+        int temp=0;
+        int[] newArray=new int[count];
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        for (int i = 1; i < array.length; i++) {
+            temp = random.nextInt(array.length);
+            if(arrayList.contains(temp)){
+                i--;
+            }else{
+                arrayList.add(temp);
+                newArray[i-1]=array[i];
             }
         }
-        // reverse each row
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n / 2; j++) {
-                int tmp = matrix[i][j];
-                matrix[i][j] = matrix[i][n - j - 1];
-                matrix[i][n - j - 1] = tmp;
-            }
-        }
-        for (int[] ints : matrix) {
-            for (int anInt : ints) {
-                System.out.println("anInt:" + anInt);
-            }
-        }
-
+        return newArray;
     }
 
     /**

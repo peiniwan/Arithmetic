@@ -45,9 +45,27 @@ public class StringUtils {
     public static String reverse(String originStr) {
         if (originStr == null || originStr.length() <= 1)
             return originStr;
+        //取出除第一个字符外的子串
         return reverse(originStr.substring(1)) + originStr.charAt(0);
     }
 
+    public static String reverse2(String originStr) {
+        if (originStr == null || originStr.length() <= 1) {
+            return originStr;
+        }
+        char[] chars = originStr.toCharArray();
+        int left = 0, right = chars.length - 1;
+        while (left < right) {
+            char temp = chars[left];
+            chars[left] = chars[right];
+            chars[right] = temp;
+
+            left++;
+            right--;
+        }
+
+        return new String(chars);
+    }
 
     /**
      * 给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
@@ -74,6 +92,31 @@ public class StringUtils {
         return -1;
     }
 
+    /**
+     * 'a' ~ 'z' 映射成数组下标 0 ~ 25
+     * 'a' - 'a' = 0
+     * 'b' - 'a' = 1
+     * 'c' - 'a' = 2
+     * 空间复杂度：O(1),固定大小 int[26],常数更小
+     */
+    public int firstUniqChar2(String s) {
+        int[] count = new int[26]; // 统计每个字符出现的次数
+
+        // 第一次遍历，统计次数
+        for (char c : s.toCharArray()) {
+            count[c - 'a']++;
+        }
+
+        // 第二次遍历，找到第一个出现次数为1的字符
+        for (int i = 0; i < s.length(); i++) {
+            if (count[s.charAt(i) - 'a'] == 1) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
 
     //================ 下面都是双指针  ======================
 
@@ -82,6 +125,7 @@ public class StringUtils {
      * 检查起始位置分别是 0、1、2…n-m 且长度为 m 的 n-m+1 个子串，看有没有跟模式串匹配的
      * indexOf(xxx)方法直接就返回了
      * 时间复杂度：O(n* m)
+     *
      */
     public static int bfFind(String S, String T) {
         char[] arr1 = S.toCharArray();
@@ -92,7 +136,11 @@ public class StringUtils {
                 i++;
                 j++;
             } else {
-                //++操作，为什么-j，因为相同时ij都+过，其他情况j是0
+                //当匹配失败时，主串指针回退到下一个起点，模式串指针归零，从头开始比较
+                //为什么-j，j：模式串当前比较的位置（已经匹配了多少个字符）
+//                匹配开始时的起点 = i - j
+//                失配后要换下一个起点 = (i - j) + 1
+//                所以 i = i - j + 1。
                 i = i - j + 1;
                 j = 0;
             }
@@ -184,7 +232,6 @@ public class StringUtils {
             arr[j] = temp;
         }
     }
-
 
     /**
      * 反转字符串中的元音字符

@@ -340,16 +340,25 @@ public class LinkedUtils {
      * 输出：1->1->2->3->4->4
      */
     public ListNode Merge(ListNode list1, ListNode list2) {
-        if (list1 == null) return list2;//注意鲁棒性
+        // 1. 边界处理：如果某一个链表为空，直接返回另一个
+        if (list1 == null) return list2;
         if (list2 == null) return list1;
-        if (list1.val <= list2.val) {  //利用归并排序的递归思想，将两个链表的较小节点链接起来
-            list1.next = Merge(list1.next, list2);  //如果list1当前节点小于list2当前节点，链表放入较小节点(不动，继续设置下一个)并将索引往后一个节点，与list2的原较大节点继续比较
-            return list1;
+
+        // 2. 递归比较两个链表的头结点
+        if (list1.val <= list2.val) {
+            // 如果 list1 的头结点更小（或相等），则把它作为合并结果的当前节点
+            // 然后递归合并 list1 的下一个节点 和 list2
+            list1.next = Merge(list1.next, list2);
+            return list1;   // 返回 list1，因为它是当前合并链表的头
         } else {
-            list2.next = Merge(list2.next, list1);  //如果list2当前节点小于list1当前节点，链表放入较小节点并将索引往后一个节点，与list1的原较大节点继续比较
-            return list2;
+            // 否则 list2 的头结点更小，把它作为当前节点
+            // 然后递归合并 list2 的下一个节点 和 list1
+            list2.next = Merge(list2.next, list1);
+            return list2;   // 返回 list2，因为它是当前合并链表的头
         }
     }
+
+
 
     /**
      * 21. 合并两个有序链表
@@ -547,26 +556,29 @@ public class LinkedUtils {
     }
 
 
-    // 反转以 a 为头结点的链表
+    // 反转以 a 为头结点的链表，和上面的 迭代反转链表 一样
     ListNode reverse3(ListNode a) {
+        // 定义三个指针：pre, cur, nxt
         ListNode pre, cur, nxt;
-        pre = null;
-        cur = a;
-        nxt = a;
+        pre = null;  // pre 指向反转后链表的前一个节点（初始为空）
+        cur = a;     // cur 指向当前要处理的节点
+        nxt = a;     // nxt 用来保存 cur 的下一个节点，避免断链
+
+        // 遍历整个链表
         while (cur != null) {
-            nxt = cur.next;
-            // 逐个结点反转
-            cur.next = pre;
-            // 更新指针位置
-            pre = cur;
-            cur = nxt;
+            nxt = cur.next;   // 1. 先保存当前节点的下一个节点
+            cur.next = pre;   // 2. 反转：让当前节点指向前一个节点
+            pre = cur;        // 3. pre 向前移动（更新为当前节点）
+            cur = nxt;        // 4. cur 向前移动（更新为下一个节点）
         }
-        // 返回反转后的头结点
+
+        // 当 cur 遍历到 null，pre 已经指向新的头节点
         return pre;
     }
 
     /**
-     * 反转区间 [a, b) 的元素，注意是左闭右开
+     * 反转区间 [a, b) 的元素，注意是左闭右开,含头不含尾,即从 a 开始，反转到 b 之前的节点
+     * 所以 b 在反转中是不参与的，但作为「分界点」存在，方便递归时继续往后处理。
      */
     ListNode reverse2(ListNode a, ListNode b) {
         ListNode pre, cur, nxt;
@@ -593,7 +605,7 @@ public class LinkedUtils {
      */
     ListNode reverseKGroup(ListNode head, int k) {
         if (head == null) return null;
-        // 区间 [a, b) 包含 k 个待反转元素
+        //先用指针 a、b 定义一个「长度为 k 的区间」 [a, b)。
         ListNode a, b;
         a = b = head;
         for (int i = 0; i < k; i++) {
@@ -607,4 +619,5 @@ public class LinkedUtils {
         a.next = reverseKGroup(b, k);
         return newHead;
     }
+
 }
